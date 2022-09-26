@@ -21,6 +21,12 @@ interface ILoString {
 
   // keeps track of the new sorted list for the sort method
   ILoString insert(String str);
+  
+  // checks if this list is sorted
+  boolean isSorted();
+  
+  // accumulates data for isSorted
+  boolean sortAcc(String str);
 }
 
 // to represent an empty list of Strings
@@ -55,6 +61,16 @@ class MtLoString implements ILoString {
   // keeps track of the new list for the sort method
   public ILoString insert(String str) {
     return new ConsLoString(str, this);
+  }
+  
+  // checks if this list is sorted
+  public boolean isSorted() {
+    return true;
+  }
+  
+  // accumulates data for isSorted
+  public boolean sortAcc(String str) {
+    return true;
   }
 }
 
@@ -120,6 +136,17 @@ class ConsLoString implements ILoString {
     } else {
       return new ConsLoString(str, this);
     }
+  }
+  
+  // checks if this list is sorted
+  public boolean isSorted() {
+    return this.rest.sortAcc(this.first);
+  }
+  
+  // accumulates data for isSorted
+  public boolean sortAcc(String str) {
+    return this.first.toLowerCase().compareTo(str.toLowerCase()) < 0
+        && this.rest.sortAcc(this.first);
   }
 }
 
@@ -198,6 +225,16 @@ class ExamplesStrings {
         t.checkExpect(this.mary.sort(), marySort)
         && t.checkExpect(this.johnny.sort(), johnnySort)
         && t.checkExpect(this.mt.sort(), mt);
+  }
+  
+  // test the method isSorted
+  boolean testIsSorted(Tester t) {
+    return 
+        t.checkExpect(this.mary.isSorted(), false)
+        && t.checkExpect(this.marySort.isSorted(), true)
+        && t.checkExpect(this.johnny.isSorted(), false)
+        && t.checkExpect(this.johnnySort.isSorted(), true)
+        && t.checkExpect(this.mt.isSorted(), true);
   }
 
 }
