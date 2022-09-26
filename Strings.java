@@ -9,6 +9,12 @@ interface ILoString {
 
   // replace all instances of the first string in this list with the second
   ILoString findAndReplace(String find, String replace);
+
+  // checks if there are repeated strings in this list
+  boolean anyDupes();
+
+  // helper for anyDupes
+  boolean dupeHelper(String ref, ILoString list);
 }
 
 // to represent an empty list of Strings
@@ -23,6 +29,16 @@ class MtLoString implements ILoString {
   // replace all instances of the first string in this list with the second
   public ILoString findAndReplace(String find, String replace) {
     return this;
+  }
+
+  // checks if there are repeated strings in this list
+  public boolean anyDupes() {
+    return false;
+  }
+
+  // helper for anyDupes
+  public boolean dupeHelper(String ref, ILoString list) {
+    return false;
   }
 }
 
@@ -57,6 +73,7 @@ class ConsLoString implements ILoString {
     return this.first.concat(this.rest.combine());
   }  
 
+  // replace all instances of the first string in this list with the second
   public ILoString findAndReplace(String find, String replace) {
     if (this.first.equals(find)) {
       return new ConsLoString(replace, this.rest.findAndReplace(find, replace));
@@ -65,6 +82,16 @@ class ConsLoString implements ILoString {
     }
   }
 
+  // to represent a nonempty list of Strings
+  public boolean anyDupes() {
+    return this.dupeHelper(this.first, this.rest);
+  }
+
+  // helper for anyDupes
+  public boolean dupeHelper(String ref, ILoString list) {
+    return this.first.equals(ref)
+        || list.anyDupes();
+  }
 }
 
 // to represent examples for lists of strings
@@ -81,7 +108,7 @@ class ExamplesStrings {
           new ConsLoString("water",
               new ConsLoString("water",
                   new ConsLoString("chair", new MtLoString())))));
-  
+
   ILoString list2 = new ConsLoString("water",
       new ConsLoString("water",
           new ConsLoString("water",
@@ -98,6 +125,13 @@ class ExamplesStrings {
   boolean testFindAndReplace(Tester t) {
     return 
         t.checkExpect(this.list1.findAndReplace("bottle", "water"), list2);
+  }
+  
+  // test the method anyDupes
+  boolean testAnyDupes(Tester t) {
+    return 
+        t.checkExpect(this.list1.anyDupes(), true)
+        && t.checkExpect(this.mary.anyDupes(), false);
   }
 
 }
