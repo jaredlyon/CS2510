@@ -145,7 +145,7 @@ class ConsLoString implements ILoString {
   
   // accumulates data for isSorted
   public boolean sortAcc(String str) {
-    return this.first.toLowerCase().compareTo(str.toLowerCase()) < 0
+    return this.first.toLowerCase().compareTo(str.toLowerCase()) > 0
         && this.rest.sortAcc(this.first);
   }
 }
