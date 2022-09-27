@@ -36,6 +36,12 @@ interface ILoString {
   
   // compares a string to a list for merge
   boolean mergeChecker(String str);
+  
+  // reverses this list for reverseConcat
+  String reverseConcat();
+  
+  // insert method for the reverseConcat
+  String reverseConcatInsert(String str);
 }
 
 // to represent an empty list of Strings
@@ -96,6 +102,17 @@ class MtLoString implements ILoString {
   public boolean mergeChecker(String str) {
     return true;
   }
+
+  // reverses this list for reverseConcat
+  public String reverseConcat() {
+    return "";
+  }
+  
+  // insert method for the reverseConcat
+  public String reverseConcatInsert(String str) {
+    return "" + str;
+  }
+  
 }
 
 // to represent a nonempty list of Strings
@@ -191,6 +208,16 @@ class ConsLoString implements ILoString {
   public boolean mergeChecker(String str) {
     return str.toLowerCase().compareTo(this.first.toLowerCase()) <= 0
         && this.rest.mergeChecker(str);
+  }
+  
+  // reverses this list for reverseConcat
+  public String reverseConcat() {
+    return this.rest.reverseConcat().reverseConcatInsert(this.first);
+  }
+  
+  // insert method for the reverseConcat
+  public String reverseConcatInsert(String str) {
+    return this.first + this.rest.reverseConcatInsert(str);
   }
   
 }
@@ -370,6 +397,13 @@ class ExamplesStrings {
         t.checkExpect(this.marySort.merge(this.johnnySort), this.maryJohnnyMerge) // different output from interleave
         && t.checkExpect(this.list4.merge(this.list5), this.list45InterleaveMerge) // same output as interleave
         && t.checkExpect(this.mt.merge(this.marySort), this.marySort);
+  }
+  
+  // test the method reverseConcat
+  boolean testReverseConcat(Tester t) {
+    return
+        t.checkExpect(this.mary.reverseConcat(), "lamb.little a had Mary ")
+        && t.checkExpect(this.mt.reverseConcat(), "");
   }
 
 }
