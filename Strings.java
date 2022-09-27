@@ -30,6 +30,12 @@ interface ILoString {
   
   // combines lists alternatively, leaving any extras at the end
   ILoString interleave(ILoString other);
+  
+  // combines this sorted listed with another sorted list to create a new sorted list
+  ILoString merge(ILoString other);
+  
+  // compares a string to a list for merge
+  boolean mergeChecker(String str);
 }
 
 // to represent an empty list of Strings
@@ -79,6 +85,16 @@ class MtLoString implements ILoString {
   // combines lists alternatively, leaving any extras at the end
   public ILoString interleave(ILoString other) {
     return other;
+  }
+  
+  // combines this sorted listed with another sorted list to create a new sorted list
+  public ILoString merge(ILoString other) {
+    return other;
+  }
+  
+  // compares a string to a list for merge
+  public boolean mergeChecker(String str) {
+    return true;
   }
 }
 
@@ -159,12 +175,29 @@ class ConsLoString implements ILoString {
 
   // combines lists alternatively, leaving any extras at the end
   public ILoString interleave(ILoString other) {
-    return new ConsLoString(this.first ,other.interleave(this.rest));
+    return new ConsLoString(this.first, other.interleave(this.rest));
   }
+  
+  // combines this sorted listed with another sorted list to create a new sorted list
+  public ILoString merge(ILoString other) {
+    if (other.mergeChecker(this.first)) {
+      return new ConsLoString(this.first, this.rest.merge(other));
+    } else {
+      return other.merge(this);
+    }
+  }
+  
+  // compares a string to a list for merge
+  public boolean mergeChecker(String str) {
+    return str.toLowerCase().compareTo(this.first.toLowerCase()) <= 0
+        && this.rest.mergeChecker(str);
+  }
+  
 }
 
 // to represent examples for lists of strings
 class ExamplesStrings {
+  ExamplesStrings() {}
   
   ILoString mt = new MtLoString();
 
@@ -191,6 +224,28 @@ class ExamplesStrings {
           new ConsLoString("Johnny ",
               new ConsLoString("owned ",
                   new ConsLoString("pretty ", new MtLoString())))));
+  
+  ILoString maryJohnnyMerge = new ConsLoString ("a ",
+      new ConsLoString("a ",
+          new ConsLoString("car.",
+              new ConsLoString("had ",
+                  new ConsLoString("Johnny ", 
+                      new ConsLoString("lamb.",
+                          new ConsLoString("little ",
+                              new ConsLoString("Mary ",
+                                  new ConsLoString("owned ",
+                                      new ConsLoString("pretty ", new MtLoString()))))))))));
+  
+  ILoString maryJohnnyInterleave = new ConsLoString ("a ",
+      new ConsLoString("a ",
+          new ConsLoString("had ",
+              new ConsLoString("car.",
+                  new ConsLoString("lamb.", 
+                      new ConsLoString("Johnny ",
+                          new ConsLoString("little ",
+                              new ConsLoString("owned ",
+                                  new ConsLoString("Mary ",
+                                      new ConsLoString("pretty ", new MtLoString()))))))))));
 
   ILoString list1 = new ConsLoString("bottle",
       new ConsLoString("bottle",
@@ -213,6 +268,17 @@ class ExamplesStrings {
   ILoString list4 = new ConsLoString("apple",
       new ConsLoString("banana",
           new ConsLoString("orange", new MtLoString())));
+  
+  ILoString list5 = new ConsLoString("axe",
+      new ConsLoString("beyblade",
+          new ConsLoString("ostensible", new MtLoString())));
+  
+  ILoString list45InterleaveMerge = new ConsLoString("apple",
+      new ConsLoString("axe",
+          new ConsLoString("banana",
+              new ConsLoString("beyblade",
+                  new ConsLoString("orange",
+                      new ConsLoString("ostensible", new MtLoString()))))));
   
   ILoString maryJohnny = new ConsLoString ("Mary ",
       new ConsLoString("Johnny ",
@@ -289,10 +355,20 @@ class ExamplesStrings {
   boolean testInterleave(Tester t) {
     return
         t.checkExpect(this.mary.interleave(this.johnny), this.maryJohnny)
+        && t.checkExpect(this.marySort.interleave(this.johnnySort), this.maryJohnnyInterleave) // different output from merge
+        && t.checkExpect(this.list4.interleave(this.list5), this.list45InterleaveMerge) // same output as merge
         && t.checkExpect(this.mary.interleave(this.mary), this.maryMary)
         && t.checkExpect(this.mary.interleave(this.mt), this.mary)
         && t.checkExpect(this.mt.interleave(this.mary), this.mary)
         && t.checkExpect(this.mary.interleave(this.list4), this.maryList4);
+  }
+  
+  // test the method merge
+  boolean testMerge(Tester t) {
+    return
+        t.checkExpect(this.marySort.merge(this.johnnySort), this.maryJohnnyMerge) // different output from interleave
+        && t.checkExpect(this.list4.merge(this.list5), this.list45InterleaveMerge) // same output as interleave
+        && t.checkExpect(this.mt.merge(this.marySort), this.marySort);
   }
 
 }
