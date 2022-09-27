@@ -321,6 +321,7 @@ class ExamplesStrings {
   boolean testFindAndReplace(Tester t) {
     return 
         t.checkExpect(this.list1.findAndReplace("bottle", "water"), list2)
+        && t.checkExpect(this.list1.findAndReplace("gahhh", "aaaaahhh"), list1)
         && t.checkExpect(this.mt.findAndReplace("b", "a"), mt);
   }
 
