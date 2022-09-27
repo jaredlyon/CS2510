@@ -1,6 +1,6 @@
 // CS 2510, Assignment 3
 
-import tester.*;
+import tester.Tester;
 
 // to represent a list of Strings
 interface ILoString {
@@ -27,6 +27,9 @@ interface ILoString {
   
   // accumulates data for isSorted
   boolean sortAcc(String str);
+  
+  // combines lists alternatively, leaving any extras at the end
+  ILoString interleave(ILoString other);
 }
 
 // to represent an empty list of Strings
@@ -71,6 +74,11 @@ class MtLoString implements ILoString {
   // accumulates data for isSorted
   public boolean sortAcc(String str) {
     return true;
+  }
+  
+  // combines lists alternatively, leaving any extras at the end
+  public ILoString interleave(ILoString other) {
+    return other;
   }
 }
 
@@ -148,6 +156,11 @@ class ConsLoString implements ILoString {
     return this.first.toLowerCase().compareTo(str.toLowerCase()) > 0
         && this.rest.sortAcc(this.first);
   }
+
+  // combines lists alternatively, leaving any extras at the end
+  public ILoString interleave(ILoString other) {
+    return new ConsLoString(this.first ,other.interleave(this.rest));
+  }
 }
 
 // to represent examples for lists of strings
@@ -196,7 +209,42 @@ class ExamplesStrings {
           new ConsLoString("water",
               new ConsLoString("water",
                   new ConsLoString("chair", new MtLoString())))));
-
+  
+  ILoString list4 = new ConsLoString("apple",
+      new ConsLoString("banana",
+          new ConsLoString("orange", new MtLoString())));
+  
+  ILoString maryJohnny = new ConsLoString ("Mary ",
+      new ConsLoString("Johnny ",
+          new ConsLoString("had ",
+              new ConsLoString("owned ",
+                  new ConsLoString("a ", 
+                      new ConsLoString("a ",
+                          new ConsLoString("little ",
+                              new ConsLoString("pretty ",
+                                  new ConsLoString("lamb.",
+                                      new ConsLoString("car.", new MtLoString()))))))))));
+  
+  ILoString maryMary = new ConsLoString("Mary ",
+      new ConsLoString("Mary ",
+          new ConsLoString("had ",
+              new ConsLoString("had ", 
+                  new ConsLoString("a ",
+                      new ConsLoString("a ",
+                          new ConsLoString("little ",
+                              new ConsLoString("little ",
+                                  new ConsLoString("lamb.",
+                                      new ConsLoString("lamb.", new MtLoString()))))))))));
+  
+  ILoString maryList4 =  new ConsLoString("Mary ",
+      new ConsLoString("apple",
+          new ConsLoString("had ",
+              new ConsLoString("banana", 
+                  new ConsLoString("a ",
+                      new ConsLoString("orange",
+                          new ConsLoString("little ",
+                              new ConsLoString("lamb.", new MtLoString()))))))));
+                                          
   // test the method combine for the lists of Strings
   boolean testCombine(Tester t) {
     return 
@@ -235,6 +283,16 @@ class ExamplesStrings {
         && t.checkExpect(this.johnny.isSorted(), false)
         && t.checkExpect(this.johnnySort.isSorted(), true)
         && t.checkExpect(this.mt.isSorted(), true);
+  }
+  
+  // test the method interleave
+  boolean testInterleave(Tester t) {
+    return
+        t.checkExpect(this.mary.interleave(this.johnny), this.maryJohnny)
+        && t.checkExpect(this.mary.interleave(this.mary), this.maryMary)
+        && t.checkExpect(this.mary.interleave(this.mt), this.mary)
+        && t.checkExpect(this.mt.interleave(this.mary), this.mary)
+        && t.checkExpect(this.mary.interleave(this.list4), this.maryList4);
   }
 
 }
