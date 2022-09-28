@@ -65,6 +65,32 @@ class MtLoString implements ILoString {
   MtLoString() {
   }
 
+  /*
+   * fields:
+   *  none
+   * methods:
+   *  this.combine() ... String
+   *  this.findAndReplace(String, String) ... ILoString
+   *  this.anyDupes() ... boolean
+   *  this.dupeHelper(String) ... boolean
+   *  this.sort() ... ILoString
+   *  this.insert(String) ... ILoString
+   *  this.isSorted() ... boolean
+   *  this.sortAcc(String) ... boolean
+   *  this.interleave(ILoString) ... ILoString
+   *  this.merge(ILoString) ... ILoString
+   *  this.mergeChecker(String) ... boolean
+   *  this.reverseConcat() ... String
+   *  this.reverseConcatInsert(String) ... String
+   *  this.isDoubledList() ... boolean
+   *  this.isDoubledListHelper(String) ... boolean
+   *  this.isPalindromeList() ... boolean
+   *  this.reverse() ... ILoString
+   *  this.reverseHelper(ILoString) ... ILoString
+   * methods for fields:
+   *  none
+   */
+
   // combine all Strings in this list into one
   public String combine() {
     return "";
@@ -107,12 +133,59 @@ class MtLoString implements ILoString {
 
   // combines lists alternatively, leaving any extras at the end
   public ILoString interleave(ILoString other) {
+    /* fields of other:
+     *  other.first ... String
+     *  other.rest ... ILoString
+     * methods:
+     *  other.combine() ... String
+     *  other.findAndReplace(String, String) ... ILoString
+     *  other.anyDupes() ... boolean
+     *  other.dupeHelper(String) ... boolean
+     *  other.sort() ... ILoString
+     *  other.insert(String) ... ILoString
+     *  other.isSorted() ... boolean
+     *  other.sortAcc(String) ... boolean
+     *  other.interleave(ILoString) ... ILoString
+     *  other.merge(ILoString) ... ILoString
+     *  other.mergeChecker(String) ... boolean
+     *  other.reverseConcat() ... String
+     *  other.reverseConcatInsert(String) ... String
+     *  other.isDoubledList() ... boolean
+     *  other.isDoubledListHelper(String) ... boolean
+     *  other.isPalindromeList() ... boolean
+     *  other.reverse() ... ILoString
+     *  other.reverseHelper(ILoString) ... ILoString
+     */
+
     return other;
   }
 
-  // combines this sorted listed with another sorted list to create a new sorted
-  // list
+  // combines this sorted listed with another sorted list to create a new sorted list
   public ILoString merge(ILoString other) {
+    /* fields of other:
+     *  other.first ... String
+     *  other.rest ... ILoString
+     * methods:
+     *  other.combine() ... String
+     *  other.findAndReplace(String, String) ... ILoString
+     *  other.anyDupes() ... boolean
+     *  other.dupeHelper(String) ... boolean
+     *  other.sort() ... ILoString
+     *  other.insert(String) ... ILoString
+     *  other.isSorted() ... boolean
+     *  other.sortAcc(String) ... boolean
+     *  other.interleave(ILoString) ... ILoString
+     *  other.merge(ILoString) ... ILoString
+     *  other.mergeChecker(String) ... boolean
+     *  other.reverseConcat() ... String
+     *  other.reverseConcatInsert(String) ... String
+     *  other.isDoubledList() ... boolean
+     *  other.isDoubledListHelper(String) ... boolean
+     *  other.isPalindromeList() ... boolean
+     *  other.reverse() ... ILoString
+     *  other.reverseHelper(ILoString) ... ILoString
+     */
+
     return other;
   }
 
@@ -150,8 +223,33 @@ class MtLoString implements ILoString {
   public ILoString reverse() {
     return this;
   }
-  
+
+  // helper for reverse method
   public ILoString reverseHelper(ILoString acc) {
+    /* fields of other:
+     *  acc.first ... String
+     *  acc.rest ... ILoString
+     * methods:
+     *  acc.combine() ... String
+     *  acc.findAndReplace(String, String) ... ILoString
+     *  acc.anyDupes() ... boolean
+     *  acc.dupeHelper(String) ... boolean
+     *  acc.sort() ... ILoString
+     *  acc.insert(String) ... ILoString
+     *  acc.isSorted() ... boolean
+     *  acc.sortAcc(String) ... boolean
+     *  acc.interleave(ILoString) ... ILoString
+     *  acc.merge(ILoString) ... ILoString
+     *  acc.mergeChecker(String) ... boolean
+     *  acc.reverseConcat() ... String
+     *  acc.reverseConcatInsert(String) ... String
+     *  acc.isDoubledList() ... boolean
+     *  acc.isDoubledListHelper(String) ... boolean
+     *  acc.isPalindromeList() ... boolean
+     *  acc.reverse() ... ILoString
+     *  acc.reverseHelper(ILoString) ... ILoString
+     */
+
     return acc;
   }
 }
@@ -167,18 +265,50 @@ class ConsLoString implements ILoString {
   }
 
   /*
-   * TEMPLATE FIELDS: 
-   * ... this.first ... -- String 
-   * ... this.rest ... -- ILoString
-   * 
-   * METHODS 
-   * ... this.combine() ... -- String
-   * 
-   * METHODS FOR FIELDS 
-   * ... this.first.concat(String) ... -- String 
-   * ... this.first.compareTo(String) ... -- int 
-   * ... this.rest.combine() ... -- String
-   * 
+   * fields:
+   *  this.first ... String
+   *  this.rest ... ILoString
+   * methods:
+   *  this.combine() ... String
+   *  this.findAndReplace(String, String) ... ILoString
+   *  this.anyDupes() ... boolean
+   *  this.dupeHelper(String) ... boolean
+   *  this.sort() ... ILoString
+   *  this.insert(String) ... ILoString
+   *  this.isSorted() ... boolean
+   *  this.sortAcc(String) ... boolean
+   *  this.interleave(ILoString) ... ILoString
+   *  this.merge(ILoString) ... ILoString
+   *  this.mergeChecker(String) ... boolean
+   *  this.reverseConcat() ... String
+   *  this.reverseConcatInsert(String) ... String
+   *  this.isDoubledList() ... boolean
+   *  this.isDoubledListHelper(String) ... boolean
+   *  this.isPalindromeList() ... boolean
+   *  this.reverse() ... ILoString
+   *  this.reverseHelper(ILoString) ... ILoString
+   * methods for fields:
+   *  this.first.concat(String) ... String
+   *  this.first.compareTo(String) ... int
+   *  this.rest.combine() ... String
+   *  this.rest.combine() ... String
+   *  this.rest.findAndReplace(String, String) ... ILoString
+   *  this.rest.anyDupes() ... boolean
+   *  this.rest.dupeHelper(String) ... boolean
+   *  this.rest.sort() ... ILoString
+   *  this.rest.insert(String) ... ILoString
+   *  this.rest.isSorted() ... boolean
+   *  this.rest.sortAcc(String) ... boolean
+   *  this.rest.interleave(ILoString) ... ILoString
+   *  this.rest.merge(ILoString) ... ILoString
+   *  this.rest.mergeChecker(String) ... boolean
+   *  this.rest.reverseConcat() ... String
+   *  this.rest.reverseConcatInsert(String) ... String
+   *  this.rest.isDoubledList() ... boolean
+   *  this.rest.isDoubledListHelper(String) ... boolean
+   *  this.rest.isPalindromeList() ... boolean
+   *  this.rest.reverse() ... ILoString
+   *  this.rest.reverseHelper(ILoString) ... ILoString
    */
 
   // combine all Strings in this list into one
@@ -190,8 +320,7 @@ class ConsLoString implements ILoString {
   public ILoString findAndReplace(String find, String replace) {
     if (this.first.equals(find)) {
       return new ConsLoString(replace, this.rest.findAndReplace(find, replace));
-    }
-    else {
+    } else {
       return new ConsLoString(this.first, this.rest.findAndReplace(find, replace));
     }
   }
@@ -215,8 +344,7 @@ class ConsLoString implements ILoString {
   public ILoString insert(String str) {
     if (this.first.toLowerCase().compareTo(str.toLowerCase()) < 0) {
       return new ConsLoString(this.first, this.rest.insert(str));
-    }
-    else {
+    } else {
       return new ConsLoString(str, this);
     }
   }
@@ -234,16 +362,62 @@ class ConsLoString implements ILoString {
 
   // combines lists alternatively, leaving any extras at the end
   public ILoString interleave(ILoString other) {
+    /* fields of other:
+     *  other.first ... String
+     *  other.rest ... ILoString
+     * methods:
+     *  other.combine() ... String
+     *  other.findAndReplace(String, String) ... ILoString
+     *  other.anyDupes() ... boolean
+     *  other.dupeHelper(String) ... boolean
+     *  other.sort() ... ILoString
+     *  other.insert(String) ... ILoString
+     *  other.isSorted() ... boolean
+     *  other.sortAcc(String) ... boolean
+     *  other.interleave(ILoString) ... ILoString
+     *  other.merge(ILoString) ... ILoString
+     *  other.mergeChecker(String) ... boolean
+     *  other.reverseConcat() ... String
+     *  other.reverseConcatInsert(String) ... String
+     *  other.isDoubledList() ... boolean
+     *  other.isDoubledListHelper(String) ... boolean
+     *  other.isPalindromeList() ... boolean
+     *  other.reverse() ... ILoString
+     *  other.reverseHelper(ILoString) ... ILoString
+     */
+
     return new ConsLoString(this.first, other.interleave(this.rest));
   }
 
-  // combines this sorted listed with another sorted list to create a new sorted
-  // list
+  // combines this sorted listed with another sorted list to create a new sorted list
   public ILoString merge(ILoString other) {
+    /* fields of other:
+     *  other.first ... String
+     *  other.rest ... ILoString
+     * methods:
+     *  other.combine() ... String
+     *  other.findAndReplace(String, String) ... ILoString
+     *  other.anyDupes() ... boolean
+     *  other.dupeHelper(String) ... boolean
+     *  other.sort() ... ILoString
+     *  other.insert(String) ... ILoString
+     *  other.isSorted() ... boolean
+     *  other.sortAcc(String) ... boolean
+     *  other.interleave(ILoString) ... ILoString
+     *  other.merge(ILoString) ... ILoString
+     *  other.mergeChecker(String) ... boolean
+     *  other.reverseConcat() ... String
+     *  other.reverseConcatInsert(String) ... String
+     *  other.isDoubledList() ... boolean
+     *  other.isDoubledListHelper(String) ... boolean
+     *  other.isPalindromeList() ... boolean
+     *  other.reverse() ... ILoString
+     *  other.reverseHelper(ILoString) ... ILoString
+     */
+
     if (other.mergeChecker(this.first)) {
       return new ConsLoString(this.first, this.rest.merge(other));
-    }
-    else {
+    } else {
       return other.merge(this);
     }
   }
@@ -273,9 +447,8 @@ class ConsLoString implements ILoString {
   public boolean isDoubledListHelper(String str) {
     if (this.first.equalsIgnoreCase(str.toLowerCase())) {
       return this.rest.isDoubledList();
-      }
-      else {
-        return false;
+    } else {
+      return false;
     }
   }
 
@@ -291,6 +464,30 @@ class ConsLoString implements ILoString {
 
   // helper for reverse
   public ILoString reverseHelper(ILoString acc) {
+    /* fields of other:
+     *  acc.first ... String
+     *  acc.rest ... ILoString
+     * methods:
+     *  acc.combine() ... String
+     *  acc.findAndReplace(String, String) ... ILoString
+     *  acc.anyDupes() ... boolean
+     *  acc.dupeHelper(String) ... boolean
+     *  acc.sort() ... ILoString
+     *  acc.insert(String) ... ILoString
+     *  acc.isSorted() ... boolean
+     *  acc.sortAcc(String) ... boolean
+     *  acc.interleave(ILoString) ... ILoString
+     *  acc.merge(ILoString) ... ILoString
+     *  acc.mergeChecker(String) ... boolean
+     *  acc.reverseConcat() ... String
+     *  acc.reverseConcatInsert(String) ... String
+     *  acc.isDoubledList() ... boolean
+     *  acc.isDoubledListHelper(String) ... boolean
+     *  acc.isPalindromeList() ... boolean
+     *  acc.reverse() ... ILoString
+     *  acc.reverseHelper(ILoString) ... ILoString
+     */
+
     return this.rest.reverseHelper(new ConsLoString(this.first, acc));
   }
 }
@@ -418,13 +615,10 @@ class ExamplesStrings {
   // test the method interleave
   boolean testInterleave(Tester t) {
     return t.checkExpect(this.mary.interleave(this.johnny), this.maryJohnny)
-        && t.checkExpect(this.marySort.interleave(this.johnnySort), this.maryJohnnyInterleave) // different
-                                                                                               // output
-                                                                                               // from
-                                                                                               // merge
-        && t.checkExpect(this.list4.interleave(this.list5), this.list45InterleaveMerge) // same
-                                                                                        // output as
-                                                                                        // merge
+        // different output from merge
+        && t.checkExpect(this.marySort.interleave(this.johnnySort), this.maryJohnnyInterleave)
+        // same output as merge
+        && t.checkExpect(this.list4.interleave(this.list5), this.list45InterleaveMerge)
         && t.checkExpect(this.mary.interleave(this.mary), this.maryMary)
         && t.checkExpect(this.mary.interleave(this.mt), this.mary)
         && t.checkExpect(this.mt.interleave(this.mary), this.mary)
@@ -433,11 +627,10 @@ class ExamplesStrings {
 
   // test the method merge
   boolean testMerge(Tester t) {
-    return t.checkExpect(this.marySort.merge(this.johnnySort), this.maryJohnnyMerge) // different
-                                                                                     // output from
-                                                                                     // interleave
-        && t.checkExpect(this.list4.merge(this.list5), this.list45InterleaveMerge) // same output as
-                                                                                   // interleave
+    // different output from interleave
+    return t.checkExpect(this.marySort.merge(this.johnnySort), this.maryJohnnyMerge)
+        // same output as interleave
+        && t.checkExpect(this.list4.merge(this.list5), this.list45InterleaveMerge)
         && t.checkExpect(this.mt.merge(this.marySort), this.marySort);
   }
 
@@ -448,7 +641,7 @@ class ExamplesStrings {
         && t.checkExpect(this.list1.reverseConcat(), "chairwaterwaterbottlebottle")
         && t.checkExpect(this.mt.reverseConcat(), "");
   }
-  
+
   // test the method isDoubledList
   boolean testIsDoubledList(Tester t) {
     return t.checkExpect(this.mary.isDoubledList(), false)
