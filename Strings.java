@@ -211,7 +211,7 @@ class MtLoString implements ILoString {
 
   // helper for isDoubledList
   public boolean isDoubledListHelper(String str) {
-    return true;
+    return false;
   }
 
   // checks if this list is a palindrome
@@ -356,7 +356,7 @@ class ConsLoString implements ILoString {
 
   // accumulates data for isSorted
   public boolean sortAcc(String str) {
-    return this.first.toLowerCase().compareTo(str.toLowerCase()) > 0
+    return this.first.toLowerCase().compareTo(str.toLowerCase()) >= 0
         && this.rest.sortAcc(this.first);
   }
 
