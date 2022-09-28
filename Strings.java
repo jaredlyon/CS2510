@@ -42,6 +42,18 @@ interface ILoString {
   
   // insert method for the reverseConcat
   String reverseConcatInsert(String str);
+  
+  // checks if a list of strings is a series of doubles
+  boolean isDoubledList();
+  
+  // helper for isDoubledList
+  boolean isDoubledListHelper();
+  
+  // checks if this list is the same both forwards and backwards
+  boolean isPalindromeList();
+  
+  // helper for isPalindromeList
+  boolean isPalindromeListHelper();
 }
 
 // to represent an empty list of Strings
@@ -111,6 +123,26 @@ class MtLoString implements ILoString {
   // insert method for the reverseConcat
   public String reverseConcatInsert(String str) {
     return "" + str;
+  }
+
+  // checks if this list is made of doubles
+  public boolean isDoubledList() {
+    return false;
+  }
+
+  // helper for isDoubledList
+  public boolean isDoubledListHelper() {
+    return false;
+  }
+
+  // checks if this list is a palindrome
+  public boolean isPalindromeList() {
+    return false;
+  }
+
+  // helper for isPalindromeList
+  public boolean isPalindromeListHelper() {
+    return false;
   }
   
 }
@@ -217,7 +249,27 @@ class ConsLoString implements ILoString {
   
   // insert method for the reverseConcat
   public String reverseConcatInsert(String str) {
-    return this.first + this.rest.reverseConcatInsert(str);
+    return this.first.concat(this.rest.reverseConcatInsert(str));
+  }
+
+  // checks if this list is composed of pairs
+  public boolean isDoubledList() {
+    return this.isDoubledListHelper() && this.rest.isDoubledList();
+  }
+
+  // helper for isDoubledList
+  public boolean isDoubledListHelper(String str) {
+    return this.first.toLowerCase().equals(str.toLowerCase());
+  }
+
+  // checks if this list is a palindrome
+  public boolean isPalindromeList() {
+    //noooo idea
+  }
+
+  // helper for isPalindromeList
+  public boolean isPalindromeListHelper() {
+    //no clue
   }
   
 }
@@ -233,6 +285,17 @@ class ExamplesStrings {
           new ConsLoString("a ",
               new ConsLoString("little ",
                   new ConsLoString("lamb.", new MtLoString())))));
+  
+  ILoString maryDoubled = new ConsLoString ("Mary ",
+      new ConsLoString("Mary ",
+          new ConsLoString("had ",
+              new ConsLoString("had ",
+                  new ConsLoString("a ", 
+                      new ConsLoString("a ",
+                          new ConsLoString("little ",
+                              new ConsLoString("little ",
+                                  new ConsLoString("lamb.",
+                                      new ConsLoString("lamb.", new MtLoString()))))))))));
   
   ILoString marySort = new ConsLoString("a ",
       new ConsLoString("had ",
@@ -337,6 +400,24 @@ class ExamplesStrings {
                       new ConsLoString("orange",
                           new ConsLoString("little ",
                               new ConsLoString("lamb.", new MtLoString()))))))));
+  
+  ILoString palListFalse =  new ConsLoString("Mary ",
+      new ConsLoString("apple",
+          new ConsLoString("had ",
+              new ConsLoString("banana", 
+                  new ConsLoString("a ",
+                      new ConsLoString("orange",
+                          new ConsLoString("little ",
+                              new ConsLoString("lamb.", new MtLoString()))))))));
+  
+  ILoString palListTrue =  new ConsLoString("apple",
+      new ConsLoString("banana",
+          new ConsLoString("orange",
+              new ConsLoString("tomato", 
+                  new ConsLoString("tomato",
+                      new ConsLoString("orange",
+                          new ConsLoString("banana",
+                              new ConsLoString("apple", new MtLoString()))))))));
                                           
   // test the method combine for the lists of Strings
   boolean testCombine(Tester t) {
@@ -399,11 +480,20 @@ class ExamplesStrings {
         && t.checkExpect(this.mt.merge(this.marySort), this.marySort);
   }
   
-  // test the method reverseConcat
-  boolean testReverseConcat(Tester t) {
+  // test the method isDoubledList
+  boolean testIsDoubledList(Tester t) {
     return
-        t.checkExpect(this.mary.reverseConcat(), "lamb.little a had Mary ")
-        && t.checkExpect(this.mt.reverseConcat(), "");
+        t.checkExpect(this.mary.isDoubledList(), false)
+        && t.checkExpect(this.maryDoubled.isDoubledList(), true)
+        && t.checkExpect(this.mt.isDoubledList(), false);
   }
-
+  
+  // test the method isPalindromeList
+  boolean testIsPalindromeList(Tester t) {
+    return
+        t.checkExpect(this.palListFalse.isPalindromeList(), false)
+        && t.checkExpect(this.palListTrue.isDoubledList(), true)
+        && t.checkExpect(this.mt.isPalindromeList(), false);
+  }
+  
 }
