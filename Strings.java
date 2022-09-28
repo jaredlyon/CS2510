@@ -52,8 +52,11 @@ interface ILoString {
   // checks if this list is the same both forwards and backwards
   boolean isPalindromeList();
   
+  // reverses a list
+  ILoString reverse();
+  
   // helper for isPalindromeList
-  boolean isPalindromeListHelper();
+  boolean isPalindromeListHelper(String original);
 }
 
 // to represent an empty list of Strings
@@ -137,12 +140,17 @@ class MtLoString implements ILoString {
 
   // checks if this list is a palindrome
   public boolean isPalindromeList() {
-    return false;
+    return true;
+  }
+  
+  // reverses a list
+  public ILoString reverse() {
+    return this;
   }
 
   // helper for isPalindromeList
-  public boolean isPalindromeListHelper() {
-    return false;
+  public boolean isPalindromeListHelper(String original) {
+    return true;
   }
   
 }
@@ -264,12 +272,19 @@ class ConsLoString implements ILoString {
 
   // checks if this list is a palindrome
   public boolean isPalindromeList() {
-    //noooo idea
+    return this.reverse().isPalindromeListHelper(this.first) &&
+        this.rest.isPalindromeList();
   }
+  
+  // reverses a list
+  public ILoString reverse() {
+    // CREATE A REVERSE METHODS
+  }
+  
 
   // helper for isPalindromeList
-  public boolean isPalindromeListHelper() {
-    //no clue
+  public boolean isPalindromeListHelper(String original) {
+    return this.first.toLowerCase().equals(original.toLowerCase());
   }
   
 }
