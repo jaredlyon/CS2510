@@ -130,9 +130,8 @@ class MtLoString implements ILoString {
   // combines lists alternatively, leaving any extras at the end
   public ILoString interleave(ILoString other) {
     /* fields of other:
-     *  other.first ... String
-     *  other.rest ... ILoString
-     * methods:
+     *  none
+     * methods for other:
      *  other.combine() ... String
      *  other.findAndReplace(String, String) ... ILoString
      *  other.anyDupes() ... boolean
@@ -158,9 +157,8 @@ class MtLoString implements ILoString {
   // combines this sorted listed with another sorted list to create a new sorted list
   public ILoString merge(ILoString other) {
     /* fields of other:
-     *  other.first ... String
-     *  other.rest ... ILoString
-     * methods:
+     *  none
+     * methods for other:
      *  other.combine() ... String
      *  other.findAndReplace(String, String) ... ILoString
      *  other.anyDupes() ... boolean
@@ -215,10 +213,9 @@ class MtLoString implements ILoString {
 
   // helper for reverse method
   public ILoString reverseHelper(ILoString acc) {
-    /* fields of other:
-     *  acc.first ... String
-     *  acc.rest ... ILoString
-     * methods:
+    /* fields of acc:
+     *  none
+     * methods for acc:
      *  acc.combine() ... String
      *  acc.findAndReplace(String, String) ... ILoString
      *  acc.anyDupes() ... boolean
@@ -349,9 +346,8 @@ class ConsLoString implements ILoString {
   // combines lists alternatively, leaving any extras at the end
   public ILoString interleave(ILoString other) {
     /* fields of other:
-     *  other.first ... String
-     *  other.rest ... ILoString
-     * methods:
+     *  none
+     * methods of other:
      *  other.combine() ... String
      *  other.findAndReplace(String, String) ... ILoString
      *  other.anyDupes() ... boolean
@@ -377,9 +373,8 @@ class ConsLoString implements ILoString {
   // combines this sorted listed with another sorted list to create a new sorted list
   public ILoString merge(ILoString other) {
     /* fields of other:
-     *  other.first ... String
-     *  other.rest ... ILoString
-     * methods:
+     *  none
+     * methods for other:
      *  other.combine() ... String
      *  other.findAndReplace(String, String) ... ILoString
      *  other.anyDupes() ... boolean
@@ -443,10 +438,9 @@ class ConsLoString implements ILoString {
 
   // helper for reverse
   public ILoString reverseHelper(ILoString acc) {
-    /* fields of other:
-     *  acc.first ... String
-     *  acc.rest ... ILoString
-     * methods:
+    /* fields of acc:
+     *  none
+     * methods for acc:
      *  acc.combine() ... String
      *  acc.findAndReplace(String, String) ... ILoString
      *  acc.anyDupes() ... boolean
@@ -477,94 +471,183 @@ class ExamplesStrings {
 
   ILoString mt = new MtLoString();
 
-  ILoString mary = new ConsLoString("Mary ", new ConsLoString("had ", new ConsLoString("a ",
-      new ConsLoString("little ", new ConsLoString("lamb.", new MtLoString())))));
-  
-  ILoString maryreverse = new ConsLoString("lamb.", new ConsLoString("little ", new ConsLoString("a ",
-      new ConsLoString("had ", new ConsLoString("Mary ", new MtLoString())))));
+  ILoString mary = new ConsLoString("Mary ",
+      new ConsLoString("had ",
+          new ConsLoString("a ",
+              new ConsLoString("little ",
+                  new ConsLoString("lamb.",
+                      new MtLoString())))));
+
+  ILoString maryreverse = new ConsLoString("lamb.",
+      new ConsLoString("little ",
+          new ConsLoString("a ",
+              new ConsLoString("had ",
+                  new ConsLoString("Mary ",
+                      new MtLoString())))));
 
   ILoString maryDoubled = new ConsLoString("Mary ",
       new ConsLoString("Mary ",
-          new ConsLoString("had ", new ConsLoString("had ", new ConsLoString("a ",
-              new ConsLoString("a ", new ConsLoString("little ", new ConsLoString("little ",
-                  new ConsLoString("lamb.", new ConsLoString("lamb.", new MtLoString()))))))))));
+          new ConsLoString("had ",
+              new ConsLoString("had ",
+                  new ConsLoString("a ",
+                      new ConsLoString("a ",
+                          new ConsLoString("little ",
+                              new ConsLoString("little ",
+                                  new ConsLoString("lamb.",
+                                      new ConsLoString("lamb.",
+                                          new MtLoString()))))))))));
 
-  ILoString marySort = new ConsLoString("a ", new ConsLoString("had ", new ConsLoString("lamb.",
-      new ConsLoString("little ", new ConsLoString("Mary ", new MtLoString())))));
+  ILoString marySort = new ConsLoString("a ",
+      new ConsLoString("had ",
+          new ConsLoString("lamb.",
+              new ConsLoString("little ",
+                  new ConsLoString("Mary ",
+                      new MtLoString())))));
 
-  ILoString johnny = new ConsLoString("Johnny ", new ConsLoString("owned ", new ConsLoString("a ",
-      new ConsLoString("pretty ", new ConsLoString("car.", new MtLoString())))));
+  ILoString johnny = new ConsLoString("Johnny ",
+      new ConsLoString("owned ",
+          new ConsLoString("a ",
+              new ConsLoString("pretty ",
+                  new ConsLoString("car.",
+                      new MtLoString())))));
 
-  ILoString johnnySort = new ConsLoString("a ", new ConsLoString("car.", new ConsLoString("Johnny ",
-      new ConsLoString("owned ", new ConsLoString("pretty ", new MtLoString())))));
+  ILoString johnnySort = new ConsLoString("a ",
+      new ConsLoString("car.",
+          new ConsLoString("Johnny ",
+              new ConsLoString("owned ",
+                  new ConsLoString("pretty ",
+                      new MtLoString())))));
 
   ILoString maryJohnnyMerge = new ConsLoString("a ",
       new ConsLoString("a ",
-          new ConsLoString("car.", new ConsLoString("had ", new ConsLoString("Johnny ",
-              new ConsLoString("lamb.", new ConsLoString("little ", new ConsLoString("Mary ",
-                  new ConsLoString("owned ", new ConsLoString("pretty ", new MtLoString()))))))))));
+          new ConsLoString("car.",
+              new ConsLoString("had ",
+                  new ConsLoString("Johnny ",
+                      new ConsLoString("lamb.",
+                          new ConsLoString("little ",
+                              new ConsLoString("Mary ",
+                                  new ConsLoString("owned ",
+                                      new ConsLoString("pretty ",
+                                          new MtLoString()))))))))));
 
   ILoString maryJohnnyInterleave = new ConsLoString("a ",
       new ConsLoString("a ",
-          new ConsLoString("had ", new ConsLoString("car.", new ConsLoString("lamb.",
-              new ConsLoString("Johnny ", new ConsLoString("little ", new ConsLoString("owned ",
-                  new ConsLoString("Mary ", new ConsLoString("pretty ", new MtLoString()))))))))));
+          new ConsLoString("had ",
+              new ConsLoString("car.",
+                  new ConsLoString("lamb.",
+                      new ConsLoString("Johnny ",
+                          new ConsLoString("little ",
+                              new ConsLoString("owned ",
+                                  new ConsLoString("Mary ",
+                                      new ConsLoString("pretty ",
+                                          new MtLoString()))))))))));
 
-  ILoString list1 = new ConsLoString("bottle", new ConsLoString("bottle", new ConsLoString("water",
-      new ConsLoString("water", new ConsLoString("chair", new MtLoString())))));
-  
-  ILoString list1reverse = new ConsLoString("chair", new ConsLoString("water", new ConsLoString("water",
-      new ConsLoString("bottle", new ConsLoString("bottle", new MtLoString())))));
+  ILoString list1 = new ConsLoString("bottle",
+      new ConsLoString("bottle",
+          new ConsLoString("water",
+              new ConsLoString("water",
+                  new ConsLoString("chair",
+                      new MtLoString())))));
 
-  ILoString list2 = new ConsLoString("water", new ConsLoString("water", new ConsLoString("water",
-      new ConsLoString("water", new ConsLoString("chair", new MtLoString())))));
-  
-  ILoString list2reverse = new ConsLoString("chair", new ConsLoString("water", new ConsLoString("water",
-      new ConsLoString("water", new ConsLoString("water", new MtLoString())))));
+  ILoString list1reverse = new ConsLoString("chair",
+      new ConsLoString("water",
+          new ConsLoString("water",
+              new ConsLoString("bottle",
+                  new ConsLoString("bottle",
+                      new MtLoString())))));
 
-  ILoString list3 = new ConsLoString("bottle", new ConsLoString("water", new ConsLoString("water",
-      new ConsLoString("water", new ConsLoString("chair", new MtLoString())))));
+  ILoString list2 = new ConsLoString("water",
+      new ConsLoString("water",
+          new ConsLoString("water",
+              new ConsLoString("water",
+                  new ConsLoString("chair",
+                      new MtLoString())))));
+
+  ILoString list2reverse = new ConsLoString("chair",
+      new ConsLoString("water",
+          new ConsLoString("water",
+              new ConsLoString("water", 
+                  new ConsLoString("water",
+                      new MtLoString())))));
+
+  ILoString list3 = new ConsLoString("bottle",
+      new ConsLoString("water",
+          new ConsLoString("water",
+              new ConsLoString("water",
+                  new ConsLoString("chair",
+                      new MtLoString())))));
 
   ILoString list4 = new ConsLoString("apple",
-      new ConsLoString("banana", new ConsLoString("orange", new MtLoString())));
+      new ConsLoString("banana",
+          new ConsLoString("orange",
+              new MtLoString())));
 
   ILoString list5 = new ConsLoString("axe",
-      new ConsLoString("beyblade", new ConsLoString("ostensible", new MtLoString())));
+      new ConsLoString("beyblade",
+          new ConsLoString("ostensible",
+              new MtLoString())));
 
   ILoString list45InterleaveMerge = new ConsLoString("apple",
-      new ConsLoString("axe", new ConsLoString("banana", new ConsLoString("beyblade",
-          new ConsLoString("orange", new ConsLoString("ostensible", new MtLoString()))))));
+      new ConsLoString("axe",
+          new ConsLoString("banana",
+              new ConsLoString("beyblade",
+                  new ConsLoString("orange",
+                      new ConsLoString("ostensible",
+                          new MtLoString()))))));
 
   ILoString maryJohnny = new ConsLoString("Mary ",
       new ConsLoString("Johnny ",
           new ConsLoString("had ",
-              new ConsLoString("owned ", new ConsLoString("a ",
-                  new ConsLoString("a ", new ConsLoString("little ", new ConsLoString("pretty ",
-                      new ConsLoString("lamb.", new ConsLoString("car.", new MtLoString()))))))))));
+              new ConsLoString("owned ",
+                  new ConsLoString("a ",
+                      new ConsLoString("a ",
+                          new ConsLoString("little ",
+                              new ConsLoString("pretty ",
+                                  new ConsLoString("lamb.",
+                                      new ConsLoString("car.",
+                                          new MtLoString()))))))))));
 
   ILoString maryMary = new ConsLoString("Mary ",
       new ConsLoString("Mary ",
-          new ConsLoString("had ", new ConsLoString("had ", new ConsLoString("a ",
-              new ConsLoString("a ", new ConsLoString("little ", new ConsLoString("little ",
-                  new ConsLoString("lamb.", new ConsLoString("lamb.", new MtLoString()))))))))));
+          new ConsLoString("had ",
+              new ConsLoString("had ",
+                  new ConsLoString("a ",
+                      new ConsLoString("a ",
+                          new ConsLoString("little ",
+                              new ConsLoString("little ",
+                                  new ConsLoString("lamb.",
+                                      new ConsLoString("lamb.",
+                                          new MtLoString()))))))))));
 
   ILoString maryList4 = new ConsLoString("Mary ",
       new ConsLoString("apple",
           new ConsLoString("had ",
-              new ConsLoString("banana", new ConsLoString("a ", new ConsLoString("orange",
-                  new ConsLoString("little ", new ConsLoString("lamb.", new MtLoString()))))))));
+              new ConsLoString("banana",
+                  new ConsLoString("a ",
+                      new ConsLoString("orange",
+                          new ConsLoString("little ",
+                              new ConsLoString("lamb.",
+                                  new MtLoString()))))))));
 
   ILoString palListFalse = new ConsLoString("Mary ",
       new ConsLoString("apple",
           new ConsLoString("had ",
-              new ConsLoString("banana", new ConsLoString("a ", new ConsLoString("orange",
-                  new ConsLoString("little ", new ConsLoString("lamb.", new MtLoString()))))))));
+              new ConsLoString("banana",
+                  new ConsLoString("a ",
+                      new ConsLoString("orange",
+                          new ConsLoString("little ",
+                              new ConsLoString("lamb.",
+                                  new MtLoString()))))))));
 
   ILoString palListTrue = new ConsLoString("apple",
       new ConsLoString("banana",
           new ConsLoString("orange",
-              new ConsLoString("tomato", new ConsLoString("tomato", new ConsLoString("orange",
-                  new ConsLoString("banana", new ConsLoString("apple", new MtLoString()))))))));
+              new ConsLoString("tomato",
+                  new ConsLoString("tomato",
+                      new ConsLoString("orange",
+                          new ConsLoString("banana",
+                              new ConsLoString("apple",
+                                  new MtLoString()))))))));
 
   // test the method combine for the lists of Strings
   boolean testCombine(Tester t) {
@@ -591,7 +674,7 @@ class ExamplesStrings {
         && t.checkExpect(this.list3.dupeHelper("bottle"), true)
         && t.checkExpect(this.mt.dupeHelper("bottle"), false);
   }
-  
+
   // test the method sort
   boolean testSort(Tester t) {
     return t.checkExpect(this.mary.sort(), marySort)
@@ -606,14 +689,13 @@ class ExamplesStrings {
         && t.checkExpect(this.johnnySort.isSorted(), true)
         && t.checkExpect(this.mt.isSorted(), true);
   }
-  
+
   // test the sortAcc method
-  //boolean testSortAcc(Tester t) {]
-  
-  
-  
-  
-  
+  boolean testSortAcc(Tester t) {
+    return t.checkExpect(this.mary.sortAcc("apple"), false)
+        && t.checkExpect(this.mary.sortAcc("xylophone"), false)
+        && t.checkExpect(this.mt.sortAcc("hello"), true);
+  }
 
   // test the method interleave
   boolean testInterleave(Tester t) {
@@ -636,14 +718,13 @@ class ExamplesStrings {
         && t.checkExpect(this.list4.merge(this.list5), this.list45InterleaveMerge)
         && t.checkExpect(this.mt.merge(this.marySort), this.marySort);
   }
-  
+
   // test the mergeChecker helper method
- // boolean testMergeCheck(Tester t) {}
-  
-  
-  
-  
-  
+  boolean testMergeChecker(Tester t) {
+    return t.checkExpect(this.mary.mergeChecker("Apple"), false)
+        && t.checkExpect(this.mary.mergeChecker("xylophone"), false)
+        && t.checkExpect(this.mt.mergeChecker("hello"), true);
+  }
 
   // test the method reverseConcat
   boolean testReverseConcat(Tester t) {
@@ -659,20 +740,23 @@ class ExamplesStrings {
         && t.checkExpect(this.maryDoubled.isDoubledList(), true)
         && t.checkExpect(this.mt.isDoubledList(), true);
   }
-  
+
   // test the isDoubledListHelper
-  //boolean testIsDoubledListHelper(Tester t) {}
-  
-  
-  
-  
+  boolean testIsDoubledListHelper(Tester t) {
+    return t.checkExpect(this.mary.isDoubledListHelper("water"), false)
+        && t.checkExpect(this.list1.isDoubledListHelper("bottle"), false)
+        && t.checkExpect(this.mt.isDoubledListHelper(""), false);
+  }
+
+
+
   // test the reverse method
   boolean testReverse(Tester t) {
     return t.checkExpect(this.list1.reverse(), this.list1reverse)
         && t.checkExpect(this.mt.reverse(), this.mt)
         && t.checkExpect(this.list2.reverse(), this.list2reverse);
   }
-  
+
   // test the reverseHelper method
   boolean testReverseHelper(Tester t) {
     return t.checkExpect(this.list1.reverseHelper(this.mt), this.list1reverse)
@@ -680,15 +764,11 @@ class ExamplesStrings {
         && t.checkExpect(this.mt.reverseHelper(this.mt), this.mt)
         && t.checkExpect(this.mary.reverseHelper(this.mt), this.maryreverse);
   }
-  
-  
-  
-  
+
   // test the method isPalindromeList
   boolean testIsPalindromeList(Tester t) {
     return t.checkExpect(this.palListFalse.isPalindromeList(), false)
         && t.checkExpect(this.palListTrue.isPalindromeList(), true)
         && t.checkExpect(this.mt.isPalindromeList(), true);
   }
-
 }
