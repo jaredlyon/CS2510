@@ -479,6 +479,9 @@ class ExamplesStrings {
 
   ILoString mary = new ConsLoString("Mary ", new ConsLoString("had ", new ConsLoString("a ",
       new ConsLoString("little ", new ConsLoString("lamb.", new MtLoString())))));
+  
+  ILoString maryreverse = new ConsLoString("lamb.", new ConsLoString("little ", new ConsLoString("a ",
+      new ConsLoString("had ", new ConsLoString("Mary ", new MtLoString())))));
 
   ILoString maryDoubled = new ConsLoString("Mary ",
       new ConsLoString("Mary ",
@@ -582,11 +585,12 @@ class ExamplesStrings {
   }
 
   // test the dupeHelper method
- // boolean testDupeHelper(Tester t) {}
-  
-  
-  
-  
+  boolean testDupeHelper(Tester t) {
+    return t.checkExpect(this.list1.dupeHelper("banana"), false)
+        && t.checkExpect(this.list2.dupeHelper("water"), true)
+        && t.checkExpect(this.list3.dupeHelper("bottle"), true)
+        && t.checkExpect(this.mt.dupeHelper("bottle"), false);
+  }
   
   // test the method sort
   boolean testSort(Tester t) {
@@ -604,7 +608,7 @@ class ExamplesStrings {
   }
   
   // test the sortAcc method
-  //boolean testSortAcc(Tester t) {}
+  //boolean testSortAcc(Tester t) {]
   
   
   
@@ -670,7 +674,12 @@ class ExamplesStrings {
   }
   
   // test the reverseHelper method
-  boolean testReverseHelper(Tester t) {}
+  boolean testReverseHelper(Tester t) {
+    return t.checkExpect(this.list1.reverseHelper(this.mt), this.list1reverse)
+        && t.checkExpect(this.list2.reverseHelper(this.mt), this.list2reverse)
+        && t.checkExpect(this.mt.reverseHelper(this.mt), this.mt)
+        && t.checkExpect(this.mary.reverseHelper(this.mt), this.maryreverse);
+  }
   
   
   
