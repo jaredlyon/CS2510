@@ -41,9 +41,6 @@ interface ILoString {
   // reverses this list for reverseConcat
   String reverseConcat();
 
-  // insert method for the reverseConcat
-  String reverseConcatInsert(String str);
-
   // checks if a list of strings is a series of doubles
   boolean isDoubledList();
 
@@ -81,7 +78,6 @@ class MtLoString implements ILoString {
    *  this.merge(ILoString) ... ILoString
    *  this.mergeChecker(String) ... boolean
    *  this.reverseConcat() ... String
-   *  this.reverseConcatInsert(String) ... String
    *  this.isDoubledList() ... boolean
    *  this.isDoubledListHelper(String) ... boolean
    *  this.isPalindromeList() ... boolean
@@ -149,7 +145,6 @@ class MtLoString implements ILoString {
      *  other.merge(ILoString) ... ILoString
      *  other.mergeChecker(String) ... boolean
      *  other.reverseConcat() ... String
-     *  other.reverseConcatInsert(String) ... String
      *  other.isDoubledList() ... boolean
      *  other.isDoubledListHelper(String) ... boolean
      *  other.isPalindromeList() ... boolean
@@ -178,7 +173,6 @@ class MtLoString implements ILoString {
      *  other.merge(ILoString) ... ILoString
      *  other.mergeChecker(String) ... boolean
      *  other.reverseConcat() ... String
-     *  other.reverseConcatInsert(String) ... String
      *  other.isDoubledList() ... boolean
      *  other.isDoubledListHelper(String) ... boolean
      *  other.isPalindromeList() ... boolean
@@ -197,11 +191,6 @@ class MtLoString implements ILoString {
   // reverses this list for reverseConcat
   public String reverseConcat() {
     return "";
-  }
-
-  // insert method for the reverseConcat
-  public String reverseConcatInsert(String str) {
-    return "" + str;
   }
 
   // checks if this list is made of doubles
@@ -242,7 +231,6 @@ class MtLoString implements ILoString {
      *  acc.merge(ILoString) ... ILoString
      *  acc.mergeChecker(String) ... boolean
      *  acc.reverseConcat() ... String
-     *  acc.reverseConcatInsert(String) ... String
      *  acc.isDoubledList() ... boolean
      *  acc.isDoubledListHelper(String) ... boolean
      *  acc.isPalindromeList() ... boolean
@@ -281,7 +269,6 @@ class ConsLoString implements ILoString {
    *  this.merge(ILoString) ... ILoString
    *  this.mergeChecker(String) ... boolean
    *  this.reverseConcat() ... String
-   *  this.reverseConcatInsert(String) ... String
    *  this.isDoubledList() ... boolean
    *  this.isDoubledListHelper(String) ... boolean
    *  this.isPalindromeList() ... boolean
@@ -303,7 +290,6 @@ class ConsLoString implements ILoString {
    *  this.rest.merge(ILoString) ... ILoString
    *  this.rest.mergeChecker(String) ... boolean
    *  this.rest.reverseConcat() ... String
-   *  this.rest.reverseConcatInsert(String) ... String
    *  this.rest.isDoubledList() ... boolean
    *  this.rest.isDoubledListHelper(String) ... boolean
    *  this.rest.isPalindromeList() ... boolean
@@ -378,7 +364,6 @@ class ConsLoString implements ILoString {
      *  other.merge(ILoString) ... ILoString
      *  other.mergeChecker(String) ... boolean
      *  other.reverseConcat() ... String
-     *  other.reverseConcatInsert(String) ... String
      *  other.isDoubledList() ... boolean
      *  other.isDoubledListHelper(String) ... boolean
      *  other.isPalindromeList() ... boolean
@@ -407,7 +392,6 @@ class ConsLoString implements ILoString {
      *  other.merge(ILoString) ... ILoString
      *  other.mergeChecker(String) ... boolean
      *  other.reverseConcat() ... String
-     *  other.reverseConcatInsert(String) ... String
      *  other.isDoubledList() ... boolean
      *  other.isDoubledListHelper(String) ... boolean
      *  other.isPalindromeList() ... boolean
@@ -431,11 +415,6 @@ class ConsLoString implements ILoString {
   // reverses this list for reverseConcat
   public String reverseConcat() {
     return this.reverse().combine();
-  }
-
-  // insert method for the reverseConcat
-  public String reverseConcatInsert(String str) {
-    return this.first.concat(this.rest.reverseConcatInsert(str));
   }
 
   // checks if this list is composed of pairs
@@ -480,7 +459,6 @@ class ConsLoString implements ILoString {
      *  acc.merge(ILoString) ... ILoString
      *  acc.mergeChecker(String) ... boolean
      *  acc.reverseConcat() ... String
-     *  acc.reverseConcatInsert(String) ... String
      *  acc.isDoubledList() ... boolean
      *  acc.isDoubledListHelper(String) ... boolean
      *  acc.isPalindromeList() ... boolean
@@ -531,9 +509,15 @@ class ExamplesStrings {
 
   ILoString list1 = new ConsLoString("bottle", new ConsLoString("bottle", new ConsLoString("water",
       new ConsLoString("water", new ConsLoString("chair", new MtLoString())))));
+  
+  ILoString list1reverse = new ConsLoString("chair", new ConsLoString("water", new ConsLoString("water",
+      new ConsLoString("bottle", new ConsLoString("bottle", new MtLoString())))));
 
   ILoString list2 = new ConsLoString("water", new ConsLoString("water", new ConsLoString("water",
       new ConsLoString("water", new ConsLoString("chair", new MtLoString())))));
+  
+  ILoString list2reverse = new ConsLoString("chair", new ConsLoString("water", new ConsLoString("water",
+      new ConsLoString("water", new ConsLoString("water", new MtLoString())))));
 
   ILoString list3 = new ConsLoString("bottle", new ConsLoString("water", new ConsLoString("water",
       new ConsLoString("water", new ConsLoString("chair", new MtLoString())))));
@@ -597,6 +581,13 @@ class ExamplesStrings {
         && t.checkExpect(this.list3.anyDupes(), true) && t.checkExpect(this.mt.anyDupes(), false);
   }
 
+  // test the dupeHelper method
+ // boolean testDupeHelper(Tester t) {}
+  
+  
+  
+  
+  
   // test the method sort
   boolean testSort(Tester t) {
     return t.checkExpect(this.mary.sort(), marySort)
@@ -611,6 +602,14 @@ class ExamplesStrings {
         && t.checkExpect(this.johnnySort.isSorted(), true)
         && t.checkExpect(this.mt.isSorted(), true);
   }
+  
+  // test the sortAcc method
+  //boolean testSortAcc(Tester t) {}
+  
+  
+  
+  
+  
 
   // test the method interleave
   boolean testInterleave(Tester t) {
@@ -633,6 +632,14 @@ class ExamplesStrings {
         && t.checkExpect(this.list4.merge(this.list5), this.list45InterleaveMerge)
         && t.checkExpect(this.mt.merge(this.marySort), this.marySort);
   }
+  
+  // test the mergeChecker helper method
+ // boolean testMergeCheck(Tester t) {}
+  
+  
+  
+  
+  
 
   // test the method reverseConcat
   boolean testReverseConcat(Tester t) {
@@ -648,7 +655,26 @@ class ExamplesStrings {
         && t.checkExpect(this.maryDoubled.isDoubledList(), true)
         && t.checkExpect(this.mt.isDoubledList(), true);
   }
-
+  
+  // test the isDoubledListHelper
+  //boolean testIsDoubledListHelper(Tester t) {}
+  
+  
+  
+  
+  // test the reverse method
+  boolean testReverse(Tester t) {
+    return t.checkExpect(this.list1.reverse(), this.list1reverse)
+        && t.checkExpect(this.mt.reverse(), this.mt)
+        && t.checkExpect(this.list2.reverse(), this.list2reverse);
+  }
+  
+  // test the reverseHelper method
+  boolean testReverseHelper(Tester t) {}
+  
+  
+  
+  
   // test the method isPalindromeList
   boolean testIsPalindromeList(Tester t) {
     return t.checkExpect(this.palListFalse.isPalindromeList(), false)
