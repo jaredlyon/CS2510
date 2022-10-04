@@ -82,6 +82,15 @@ class ExamplesTime {
   Time fivePm = new Time(5, 15, false);
   Time sevenPm = new Time(7, 30, false);
   Time elevenPm = new Time(11, 45, false);
+  
+  Time midnightSec = new Time(12, 0, 0);
+  Time oneAmSec = new Time(1, 15, 10);
+  Time fiveAmSec = new Time(5, 30, 20);
+  Time nineAmSec = new Time(9, 45, 30);
+  Time twoPmSec = new Time(14, 0, 40);
+  Time fourPmSec = new Time(16, 15, 50);
+  Time sixPmSec = new Time(18, 30, 59);
+  Time elevenPmSec = new Time(23, 45, 0);
 
   // testing the sameTime method
   boolean testSameTime(Tester t) {
@@ -93,9 +102,17 @@ class ExamplesTime {
         && t.checkExpect(this.threePm.sameTime(threePm), true)
         && t.checkExpect(this.threePm.sameTime(twoAm), false)
         // test first original constructor
-        && t.checkExpect
+        && t.checkExpect(this.oneAmSec.sameTime(elevenPmSec), false)
+        && t.checkExpect(this.oneAmSec.sameTime(oneAmSec), true)
+        && t.checkExpect(this.oneAmSec.sameTime(nineAmSec), false)
+        && t.checkExpect(this.sixPmSec.sameTime(elevenPmSec), false)
+        && t.checkExpect(this.sixPmSec.sameTime(sixPmSec), true)
+        && t.checkExpect(this.sixPmSec.sameTime(oneAmSec), false)
         // test second constructor (without seconds)
-        && t.checkExpect
+        && t.checkExpect(this.midnightSec.sameTime(this.midnight), true)
+        && t.checkExpect(this.midnightSec.sameTime(elevenPm), false)
+        && t.checkExpect(this.midnight.sameTime(elevenPmSec), false)
+        && t.checkExpect(this.elevenPm.sameTime(elevenPmSec), true);
   }
 
   // test first time constructor
