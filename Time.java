@@ -68,7 +68,12 @@ class Utils {
 }
 
 class ExamplesTime {
+  
+  // examples for first constructor
+  
+  // examples for second constructor without seconds
 
+  // examples for third constructor
   Time midnight = new Time(12, 0, true);
   Time twoAm = new Time(2, 15, true);
   Time sixAm = new Time(6, 30,true);
@@ -80,12 +85,17 @@ class ExamplesTime {
 
   // testing the sameTime method
   boolean testSameTime(Tester t) {
+    // test third constructor
     return t.checkExpect(this.twoAm.sameTime(elevenPm), false)
         && t.checkExpect(this.twoAm.sameTime(twoAm), true)
         && t.checkExpect(this.twoAm.sameTime(tenAm), false)
         && t.checkExpect(this.threePm.sameTime(elevenPm), false)
         && t.checkExpect(this.threePm.sameTime(threePm), true)
-        && t.checkExpect(this.threePm.sameTime(twoAm), false);
+        && t.checkExpect(this.threePm.sameTime(twoAm), false)
+        // test first original constructor
+        && t.checkExpect
+        // test second constructor (without seconds)
+        && t.checkExpect
   }
 
   // test first time constructor
