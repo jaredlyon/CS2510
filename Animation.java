@@ -18,6 +18,14 @@ class Dot {
     this.x = rand.nextInt(600);
     this.y = rand.nextInt(400);
   }
+  
+  Dot(int radius, Color c, int seed) {
+    Random rand = new Random(seed);
+    this.radius = radius;
+    this.c = c;
+    this.x = rand.nextInt(600);
+    this.y = rand.nextInt(400);
+  }
 
   Dot(int radius, Color c, int x, int y) {
     this.radius = radius;
@@ -132,17 +140,21 @@ class DotsWorld extends World {
 }
 
 class ExamplesAnimation {
-  Dot d1 = new Dot(10, Color.magenta);
-  Dot d2 = new Dot(10, Color.magenta);
-  Dot d3 = new Dot(10, Color.magenta);
+  Dot d1Rand = new Dot(10, Color.magenta);
+  Dot d2Rand = new Dot(10, Color.magenta);
+  Dot d3Rand = new Dot(10, Color.magenta);
+  
+  Dot d1 = new Dot(10, Color.magenta, 2);
+  Dot d2 = new Dot(10, Color.magenta, 5);
+  Dot d3 = new Dot(10, Color.magenta, 10);
   Dot d4 = new Dot(10, Color.magenta, 10, 10);
   Dot d5 = new Dot(10, Color.magenta, 15, 20);
   Dot d6 = new Dot(10, Color.magenta, 15, 13);
   Dot d7 = new Dot(10, Color.magenta, 20, 23);
   
-  Dot d8 = new Dot(10, Color.green);
-  Dot d9 = new Dot(10, Color.green);
-  Dot d10 = new Dot(10, Color.green);
+  Dot d8 = new Dot(10, Color.green, 2);
+  Dot d9 = new Dot(10, Color.green, 5);
+  Dot d10 = new Dot(10, Color.green, 10);
   Dot d11 = new Dot(10, Color.green, 10, 10);
   Dot d12 = new Dot(10, Color.green, 15, 20);
   Dot d13 = new Dot(10, Color.green, 15, 13);
@@ -154,6 +166,7 @@ class ExamplesAnimation {
   ILoDot lod3 = new ConsLoDot(this.d3, this.lod2);
   ILoDot lod4 = new ConsLoDot(this.d5, new ConsLoDot(this.d4, this.mt));
   ILoDot lod5 = new ConsLoDot(this.d7, new ConsLoDot(this.d6, this.mt));
+  
   
   ILoDot lod6 = new ConsLoDot(this.d8, this.mt);
   ILoDot lod7 = new ConsLoDot(this.d9, this.lod6);
@@ -190,7 +203,6 @@ class ExamplesAnimation {
         && t.checkExpect(this.lod3.recolor(), this.lod8)
         && t.checkExpect(this.lod4.recolor(), this.lod9)
         && t.checkExpect(this.lod5.recolor(), this.lod10);
-            ;
   }
   
   //
