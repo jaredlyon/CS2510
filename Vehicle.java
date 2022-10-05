@@ -1,6 +1,27 @@
 import tester.Tester;
 
 interface IVehicle {
+  
+  /* TEMPLATE
+   * 
+   * fields: none
+   * 
+   * methods:
+   * this.totalRevenue() -- double
+   * this.fuelCost() -- double
+   * this.perPassengerProfit -- double
+   * this.format() -- String
+   * this.sameVehicle(IVehicle) -- boolean
+   * this.isAirplane() -- boolean
+   * this.isTrain() -- boolean
+   * this.isBus() -- boolean
+   * this.sameAirplane(Airplane) -- boolean
+   * this.sameTrain(Train) -- boolean
+   * this.sameBus(Bus) -- boolean
+   *
+   * methods for fields: none
+   */
+  
   // computes the total revenue of this Vehicle
   double totalRevenue();
 
@@ -48,6 +69,30 @@ abstract class AVehicle implements IVehicle {
     this.fuelCapacity = fuelCapacity;
   }
 
+  /* TEMPLATE
+   * 
+   * fields:
+   * this.name -- String
+   * this.passengerCapacity -- int
+   * this.fare -- double
+   * this.fuelCapacity -- int
+   * 
+   * methods:
+   * this.totalRevenue() -- double
+   * this.fuelCost() -- double
+   * this.perPassengerProfit -- double
+   * this.format() -- String
+   * this.isAirplane() -- boolean
+   * this.isTrain() -- boolean
+   * this.isBus() -- boolean
+   * this.sameAirplane(Airplane) -- boolean
+   * this.sameTrain(Train) -- boolean
+   * this.sameBus(Bus) -- boolean
+   *
+   * methods for fields:
+   * none
+   */
+  
   // computes the total revenue of operating this Airplane
   public double totalRevenue() {
     return this.passengerCapacity * this.fare;
@@ -67,36 +112,36 @@ abstract class AVehicle implements IVehicle {
   public String format() {
     return this.name + ", " + this.passengerCapacity;
   }
-
+  
   // is this an airplane?
   public boolean isAirplane() {
     return false;
-  };
+  }
 
   // is this a train?
   public boolean isTrain() {
     return false;
-  };
+  }
 
   // is this a bus?
   public boolean isBus() {
     return false;
-  };
-
+  }
+  
   // is this airplane the same as the given airplane?
   public boolean sameAirplane(Airplane a) {
     return false;
-  };
+  }
 
   // is this train the same as the given airplane?
   public boolean sameTrain(Train t) {
     return false;
-  };
+  }
 
   // is this bus the same as the given bus?
   public boolean sameBus(Bus b) {
     return false;
-  };
+  }
 
 }
 
@@ -111,11 +156,42 @@ class Airplane extends AVehicle {
     this.isWideBody = isWideBody;
   }
 
+  /* TEMPLATE
+   * 
+   * fields:
+   * this.name -- String
+   * this.passengerCapacity -- int
+   * this.fare -- double
+   * this.fuelCapacity -- int
+   * this.code -- String
+   * this.isWideBody -- boolean
+   * 
+   * methods:
+   * this.totalRevenue() -- double
+   * this.fuelCost() -- double
+   * this.perPassengerProfit -- double
+   * this.format() -- String
+   * this.isAirplane() -- boolean
+   * this.isTrain() -- boolean
+   * this.isBus() -- boolean
+   * this.sameAirplane(Airplane) -- boolean
+   * this.sameTrain(Train) -- boolean
+   * this.sameBus(Bus) -- boolean
+   *
+   * methods for fields:
+   * none
+   */
+  
   // computes the cost of fully fueling this Airplane
   public double fuelCost() {
     return this.fuelCapacity * 1.94;
   }
 
+  // is this IVehicle the same as that?
+  public boolean sameVehicle(IVehicle that) {
+    return that.sameAirplane(this);
+  }
+  
   // is this airplane the same as the given one?
   public boolean sameAirplane(Airplane a) {
     return this.name.equals(a.name) 
@@ -124,16 +200,6 @@ class Airplane extends AVehicle {
         && this.fuelCapacity == a.fuelCapacity
         && this.code.equals(a.code)
         && this.isWideBody == a.isWideBody;
-  }
-  
-  // is this IVehicle the same as that?
-  public boolean sameVehicle(IVehicle that) {
-    if (that.isAirplane()) {
-      return that.sameAirplane((Airplane)this);
-    }
-    else {
-      return false;
-    }
   }
 
   //is this a airplane?
@@ -153,6 +219,37 @@ class Train extends AVehicle {
     this.gauge = gauge;
   }
 
+  /* TEMPLATE
+   * 
+   * fields:
+   * this.name -- String
+   * this.passengerCapacity -- int
+   * this.fare -- double
+   * this.fuelCapacity -- int
+   * this.numberOfCars -- int
+   * this.gauge -- int
+   * 
+   * methods:
+   * this.totalRevenue() -- double
+   * this.fuelCost() -- double
+   * this.perPassengerProfit -- double
+   * this.format() -- String
+   * this.isAirplane() -- boolean
+   * this.isTrain() -- boolean
+   * this.isBus() -- boolean
+   * this.sameAirplane(Airplane) -- boolean
+   * this.sameTrain(Train) -- boolean
+   * this.sameBus(Bus) -- boolean
+   *
+   * methods for fields:
+   * none
+   */
+  
+  // is this IVehicle the same as that?
+  public boolean sameVehicle(IVehicle that) {
+    return that.sameTrain(this);
+  }
+  
   // is this train the same as the given one?
   public boolean sameTrain(Train t) {
     return this.name.equals(t.name) 
@@ -161,16 +258,6 @@ class Train extends AVehicle {
         && this.fuelCapacity == t.fuelCapacity
         && this.numberOfCars == t.numberOfCars 
         && this.gauge == t.gauge;
-  }
-  
-  // is this IVehicle the same as that?
-  public boolean sameVehicle(IVehicle that) {
-    if (that.isTrain()) {
-      return that.sameTrain((Train) this);
-    }
-    else {
-      return false;
-    }
   }
 
   // is this a train?
@@ -186,7 +273,37 @@ class Bus extends AVehicle {
     super(name, passengerCapacity, fare, fuelCapacity);
     this.length = length;
   }
+  
+  /* TEMPLATE
+   * 
+   * fields:
+   * this.name -- String
+   * this.passengerCapacity -- int
+   * this.fare -- double
+   * this.fuelCapacity -- int
+   * this.length -- int
+   * 
+   * methods:
+   * this.totalRevenue() -- double
+   * this.fuelCost() -- double
+   * this.perPassengerProfit -- double
+   * this.format() -- String
+   * this.isAirplane() -- boolean
+   * this.isTrain() -- boolean
+   * this.isBus() -- boolean
+   * this.sameAirplane(Airplane) -- boolean
+   * this.sameTrain(Train) -- boolean
+   * this.sameBus(Bus) -- boolean
+   *
+   * methods for fields:
+   * none
+   */
 
+  // is this IVehicle the same as that?
+  public boolean sameVehicle(IVehicle that) {
+    return that.sameBus(this);
+  }
+  
   // is this bus the same as the given one?
   public boolean sameBus(Bus b) {
     return this.name.equals(b.name) 
@@ -194,16 +311,6 @@ class Bus extends AVehicle {
         && this.fare == b.fare
         && this.fuelCapacity == b.fuelCapacity
         && this.length == b.length;
-  }
-
-  // is this IVehicle the same as that?
-  public boolean sameVehicle(IVehicle that) {
-    if (that.isBus()) {
-      return that.sameBus((Bus)this);
-    }
-    else {
-      return false;
-    }
   }
 
   // is this a bus?
