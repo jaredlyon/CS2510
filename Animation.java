@@ -139,6 +139,14 @@ class ExamplesAnimation {
   Dot d5 = new Dot(10, Color.magenta, 15, 20);
   Dot d6 = new Dot(10, Color.magenta, 15, 13);
   Dot d7 = new Dot(10, Color.magenta, 20, 23);
+  
+  Dot d8 = new Dot(10, Color.green);
+  Dot d9 = new Dot(10, Color.green);
+  Dot d10 = new Dot(10, Color.green);
+  Dot d11 = new Dot(10, Color.green, 10, 10);
+  Dot d12 = new Dot(10, Color.green, 15, 20);
+  Dot d13 = new Dot(10, Color.green, 15, 13);
+  Dot d14 = new Dot(10, Color.green, 20, 23);
 
   ILoDot mt = new MtLoDot();
   ILoDot lod1 = new ConsLoDot(this.d1, this.mt);
@@ -146,6 +154,12 @@ class ExamplesAnimation {
   ILoDot lod3 = new ConsLoDot(this.d3, this.lod2);
   ILoDot lod4 = new ConsLoDot(this.d5, new ConsLoDot(this.d4, this.mt));
   ILoDot lod5 = new ConsLoDot(this.d7, new ConsLoDot(this.d6, this.mt));
+  
+  ILoDot lod6 = new ConsLoDot(this.d8, this.mt);
+  ILoDot lod7 = new ConsLoDot(this.d9, this.lod6);
+  ILoDot lod8 = new ConsLoDot(this.d10, this.lod7);
+  ILoDot lod9 = new ConsLoDot(this.d12, new ConsLoDot(this.d11, this.mt));
+  ILoDot lod10 = new ConsLoDot(this.d14, new ConsLoDot(this.d13, this.mt));
 
   //add test for all methods above and any that you add
   boolean testBigBang(Tester t) {
@@ -167,6 +181,16 @@ class ExamplesAnimation {
     return t.checkExpect(this.d4.move(), this.d6)
         && t.checkExpect(this.d5.move(), this.d7)
         && t.checkExpect(this.lod4.move(), this.lod5);
+  }
+  
+  // test recolor method
+  boolean testRecolor(Tester t) {
+    return t.checkExpect(this.lod1.recolor(), this.lod6)
+        && t.checkExpect(this.lod2.recolor(), this.lod7)
+        && t.checkExpect(this.lod3.recolor(), this.lod8)
+        && t.checkExpect(this.lod4.recolor(), this.lod9)
+        && t.checkExpect(this.lod5.recolor(), this.lod10);
+            ;
   }
   
   //
