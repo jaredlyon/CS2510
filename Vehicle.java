@@ -395,23 +395,23 @@ class ExamplesVehicle {
   
   // testing the same airplane method
   boolean testSameAirplane(Tester t) {
-    return t.checkExpect(this.dreamliner.sameAirplane(this.dreamliner), true)
-        && t.checkExpect(this.dreamliner.sameAirplane(this.united), false)
-        && t.checkExpect(this.united.sameAirplane(this.united), true);
+    return t.checkExpect(this.dreamliner.sameAirplane((Airplane)this.dreamliner), true)
+        && t.checkExpect(this.dreamliner.sameAirplane((Airplane)this.united), false)
+        && t.checkExpect(this.united.sameAirplane((Airplane)this.united), true);
   }
   
   // testing the same train method
   boolean testSameTrain(Tester t) {
-    return t.checkExpect(this.commuterRail.sameTrain(this.commuterRail), true)
-    && t.checkExpect(this.commuterRail.sameTrain(this.metroNorth), false)
-    && t.checkExpect(this.metroNorth.sameTrain(this.metroNorth), true);
+    return t.checkExpect(this.commuterRail.sameTrain((Train)this.commuterRail), true)
+    && t.checkExpect(this.commuterRail.sameTrain((Train)this.metroNorth), false)
+    && t.checkExpect(this.metroNorth.sameTrain((Train)this.metroNorth), true);
   }
   
   // testing the same bus method
   boolean testSameBus(Tester t) {
-    return t.checkExpect(this.silverLine.sameBus(this.silverLine), true)
-    && t.checkExpect(this.silverLine.sameBus(this.greyhound), false)
-    && t.checkExpect(this.greyhound.sameBus(this.greyhound), true);
+    return t.checkExpect(this.silverLine.sameBus((Bus)this.silverLine), true)
+    && t.checkExpect(this.silverLine.sameBus((Bus)this.greyhound), false)
+    && t.checkExpect(this.greyhound.sameBus((Bus)this.greyhound), true);
   }
   
   // testing the is airplane method
