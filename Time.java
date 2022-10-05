@@ -1,5 +1,6 @@
 import tester.Tester;
 
+// represents a time of day
 class Time {
   int hour;
   int minute;
@@ -19,7 +20,7 @@ class Time {
     this(hour, minute, 0);
   }
 
-  // am time constructor
+  // time constructor w/ am & pm
   Time(int hour, int minute, boolean isAM) {
     Utils u = new Utils();
 
@@ -32,6 +33,17 @@ class Time {
     this.minute = u.checkRange(minute,  0, 59, "Minute must be between 0 and 59, inclusive");
     this.second = 0;
   }
+  
+  /*
+   * fields:
+   *  this.hour ... int
+   *  this.minute ... int
+   *  this.second ... int
+   * methods:
+   *  this.sameTime(Time) ... boolean
+   * methods for fields:
+   *  none
+   */
 
   public boolean sameTime(Time other) {
     if (this.isAM && other.isAM) {
@@ -69,11 +81,6 @@ class Utils {
 
 class ExamplesTime {
   
-  // examples for first constructor
-  
-  // examples for second constructor without seconds
-
-  // examples for third constructor
   Time midnight = new Time(12, 0, true);
   Time twoAm = new Time(2, 15, true);
   Time sixAm = new Time(6, 30,true);
