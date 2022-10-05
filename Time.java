@@ -48,6 +48,7 @@ class Time {
    *  this.hour ... int
    *  this.minute ... int
    *  this.second ... int
+   *  this.isAM ... boolean
    * methods:
    *  this.sameTime(Time) ... boolean
    * methods for fields:
@@ -61,6 +62,7 @@ class Time {
   }
 }
 
+// contains utility classes
 class Utils {
   //checks if a given number is in the given range
   int checkRange(int n, int low, int high, String message) {
@@ -74,6 +76,7 @@ class Utils {
 
 class ExamplesTime {
 
+  // examples that use isAM boolean
   Time newDay = new Time(12, 0, true);
   Time midDay = new Time(12, 0, false);
   Time twoAm = new Time(2, 15, true);
@@ -84,6 +87,7 @@ class ExamplesTime {
   Time sevenPm = new Time(7, 30, false);
   Time elevenPm = new Time(11, 45, false);
 
+  // examples that use normal/convenience constructors
   Time newDaySec = new Time(0, 0);
   Time midDaySec = new Time(12, 0);
   Time oneAmSec = new Time(1, 15, 10);
