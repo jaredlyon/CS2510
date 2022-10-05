@@ -1,7 +1,7 @@
 import tester.Tester;
 
 interface IVehicle {
-  
+
   /* TEMPLATE
    * 
    * fields: none
@@ -21,7 +21,7 @@ interface IVehicle {
    *
    * methods for fields: none
    */
-  
+
   // computes the total revenue of this Vehicle
   double totalRevenue();
 
@@ -92,7 +92,7 @@ abstract class AVehicle implements IVehicle {
    * methods for fields:
    * none
    */
-  
+
   // computes the total revenue of operating this Airplane
   public double totalRevenue() {
     return this.passengerCapacity * this.fare;
@@ -110,9 +110,9 @@ abstract class AVehicle implements IVehicle {
 
   // produce a String that shows the name and passenger capacity of this Train
   public String format() {
-    return this.name + ", " + this.passengerCapacity;
+    return this.name + ", " + this.passengerCapacity + ".";
   }
-  
+
   // is this an airplane?
   public boolean isAirplane() {
     return false;
@@ -127,7 +127,7 @@ abstract class AVehicle implements IVehicle {
   public boolean isBus() {
     return false;
   }
-  
+
   // is this airplane the same as the given airplane?
   public boolean sameAirplane(Airplane a) {
     return false;
@@ -181,7 +181,7 @@ class Airplane extends AVehicle {
    * methods for fields:
    * none
    */
-  
+
   // computes the cost of fully fueling this Airplane
   public double fuelCost() {
     return this.fuelCapacity * 1.94;
@@ -191,7 +191,7 @@ class Airplane extends AVehicle {
   public boolean sameVehicle(IVehicle that) {
     return that.sameAirplane(this);
   }
-  
+
   // is this airplane the same as the given one?
   public boolean sameAirplane(Airplane a) {
     return this.name.equals(a.name) 
@@ -244,12 +244,12 @@ class Train extends AVehicle {
    * methods for fields:
    * none
    */
-  
+
   // is this IVehicle the same as that?
   public boolean sameVehicle(IVehicle that) {
     return that.sameTrain(this);
   }
-  
+
   // is this train the same as the given one?
   public boolean sameTrain(Train t) {
     return this.name.equals(t.name) 
@@ -273,7 +273,7 @@ class Bus extends AVehicle {
     super(name, passengerCapacity, fare, fuelCapacity);
     this.length = length;
   }
-  
+
   /* TEMPLATE
    * 
    * fields:
@@ -303,7 +303,7 @@ class Bus extends AVehicle {
   public boolean sameVehicle(IVehicle that) {
     return that.sameBus(this);
   }
-  
+
   // is this bus the same as the given one?
   public boolean sameBus(Bus b) {
     return this.name.equals(b.name) 
@@ -320,7 +320,7 @@ class Bus extends AVehicle {
 }
 
 class ExamplesVehicle {
-  
+
   IVehicle dreamliner = new Airplane("Boeing 787", 242, 835.0, 33340, "B788", false);
   IVehicle united = new Airplane("Airbus A380", 196, 760.0, 30000, "D429", true);
   IVehicle commuterRail = new Train("MPI HSP46", 500, 11.50, 2000, 6, 1435);
@@ -366,12 +366,12 @@ class ExamplesVehicle {
 
   // testing the format method
   boolean testFormat(Tester t) {
-    return t.checkExpect(this.dreamliner.format(), "Boeing 787, 242")
-        && t.checkExpect(this.united.format(), "Airbus A380, 196")
-        && t.checkExpect(this.commuterRail.format(), "MPI HSP46, 500")
-        && t.checkExpect(this.metroNorth.format(), "M8, 1000")
-        && t.checkExpect(this.silverLine.format(), "Neoplan AN460LF, 77")
-        && t.checkExpect(this.greyhound.format(), "D4505, 64");
+    return t.checkExpect(this.dreamliner.format(), "Boeing 787, 242.")
+        && t.checkExpect(this.united.format(), "Airbus A380, 196.")
+        && t.checkExpect(this.commuterRail.format(), "MPI HSP46, 500.")
+        && t.checkExpect(this.metroNorth.format(), "M8, 1000.")
+        && t.checkExpect(this.silverLine.format(), "Neoplan AN460LF, 77.")
+        && t.checkExpect(this.greyhound.format(), "D4505, 64.");
   }
 
   // testing the same vehicle method
@@ -392,28 +392,28 @@ class ExamplesVehicle {
         && t.checkExpect(this.metroNorth.sameVehicle(this.metroNorth), true)
         && t.checkExpect(this.greyhound.sameVehicle(this.greyhound), true);
   }
-  
+
   // testing the same airplane method
   boolean testSameAirplane(Tester t) {
     return t.checkExpect(this.dreamliner.sameAirplane((Airplane)this.dreamliner), true)
         && t.checkExpect(this.dreamliner.sameAirplane((Airplane)this.united), false)
         && t.checkExpect(this.united.sameAirplane((Airplane)this.united), true);
   }
-  
+
   // testing the same train method
   boolean testSameTrain(Tester t) {
     return t.checkExpect(this.commuterRail.sameTrain((Train)this.commuterRail), true)
-    && t.checkExpect(this.commuterRail.sameTrain((Train)this.metroNorth), false)
-    && t.checkExpect(this.metroNorth.sameTrain((Train)this.metroNorth), true);
+        && t.checkExpect(this.commuterRail.sameTrain((Train)this.metroNorth), false)
+        && t.checkExpect(this.metroNorth.sameTrain((Train)this.metroNorth), true);
   }
-  
+
   // testing the same bus method
   boolean testSameBus(Tester t) {
     return t.checkExpect(this.silverLine.sameBus((Bus)this.silverLine), true)
-    && t.checkExpect(this.silverLine.sameBus((Bus)this.greyhound), false)
-    && t.checkExpect(this.greyhound.sameBus((Bus)this.greyhound), true);
+        && t.checkExpect(this.silverLine.sameBus((Bus)this.greyhound), false)
+        && t.checkExpect(this.greyhound.sameBus((Bus)this.greyhound), true);
   }
-  
+
   // testing the is airplane method
   boolean testIsAirplane(Tester t) {
     return t.checkExpect(this.united.isAirplane(), true)
@@ -423,7 +423,7 @@ class ExamplesVehicle {
         && t.checkExpect(this.silverLine.isAirplane(), false)
         && t.checkExpect(this.greyhound.isAirplane(), false);
   }
-  
+
   // testing the is train method
   boolean testIsTrain(Tester t) {
     return t.checkExpect(this.united.isTrain(), false)
@@ -433,7 +433,7 @@ class ExamplesVehicle {
         && t.checkExpect(this.silverLine.isTrain(), false)
         && t.checkExpect(this.greyhound.isTrain(), false);
   }
-  
+
   // testing the is bus method
   boolean testIsBus(Tester t) {
     return t.checkExpect(this.united.isBus(), false)
