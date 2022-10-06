@@ -248,6 +248,15 @@ class ExamplesAnimation {
   Dot d12 = new Dot(10, Color.green, 15, 20);
   Dot d13 = new Dot(10, Color.green, 15, 13);
   Dot d14 = new Dot(10, Color.green, 20, 23);
+  
+  Dot dm4 = new Dot(10, Color.magenta, 4);
+  Dot dm3 = new Dot(10, Color.magenta, this.d3.x + 5, this.d3.y + 3);
+  Dot dm2 = new Dot(10, Color.magenta, this.d2.x + 5, this.d2.y + 3);
+  Dot dm1 = new Dot(10, Color.magenta, this.d1.x + 5, this.d1.y + 3);
+  
+  ILoDot lodm1 =  new ConsLoDot(this.dm3,
+                     new ConsLoDot(this.dm2,
+                         new ConsLoDot(this.dm1, new MtLoDot())));
 
   ILoDot mt = new MtLoDot();
   ILoDot lod1 = new ConsLoDot(this.d1, this.mt);
@@ -293,7 +302,7 @@ class ExamplesAnimation {
   boolean testMove(Tester t) {
     return t.checkExpect(this.d4.move(), this.d6) 
         && t.checkExpect(this.d5.move(), this.d7)
-        && t.checkExpect(this.lod3.move(), this.lod4)
+        && t.checkExpect(this.lod3.move(), this.lodm1)
         && t.checkExpect(this.lod4.move(), this.lod5);
   }
 
@@ -319,7 +328,7 @@ class ExamplesAnimation {
 
   // test onTick method
   boolean testOnTick(Tester t) {
-    return t.checkExpect(this.dw1.onTick(), new DotsWorld((new ConsLoDot(new Dot(10, Color.magenta), this.dw1.dots)).move()));
+    return t.checkExpect(this.dw1.onTick(), new DotsWorld((new ConsLoDot(new Dot(10, Color.magenta, 10), this.dw1.dots)).move()));
   }
   
   // test onKeyEvent method
