@@ -13,7 +13,8 @@ interface IList<T> {
   IList<T> filter(Predicate<T> pred);
   <U> IList<U> map(Function<T,U> converter);
   <U> U fold(BiFunction<T,U,U> converter,U initial);
-  IList<T> zip(IList<T> t, Function<T,T> zipper);  
+  IList<T> zip(IList<T> t, Function<T,T> zipper)
+  IList<T> zipHelper(IList<T> t, Function<T,T> zipper);  
 }
 
 class MtList<T> implements IList<T> {
