@@ -75,3 +75,21 @@ class Node<T> extends ABST<T> {
     this.right = right;
   }
 }
+
+
+class ExamplesBooks {
+  
+  Book gatsby = new Book("The Great Gatsby", "F. Scott Fitzgerald", 20);
+  Book button = new Book("The Curious Case of Benjamin Button", "F. Scott Fitzgerald", 25);
+  Book catcher = new Book("Catcher in the Rye", "J.D. Salinger", 10);
+  Book prejudice = new Book("Pride and Prejudice", "Jane Austen", 40);
+  Book mockingbird = new Book("To Kill a Mockingbird", "Harper Lee", 45);
+  Book watchman = new Book("Go Set a Watchman", "Harper Lee", 10);
+  Book eightyfour = new Book("1984", "George Orwell", 20);
+  Book animal = new Book("Animal Farm", "George Orwell", 15);
+  Book it = new Book("It", "Stephen King", 60);
+  Book misery = new Book("Misery", "Stephen King", 45);
+  Book hamlet = new Book("Hamlet", "William Shakespeare", 35);
+  Book romeo = new Book("Romeo and Juliet", "William Shakespeare", 40);
+  
+}
