@@ -364,4 +364,32 @@ class ExamplesBooks {
   // level 1
   ABST<Book> n1_1 = new Node<Book>(new BooksByPrice(), this.romeo, this.n2_1, this.n2_2);
   
+  
+  // tests for insert method
+  boolean testInsert(Tester t) {
+    return t.checkExpect(this.leaf.insert(new BooksByPrice(), this.catcher), this.nodeCatcher)
+        && t.checkExpect(this.n3_1.insert(new BooksByPrice(), this.catcher), 
+            new Node<Book>(new BooksByPrice(), this.watchman, this.nodeCatcher, this.leaf))
+        && t.checkExpect(this.n2_1.insert(new BooksByPrice(), this.mockingbird), 
+            new Node<Book>(new BooksByPrice(), this.misery, this.n3_1, this.nodeMockingbird));
+  }
+  
+  // tests for present method
+  boolean testPresent(Tester t) {
+    return t.checkExpect(this.n1_1.present(this.misery), true)
+        && t.checkExpect(this.n1_1.present(this.watchman), true)
+        && t.checkExpect(this.n1_1.present(this.prejudice), false)
+        && t.checkExpect(this.n1_1.present(this.gatsby), false)
+        && t.checkExpect(this.leaf.present(this.misery), false);
+  }
+  
+  // tests for getLeftmost
+  boolean testGetLeftmost(Tester t) {
+    return t.checkExpect(this.n1_1.getLeftmost(), this.watchman)
+        && t.checkExpect(this.n2_2.getLeftmost(), this.animal)
+        && t.checkExpect(this.n3_4.getLeftmost(), this.it)
+        && t.checkException(this.leaf.getLeftmost(), null, "No leftmost item of an empty tree", null);
+  }
+  
+  
 }
