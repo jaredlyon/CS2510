@@ -279,7 +279,7 @@ class ExamplesBooks {
   // level 1
   ABST<Book> n1_1 = new Node<Book>(new BooksByPrice(), this.romeo, this.n2_1, this.n2_2);
 
-  // tree for testInsert
+  // price tree for testInsert
   // level 4
   ABST<Book> n4_1_insert = new Node<Book>(new BooksByPrice(), this.gatsby, this.leaf, this.leaf);  
 
@@ -295,7 +295,7 @@ class ExamplesBooks {
   // level 1
   ABST<Book> n1_1_insert = new Node<Book>(new BooksByPrice(), this.romeo, this.n2_1_insert, this.n2_2_insert);
 
-  // tree for getRight
+  // price tree for getRight
   // level 3
   ABST<Book> n3_3_right = new Node<Book>(new BooksByPrice(), this.animal, this.leaf, this.leaf);
   ABST<Book> n3_4_right = new Node<Book>(new BooksByPrice(), this.it, this.leaf, this.leaf);
@@ -306,10 +306,41 @@ class ExamplesBooks {
 
   // level 1
   ABST<Book> n1_1_right = new Node<Book>(new BooksByPrice(), this.romeo, this.n2_1_right, this.n2_2_right);
+  
+  // make a tree by book title
+  // level 3
+  ABST<Book> leaf_title = new Leaf<Book>(new BooksByTitle());
+  ABST<Book> n3_1_title = new Node<Book>(new BooksByTitle(), this.animal, this.leaf_title, this.leaf_title);
+  ABST<Book> n3_2_title = new Node<Book>(new BooksByTitle(), this.hamlet, this.leaf_title, this.leaf_title);
+  ABST<Book> n3_3_title = new Node<Book>(new BooksByTitle(), this.romeo, this.leaf_title, this.leaf_title);
+  ABST<Book> n3_4_title = new Node<Book>(new BooksByTitle(), this.mockingbird, this.leaf_title, this.leaf_title);
+  // level 2
+  ABST<Book> n2_1_title = new Node<Book>(new BooksByTitle(), this.watchman, this.n3_1_title, this.n3_2_title);
+  ABST<Book> n2_2_title = new Node<Book>(new BooksByTitle(), this.gatsby, this.n3_3_title, this.n3_4_title);
+  // level 1
+  ABST<Book> n1_1_title = new Node<Book>(new BooksByTitle(), this.misery, this.n2_1_title, this.n2_2_title);
+  
+  // title tree for testInsert
+  // level 4
+  ABST<Book> n4_4_title_insert = new Node<Book>(new BooksByTitle(), this.it, this.leaf_title, this.leaf_title);
+  // level 3
+  ABST<Book> n3_2_title_insert = new Node<Book>(new BooksByTitle(), this.hamlet, this.leaf_title, this.n4_4_title_insert);
+  // level 2
+  ABST<Book> n2_1_title_insert = new Node<Book>(new BooksByTitle(), this.watchman, this.n3_1_title, this.n3_2_title_insert);
+  // level 1
+  ABST<Book> n1_1_title_insert = new Node<Book>(new BooksByTitle(), this.misery, this.n2_1_title_insert, this.n2_2_title);
+  
+  // title tree for getRight
+  // level 2
+  ABST<Book> n2_1_title_getRight = new Node<Book>(new BooksByTitle(), this.watchman, this.leaf_title, this.n3_2_title);
+  // level 1
+  ABST<Book> n1_1_title_getRight = new Node<Book>(new BooksByTitle(), this.misery, this.n2_1_title_getRight, this.n2_2_title);
+  
 
   // tests for insert method
   boolean testInsert(Tester t) {
-    return t.checkExpect(this.n1_1.insert(this.gatsby), this.n1_1_insert);
+    return t.checkExpect(this.n1_1.insert(this.gatsby), this.n1_1_insert)
+        && t.checkExpect(this.n1_1_title.insert(this.it), this.n1_1_title_insert);
   }
 
   // tests for present method
@@ -318,7 +349,11 @@ class ExamplesBooks {
         && t.checkExpect(this.n1_1.present(this.watchman), true)
         && t.checkExpect(this.leaf.present(this.misery), false)
         && t.checkExpect(this.n1_1.present(this.prejudice), false)
-        && t.checkExpect(this.n1_1.present(this.gatsby), false);
+        && t.checkExpect(this.n1_1.present(this.gatsby), false)
+        && t.checkExpect(this.n1_1_title.present(this.gatsby), true)
+        && t.checkExpect(this.n1_1_title.present(this.eightyfour), false)
+        && t.checkExpect(this.n1_1_title.present(this.prejudice), false)
+        && t.checkExpect(this.leaf_title.present(this.eightyfour), false);
   }
 
   // tests for getLeftmost
@@ -326,13 +361,17 @@ class ExamplesBooks {
     return t.checkExpect(this.n1_1.getLeftmost(), this.watchman)
         && t.checkExpect(this.n2_2.getLeftmost(), this.animal)
         && t.checkExpect(this.n3_4.getLeftmost(), this.it)
+        && t.checkExpect(this.n1_1_title.getLeftmost(), this.animal)
+        && t.checkExpect(this.n2_2_title.getLeftmost(), this.romeo)
+        && t.checkExpect(this.n3_4_title.getLeftmost(), this.mockingbird)
         && t.checkException(new RuntimeException("No leftmost item of an empty tree"), this.leaf, "getLeftmost");
   }
 
 //  //tests for getRight
 //  boolean testGetRight(Tester t) {
-//    return t.checkExpect(this.n2_2.getRight(), this.n3_4)
+//    return t.checkExpect(this.n2_2.getRight(), this.n2_2_right)          // this test returned the right node (n3_4), but i changed it so it would return everything but the left (including current nodes data)
 //        && t.checkExpect(this.n1_1.getRight(), this.n1_1_right)
+//        && t.checkExpect(this.n1_1.title.getRight(), this.n1_1_title_getRight)
 //        && t.checkException(new RuntimeException("No right of an empty tree"), this.leaf, "getRight");
 //  }
 //
@@ -340,14 +379,22 @@ class ExamplesBooks {
 //  boolean testSameTree(Tester t) {
 //    return t.checkExpect(this.n2_2.sameTree(this.n2_2), true)
 //        && t.checkExpect(this.n2_2.sameTree(this.n1_1), false)
-//        && t.checkExpect(this.n2_2.sameTree(this.leaf), false);
+//        && t.checkExpect(this.n2_2.sameTree(this.leaf), false)
+//        && t.checkExpect(this.n1_1_title.sameTree(this.n1_1_title), true)
+//        && t.checkExpect(this.n1_1_title.sameTree(this.n2_2_title), false)
+//        && t.checkExpect(this.n2_1_title.sameTree(this.n1_1_title), false)
+//        && t.checkExpect(this.n1_1_title.sameTree(this.leaf_title), false);
 //  }
 //
 //  //tests for sameNode
 //  boolean testSameNode(Tester t) {
 //    return t.checkExpect(this.n2_2.sameNode(this.n2_2), true)
 //        && t.checkExpect(this.n2_2.sameNode(this.n1_1), false)
-//        && t.checkExpect(this.n2_2.sameNode(this.leaf), false);
+//        && t.checkExpect(this.n2_2.sameNode(this.leaf), false)
+//        && t.checkExpect(this.n1_1_title.sameTree(this.n1_1_title), true)
+//        && t.checkExpect(this.n1_1_title.sameTree(this.n2_2_title), false)
+//        && t.checkExpect(this.n2_1_title.sameTree(this.n1_1_title), false)
+//        && t.checkExpect(this.n1_1_title.sameTree(this.leaf_title), false);
 //  }
 //
 //  //tests for sameData
@@ -355,24 +402,37 @@ class ExamplesBooks {
 //    return t.checkExpect(this.n2_2.sameData(this.n2_2), true)
 //        && t.checkExpect(this.n2_2.sameData(this.n1_1), true)
 //        && t.checkExpect(this.n2_2.sameData(this.leaf), true)
-//        && t.checkExpect(this.leaf.sameData(this.n2_2), false);
+//        && t.checkExpect(this.leaf.sameData(this.n2_2), false)
+//        && t.checkExpect(this.n1_1_title.sameData(this.n1_1_title), true)
+//        && t.checkExpect(this.n1_1_title.sameData(this.n2_2_title), false)
+//        && t.checkExpect(this.n2_1_title.sameData(this.n1_1_title), false)
+//        && t.checkExpect(this.n1_1_title.sameData(this.leaf_title), false);
 //  }
 //
 //  //tests for inTree
 //  boolean testInTree(Tester t) {
 //    return t.checkExpect(this.n2_2.inTree(this.n2_2), true)
 //        && t.checkExpect(this.n2_2.inTree(this.n1_1), false)
-//        && t.checkExpect(this.n2_2.inTree(this.leaf), false);
+//        && t.checkExpect(this.n2_2.inTree(this.leaf), false)
+//        && t.checkExpect(this.n1_1_title.inTree(this.n1_1_title), true)
+//        && t.checkExpect(this.n1_1_title.inTree(this.n2_2_title), false)
+//        && t.checkExpect(this.n2_1_title.inTree(this.n1_1_title), false)
+//        && t.checkExpect(this.n1_1_title.inTree(this.leaf_title), false);
 //  }
 //
 //  //tests for buildList
 //  boolean testBuildList(Tester t) {
 //    return t.checkExpect(this.n2_2.buildList(),
-//        new ConsList<Book>(this.animal,
-//            new ConsList<Book>(this.hamlet,
-//                new ConsList<Book>(this.it,
+//            new ConsList<Book>(this.animal,
+//               new ConsList<Book>(this.hamlet,
+//                  new ConsList<Book>(this.it,
 //                    new MtList<Book>()))))
-//        && t.checkExpect(this.leaf.buildList(), new MtList<Book>());
+//        && t.checkExpect(this.leaf.buildList(), new MtList<Book>())
+//        && t.checkExpect(this.n2_1_title.buildList(),
+//             new ConsList<Book>(this.animal,
+//               new ConsList<Book>(this.watchman,
+//                 new ConsList<Book>(this.hamlet,
+//                   new MtList<Book>()))));
 //  }
 
 }
