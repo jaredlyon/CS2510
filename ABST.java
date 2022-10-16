@@ -2,7 +2,7 @@ import tester.Tester;
 import java.util.Comparator;
 
 interface IList<T> {
-  
+
 }
 
 class MtList<T> implements IList<T> {
@@ -13,7 +13,7 @@ class MtList<T> implements IList<T> {
 class ConsList<T> implements IList<T> {
   T first;
   IList<T> rest;
-  
+
   ConsList(T first, IList<T> rest) {
     this.first = first;
     this.rest = rest;
@@ -28,6 +28,13 @@ class Book {
     this.title = title;
     this.author = author;
     this.price = price;
+  }
+
+  // checks if this book is the same the given book
+  public boolean sameBook(Book bk) {
+    return this.title.equals(bk.title)
+        && this.author.equals(bk.title)
+        && this.price == bk.price;
   }
 }
 
@@ -112,7 +119,7 @@ class Leaf<T> extends ABST<T> {
   public T getLeftmost() {
     throw new RuntimeException("No leftmost item of an empty tree");
   }
-  
+
   // checks if this item is the leftmost item in this tree
   public T leftHelper(T data) {
     return data;
@@ -122,7 +129,7 @@ class Leaf<T> extends ABST<T> {
   public ABST<T> getRight() {
     throw new RuntimeException("No right of an empty tree");
   }
-  
+
   // helps getRight
   public ABST<T> rightHelper(ABST<T> tree) {
     return tree;
@@ -192,7 +199,7 @@ class Node<T> extends ABST<T> {
   public T getLeftmost() {
     return this.left.leftHelper(this.data);
   }
-  
+
   // checks if this item is the leftmost item in this tree
   public T leftHelper(T data) {
     return this.left.leftHelper(this.data);
@@ -200,13 +207,9 @@ class Node<T> extends ABST<T> {
 
   // gets the right side of this tree
   public ABST<T> getRight() {
-    return 
+    return new Node<T>(this.order, this.data, this.left.rightHelper(this.left), this.right);
   }
-  
-  // helps getRight
-  public ABST<T> rightHelper(ABST<T> tree) {
-    
-  }
+
 
   // checks if this tree is the same as the given one
   public boolean sameTree(ABST<T> tree) {
@@ -241,6 +244,7 @@ class Node<T> extends ABST<T> {
   public IList<T> buildHelper() {
     return new ConsList<T>(this.left.buildList(), this.right.buildList());
   }
+  
 }
 
 
@@ -274,11 +278,11 @@ class ExamplesBooks {
 
   // level 1
   ABST<Book> n1_1 = new Node<Book>(new BooksByPrice(), this.romeo, this.n2_1, this.n2_2);
-  
+
   // tree for testInsert
   // level 4
   ABST<Book> n4_1_insert = new Node<Book>(new BooksByPrice(), this.gatsby, this.leaf, this.leaf);  
-  
+
   // level 3
   ABST<Book> n3_1_insert = new Node<Book>(new BooksByPrice(), this.watchman, this.n4_1_insert, this.leaf);
   ABST<Book> n3_3_insert = new Node<Book>(new BooksByPrice(), this.animal, this.leaf, this.leaf);
@@ -289,8 +293,19 @@ class ExamplesBooks {
   ABST<Book> n2_2_insert = new Node<Book>(new BooksByPrice(), this.hamlet, this.n3_3_insert, this.n3_4_insert);
 
   // level 1
-  ABST<Book> n1_1_insert = new Node<Book>(new BooksByPrice(), this.romeo, this.n2_1_insert, this.n2_2_insert);  
+  ABST<Book> n1_1_insert = new Node<Book>(new BooksByPrice(), this.romeo, this.n2_1_insert, this.n2_2_insert);
 
+  // tree for getRight
+  // level 3
+  ABST<Book> n3_3_right = new Node<Book>(new BooksByPrice(), this.animal, this.leaf, this.leaf);
+  ABST<Book> n3_4_right = new Node<Book>(new BooksByPrice(), this.it, this.leaf, this.leaf);
+
+  // level 2
+  ABST<Book> n2_1_right = new Node<Book>(new BooksByPrice(), this.misery, this.leaf, this.leaf);
+  ABST<Book> n2_2_right = new Node<Book>(new BooksByPrice(), this.hamlet, this.n3_3_right, this.n3_4_right);
+
+  // level 1
+  ABST<Book> n1_1_right = new Node<Book>(new BooksByPrice(), this.romeo, this.n2_1_right, this.n2_2_right);
 
   // tests for insert method
   boolean testInsert(Tester t) {
@@ -314,42 +329,43 @@ class ExamplesBooks {
         && t.checkException(new RuntimeException("No leftmost item of an empty tree"), this.leaf, "getLeftmost");
   }
 
-  //tests for getRight
+//  //tests for getRight
 //  boolean testGetRight(Tester t) {
-//    return t.checkExpect(this.n2_2.getRight(), this.it)
+//    return t.checkExpect(this.n2_2.getRight(), this.n3_4)
+//        && t.checkExpect(this.n1_1.getRight(), this.n1_1_right)
 //        && t.checkException(new RuntimeException("No right of an empty tree"), this.leaf, "getRight");
 //  }
-
-  //tests for sameTree
-  boolean testSameTree(Tester t) {
-    return t.checkExpect(this.n2_2.sameTree(this.n2_2), true)
-        && t.checkExpect(this.n2_2.sameTree(this.n1_1), false)
-        && t.checkExpect(this.n2_2.sameTree(this.leaf), false);
-  }
-
-  //tests for sameNode
-  boolean testSameNode(Tester t) {
-    return t.checkExpect(this.n2_2.sameNode(this.n2_2), true)
-        && t.checkExpect(this.n2_2.sameNode(this.n1_1), false)
-        && t.checkExpect(this.n2_2.sameNode(this.leaf), false);
-  }
-
-  //tests for sameData
-  boolean testSameData(Tester t) {
-    return t.checkExpect(this.n2_2.sameData(this.n2_2), true)
-        && t.checkExpect(this.n2_2.sameData(this.n1_1), true)
-        && t.checkExpect(this.n2_2.sameData(this.leaf), true)
-        && t.checkExpect(this.leaf.sameData(this.n2_2), false);
-  }
-  
-  //tests for inTree
-  boolean testInTree(Tester t) {
-    return t.checkExpect(this.n2_2.inTree(this.n2_2), true)
-        && t.checkExpect(this.n2_2.inTree(this.n1_1), false)
-        && t.checkExpect(this.n2_2.inTree(this.leaf), false);
-  }
-
-  //tests for buildList
+//
+//  //tests for sameTree
+//  boolean testSameTree(Tester t) {
+//    return t.checkExpect(this.n2_2.sameTree(this.n2_2), true)
+//        && t.checkExpect(this.n2_2.sameTree(this.n1_1), false)
+//        && t.checkExpect(this.n2_2.sameTree(this.leaf), false);
+//  }
+//
+//  //tests for sameNode
+//  boolean testSameNode(Tester t) {
+//    return t.checkExpect(this.n2_2.sameNode(this.n2_2), true)
+//        && t.checkExpect(this.n2_2.sameNode(this.n1_1), false)
+//        && t.checkExpect(this.n2_2.sameNode(this.leaf), false);
+//  }
+//
+//  //tests for sameData
+//  boolean testSameData(Tester t) {
+//    return t.checkExpect(this.n2_2.sameData(this.n2_2), true)
+//        && t.checkExpect(this.n2_2.sameData(this.n1_1), true)
+//        && t.checkExpect(this.n2_2.sameData(this.leaf), true)
+//        && t.checkExpect(this.leaf.sameData(this.n2_2), false);
+//  }
+//
+//  //tests for inTree
+//  boolean testInTree(Tester t) {
+//    return t.checkExpect(this.n2_2.inTree(this.n2_2), true)
+//        && t.checkExpect(this.n2_2.inTree(this.n1_1), false)
+//        && t.checkExpect(this.n2_2.inTree(this.leaf), false);
+//  }
+//
+//  //tests for buildList
 //  boolean testBuildList(Tester t) {
 //    return t.checkExpect(this.n2_2.buildList(),
 //        new ConsList<Book>(this.animal,
