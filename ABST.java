@@ -1,15 +1,5 @@
 import tester.Tester;
 import java.util.Comparator;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Predicate;
-
-import tester.Tester;
-
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.Comparator;
 
 interface IList<T> {
   
@@ -74,7 +64,7 @@ class BooksByPrice implements Comparator<Book> {
 
 interface IBST<T> {
   // inserts an item into the correct place
-  ABST<T> insert(Comparator<T> comp, T data);
+  ABST<T> insert(T data);
   // checks if an item in this tree has the given data
   boolean present(T data);
   // gets the leftmost item in this tree
@@ -112,7 +102,7 @@ class Leaf<T> extends ABST<T> {
   }
 
   // inserts an item into the correct place
-  public ABST<T> insert(Comparator<T> comp, T data) {
+  public ABST<T> insert(T data) {
     return this;
   }
 
@@ -191,7 +181,7 @@ class Node<T> extends ABST<T> {
 
   // checks if an item in this tree has the given data
   public boolean present(T data) {
-    return (this.order.compare(this.data, data) == 0) 
+    return (this.order.compare(data, this.data) == 0) 
         || this.left.present(data)
         || this.right.present(data);
   } 
@@ -259,7 +249,7 @@ class ExamplesBooks {
   Book gatsby = new Book("The Great Gatsby", "F. Scott Fitzgerald", 20);
   Book button = new Book("The Curious Case of Benjamin Button", "F. Scott Fitzgerald", 25);
   Book catcher = new Book("Catcher in the Rye", "J.D. Salinger", 10);
-  Book prejudice = new Book("Pride and Prejudice", "Jane Austen", 40);
+  Book prejudice = new Book("Pride and Prejudice", "Jane Austen", 80);
   Book mockingbird = new Book("To Kill a Mockingbird", "Harper Lee", 45);
   Book watchman = new Book("Go Set a Watchman", "Harper Lee", 30);
   Book eightyfour = new Book("1984", "George Orwell", 20);
@@ -282,25 +272,24 @@ class ExamplesBooks {
 
   // level 1
   ABST<Book> n1_1 = new Node<Book>(new BooksByPrice(), this.romeo, this.n2_1, this.n2_2);
+  
+  // trees for testInsert
+  
 
 
-//  // tests for insert method
-//  boolean testInsert(Tester t) {
-//    return t.checkExpect(this.leaf.insert(new BooksByPrice(), this.catcher), this.nodeCatcher)
-//        && t.checkExpect(this.n3_1.insert(new BooksByPrice(), this.catcher), 
-//            new Node<Book>(new BooksByPrice(), this.watchman, this.nodeCatcher, this.leaf))
-//        && t.checkExpect(this.n2_1.insert(new BooksByPrice(), this.mockingbird), 
-//            new Node<Book>(new BooksByPrice(), this.misery, this.n3_1, this.nodeMockingbird));
-//  }
-//
-//  // tests for present method
-//  boolean testPresent(Tester t) {
-//    return t.checkExpect(this.n1_1.present(this.misery), true)
-//        && t.checkExpect(this.n1_1.present(this.watchman), true)
-//        && t.checkExpect(this.n1_1.present(this.prejudice), false)
-//        && t.checkExpect(this.n1_1.present(this.gatsby), false)
-//        && t.checkExpect(this.leaf.present(this.misery), false);
-//  }
+  // tests for insert method
+  boolean testInsert(Tester t) {
+    return ;
+  }
+
+  // tests for present method
+  boolean testPresent(Tester t) {
+    return t.checkExpect(this.n1_1.present(this.misery), true)
+        && t.checkExpect(this.n1_1.present(this.watchman), true)
+        && t.checkExpect(this.leaf.present(this.misery), false)
+        && t.checkExpect(this.n1_1.present(this.prejudice), false)
+        && t.checkExpect(this.n1_1.present(this.gatsby), false);
+  }
 
   // tests for getLeftmost
   boolean testGetLeftmost(Tester t) {
