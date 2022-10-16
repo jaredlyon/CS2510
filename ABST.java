@@ -91,6 +91,8 @@ interface IBST<T> {
   boolean sameData(ABST<T> tree);
   // lists the items in this tree
   IList<T> buildList();
+  // helps buildList
+  IList<T> buildHelper();
 
 }
 
@@ -157,6 +159,11 @@ class Leaf<T> extends ABST<T> {
   // lists the items in this tree
   public IList<T> buildList() {
     return new MtList<T>();
+  }
+  
+  // helps buildList
+  public IList<T> buildHelper() {
+    return new ConsList<T>(this.left.buildList(), this.right.buildList());
   }
 
 }
