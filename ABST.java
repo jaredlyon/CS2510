@@ -176,9 +176,9 @@ class Node<T> extends ABST<T> {
   // inserts an item into the correct place
   public ABST<T> insert(Comparator<T> comp, T data) {
     if (comp.compare(this.data, data) < 1) {
-      new Node<T>(comp, this.data, this.left.insert(comp, data), this.right);
+      return new Node<T>(comp, this.data, this.left.insert(comp, data), this.right);
     } else {
-      new Node<T>(comp, this.data, this.left, this.right.insert(comp, data));
+      return new Node<T>(comp, this.data, this.left, this.right.insert(comp, data));
     }
   }
 
