@@ -73,6 +73,8 @@ interface IBST<T> {
   T leftHelper(T data);
   // gets the right side of this tree
   ABST<T> getRight();
+  // helps getRight
+  ABST<T> rightHelper(ABST<T> tree);
   // checks if this tree is the same as the given one
   boolean sameTree(ABST<T> tree);
   // checks if this node is the same as the given one
@@ -103,7 +105,7 @@ class Leaf<T> extends ABST<T> {
 
   // inserts an item into the correct place
   public ABST<T> insert(T data) {
-    return this;
+    return new Node<T>(this.order, data, new Leaf<T>(this.order), new Leaf<T>(this.order));
   }
 
   // checks if an item in this tree has the given data
@@ -124,6 +126,11 @@ class Leaf<T> extends ABST<T> {
   // gets the right side of this tree
   public ABST<T> getRight() {
     throw new RuntimeException("No right of an empty tree");
+  }
+  
+  // helps getRight
+  public ABST<T> rightHelper(ABST<T> tree) {
+    return tree;
   }
 
   // checks if this tree is the same as the given one
@@ -172,7 +179,7 @@ class Node<T> extends ABST<T> {
 
   // inserts an item into the correct place
   public ABST<T> insert(T data) {
-    if (this.order.compare(this.data, data) < 1) {
+    if (this.order.compare(this.data, data) > 1) {
       return new Node<T>(this.order, this.data, this.left.insert(data), this.right);
     } else {
       return new Node<T>(this.order, this.data, this.left, this.right.insert(data));
@@ -198,11 +205,12 @@ class Node<T> extends ABST<T> {
 
   // gets the right side of this tree
   public ABST<T> getRight() {
-    if (this.left.leftHelper()) {
-      return new Leaf<T>(this.order);
-    } else {
-      return new Node<T>(this.order, this.data, this.left.getRight(), this.right);
-    }
+    return 
+  }
+  
+  // helps getRight
+  public ABST<T> rightHelper(ABST<T> tree) {
+    
   }
 
   // checks if this tree is the same as the given one
@@ -312,12 +320,12 @@ class ExamplesBooks {
         && t.checkException(new RuntimeException("No leftmost item of an empty tree"), this.leaf, "getLeftmost");
   }
 
-//  //tests for getRight
-//  boolean testGetRight(Tester t) {
-//    return t.checkExpect(this.n2_2.getRight(), this.it)
-//        && t.checkException(this.leaf.getRight(), null, "No right of an empty tree", null);
-//  }
-//
+  //tests for getRight
+  boolean testGetRight(Tester t) {
+    return t.checkExpect(this.n2_2.getRight(), this.it)
+        && t.checkException(new RuntimeException("No right of an empty tree"), this.leaf, "getRight");
+  }
+
 //  //tests for sameTree
 //  boolean testSameTree(Tester t) {
 //    return t.checkExpect(this.n2_2.sameTree(this.n2_2), true)
