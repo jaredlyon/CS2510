@@ -273,13 +273,26 @@ class ExamplesBooks {
   // level 1
   ABST<Book> n1_1 = new Node<Book>(new BooksByPrice(), this.romeo, this.n2_1, this.n2_2);
   
-  // trees for testInsert
+  // tree for testInsert
+  // level 4
+  ABST<Book> n4_1_insert = new Node<Book>(new BooksByPrice(), this.gatsby, this.leaf, this.leaf);  
   
+  // level 3
+  ABST<Book> n3_1_insert = new Node<Book>(new BooksByPrice(), this.watchman, this.n4_1_insert, this.leaf);
+  ABST<Book> n3_3_insert = new Node<Book>(new BooksByPrice(), this.animal, this.leaf, this.leaf);
+  ABST<Book> n3_4_insert = new Node<Book>(new BooksByPrice(), this.it, this.leaf, this.leaf);
+
+  // level 2
+  ABST<Book> n2_1_insert = new Node<Book>(new BooksByPrice(), this.misery, this.n3_1_insert, this.leaf);
+  ABST<Book> n2_2_insert = new Node<Book>(new BooksByPrice(), this.hamlet, this.n3_3_insert, this.n3_4_insert);
+
+  // level 1
+  ABST<Book> n1_1_insert = new Node<Book>(new BooksByPrice(), this.romeo, this.n2_1_insert, this.n2_2_insert);  
 
 
   // tests for insert method
   boolean testInsert(Tester t) {
-    return ;
+    return t.checkExpect(this.n1_1.insert(this.gatsby), this.n1_1_insert);
   }
 
   // tests for present method
