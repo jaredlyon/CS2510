@@ -79,6 +79,8 @@ interface IBST<T> {
   boolean present(T data);
   // gets the leftmost item in this tree
   T getLeftmost();
+  // checks if this item is the leftmost item in this tree
+  boolean leftHelper();
   // gets the right side of this tree
   ABST<T> getRight();
   // checks if this tree is the same as the given one
@@ -121,6 +123,11 @@ class Leaf<T> extends ABST<T> {
   public T getLeftmost() {
     throw new RuntimeException("No leftmost item of an empty tree");
   }
+  
+  // checks if this item is the leftmost item in this tree
+  public boolean leftHelper() {
+    return false;
+  }
 
   // gets the right side of this tree
   public ABST<T> getRight() {
@@ -139,6 +146,11 @@ class Leaf<T> extends ABST<T> {
 
   // checks if this tree has the same data as the given one
   public boolean sameData(ABST<T> tree) {
+    return true;
+  }
+  
+  // searches this tree for the given data
+  public boolean inTree(ABST<T> tree) {
     return true;
   }
 
@@ -179,16 +191,21 @@ class Node<T> extends ABST<T> {
 
   // gets the leftmost item in this tree
   public T getLeftmost() {
-    if (this.left.isLeaf) {
+    if (this.left.leftHelper()) {
       return this.data;
     } else {
       return this.left.getLeftmost();
     }
   }
+  
+  // checks if this item is the leftmost item in this tree
+  public boolean leftHelper() {
+    return true;
+  }
 
   // gets the right side of this tree
   public ABST<T> getRight() {
-    if (this.left.isLeaf) {
+    if (this.left.leftHelper()) {
       return new Leaf<T>(this.order);
     } else {
       return new Node<T>(this.order, this.data, this.left.getRight(), this.right);
@@ -197,9 +214,7 @@ class Node<T> extends ABST<T> {
 
   // checks if this tree is the same as the given one
   public boolean sameTree(ABST<T> tree) {
-    return this.sameNode(tree)
-        && this.left.sameTree(tree.left)
-        && this.right.sameTree(tree.right);
+    return this.sameNode(tree);
   }
 
   // checks if this node is the same as the given one
@@ -211,9 +226,15 @@ class Node<T> extends ABST<T> {
 
   // checks if this tree has the same data as the given one
   public boolean sameData(ABST<T> tree) {
-    return this.data.sameBook(tree.data)
-        && this.left.sameData(tree.left)
-        && this.right.sameData(tree.right);
+    return this.inTree(tree)
+        && this.left.sameData(tree)
+        && this.right.sameData(tree);
+  }
+  
+  // searches this tree for the given data
+  public boolean inTree(ABST<T> tree) {
+    return this.data.sameBook(tree)
+        || this.inTree(tree)
   }
 
   // lists the items in this tree
