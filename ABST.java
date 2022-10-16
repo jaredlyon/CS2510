@@ -239,10 +239,13 @@ class Node<T> extends ABST<T> {
 
   // lists the items in this tree
   public IList<T> buildList() {
-    return new MtList<T>();
+    return new ConsList<T>(this.data, this.buildHelper());
   }
-
-
+  
+  // helps buildList
+  public IList<T> buildHelper() {
+    return new ConsList<T>(this.left.buildList(), this.right.buildList());
+  }
 }
 
 
