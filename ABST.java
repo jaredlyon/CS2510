@@ -81,6 +81,8 @@ interface IBST<T> {
   boolean sameNode(ABST<T> node);
   // checks if this tree has the same data as the given one
   boolean sameData(ABST<T> tree);
+  // searches this tree for the given data
+  boolean inTree(Node<T> node);
   // lists the items in this tree
   IList<T> buildList();
   // helps buildList
@@ -149,7 +151,7 @@ class Leaf<T> extends ABST<T> {
   }
   
   // searches this tree for the given data
-  public boolean inTree(ABST<T> tree) {
+  public boolean inTree(Node<T> node) {
     return true;
   }
 
@@ -219,23 +221,22 @@ class Node<T> extends ABST<T> {
   }
 
   // checks if this node is the same as the given one
-  public boolean sameNode(ABST<T> node) {
-    return this.data.sameBook(node.data)
+  public boolean sameNode(Node<T> node) {
+    return (node.order.compare(this.data, node.data) == 0)
         && this.left.sameNode(node.left)
         && this.right.sameNode(node.right);
   }
 
   // checks if this tree has the same data as the given one
   public boolean sameData(ABST<T> tree) {
-    return this.inTree(tree)
-        && this.left.sameData(tree)
-        && this.right.sameData(tree);
+    return tree.inTree(this);
   }
   
   // searches this tree for the given data
-  public boolean inTree(ABST<T> tree) {
-    return this.data.sameBook(tree)
-        || this.inTree(tree)
+  public boolean inTree(Node<T> node) {
+    return this.present(this.data)
+        && this.left.sameData(node)
+        && this.right.sameData(node);
   }
 
   // lists the items in this tree
