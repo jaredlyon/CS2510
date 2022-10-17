@@ -221,7 +221,7 @@ class Node<T> extends ABST<T> {
 
   // checks if this tree is the same as the given one
   public boolean sameTree(ABST<T> tree) {
-    return this.sameNode(tree);
+    return tree.sameNode(this);
   }
 
   // checks if this node is the same as the given one
@@ -233,7 +233,8 @@ class Node<T> extends ABST<T> {
 
   // checks if this tree has the same data as the given one
   public boolean sameData(ABST<T> tree) {
-    return tree.inTree(this);
+    return tree.inTree(this)
+        && this.inTree(tree);
   }
 
   // searches this tree for the given data
