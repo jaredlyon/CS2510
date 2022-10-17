@@ -4,12 +4,15 @@ import java.util.Comparator;
 interface IList<T> {
   // reverses this list
   IList<T> reverse();
+
   // helps reverse
   IList<T> reverseHelper(IList<T> data);
 }
 
 class MtList<T> implements IList<T> {
-  MtList() {};
+  MtList() {
+
+  }
 
   /*
    * fields:
@@ -82,7 +85,8 @@ class ConsList<T> implements IList<T> {
 }
 
 class Book {
-  String title, author;
+  String title;
+  String author;
   int price;
 
   Book(String title, String author, int price) {
@@ -184,28 +188,40 @@ class BooksByPrice implements Comparator<Book> {
 interface IBST<T> {
   // inserts an item into the correct place
   ABST<T> insert(T data);
+
   // checks if an item in this tree has the given data
   boolean present(T data);
+
   // gets the leftmost item in this tree
   T getLeftmost();
+
   // checks if this item is the leftmost item in this tree
   T leftHelper(T data);
+
   // gets the right side of this tree
   ABST<T> getRight();
+
   // helps getRight
   ABST<T> rightHelper(T data);
+
   // checks if this tree is the same as the given one
   boolean sameTree(ABST<T> tree);
+
   // checks if this node is the same as the given one
   boolean sameNode(Node<T> node);
+
   // checks if this leaf is the same as the given
   boolean sameLeaf(Leaf<T> leaf);
+
   // checks if this tree has the same data as the given one
   boolean sameData(ABST<T> tree);
+
   // searches this tree for the given data
   boolean inTree(ABST<T> node);
+
   // lists the items in this tree
   IList<T> buildList();
+
   // helps buildList
   IList<T> buildHelper(IList<T> list);
 }
@@ -532,7 +548,10 @@ class Node<T> extends ABST<T> {
     if (this.order.compare(this.data, leftmost) == 0) {
       return new Leaf<T>(this.order);
     } else {
-      return new Node<T>(this.order, this.data, this.left.rightHelper(leftmost), this.right.rightHelper(leftmost));
+      return new Node<T>(this.order,
+          this.data,
+          this.left.rightHelper(leftmost),
+          this.right.rightHelper(leftmost));
     } 
   }
 
@@ -692,8 +711,10 @@ class Node<T> extends ABST<T> {
 
 
 class ExamplesBooks {
-  ExamplesBooks() {};
-
+  ExamplesBooks() {
+    
+  }
+  
   // list of books
   Book gatsby = new Book("The Great Gatsby", "F. Scott Fitzgerald", 20);
   Book button = new Book("The Curious Case of Benjamin Button", "F. Scott Fitzgerald", 25);
@@ -717,40 +738,59 @@ class ExamplesBooks {
   // make a tree for books by price
   // level 3
   ABST<Book> leaf = new Leaf<Book>(new BooksByPrice());
-  ABST<Book> n3_1 = new Node<Book>(new BooksByPrice(), this.watchman, this.leaf, this.leaf);
-  ABST<Book> n3_3 = new Node<Book>(new BooksByPrice(), this.animal, this.leaf, this.leaf);
-  ABST<Book> n3_4 = new Node<Book>(new BooksByPrice(), this.it, this.leaf, this.leaf);
+  ABST<Book> n3_1 = new Node<Book>(new BooksByPrice(),
+      this.watchman, this.leaf, this.leaf);
+  ABST<Book> n3_3 = new Node<Book>(new BooksByPrice(),
+      this.animal, this.leaf, this.leaf);
+  ABST<Book> n3_4 = new Node<Book>(new BooksByPrice(),
+      this.it, this.leaf, this.leaf);
   // level 2
-  ABST<Book> n2_1 = new Node<Book>(new BooksByPrice(), this.misery, this.n3_1, this.leaf);
-  ABST<Book> n2_2 = new Node<Book>(new BooksByPrice(), this.hamlet, this.n3_3, this.n3_4);
+  ABST<Book> n2_1 = new Node<Book>(new BooksByPrice(),
+      this.misery, this.n3_1, this.leaf);
+  ABST<Book> n2_2 = new Node<Book>(new BooksByPrice(),
+      this.hamlet, this.n3_3, this.n3_4);
   // level 1
-  ABST<Book> n1_1 = new Node<Book>(new BooksByPrice(), this.romeo, this.n2_1, this.n2_2);
+  ABST<Book> n1_1 = new Node<Book>(new BooksByPrice(),
+      this.romeo, this.n2_1, this.n2_2);
 
   // price tree for testInsert
   // level 4
-  ABST<Book> n4_1_insert = new Node<Book>(new BooksByPrice(), this.gatsby, this.leaf, this.leaf);  
+  ABST<Book> n4_1_insert = new Node<Book>(new BooksByPrice(),
+      this.gatsby, this.leaf, this.leaf);  
   // level 3
-  ABST<Book> n3_1_insert = new Node<Book>(new BooksByPrice(), this.watchman, this.n4_1_insert, this.leaf);
-  ABST<Book> n3_3_insert = new Node<Book>(new BooksByPrice(), this.animal, this.leaf, this.leaf);
-  ABST<Book> n3_4_insert = new Node<Book>(new BooksByPrice(), this.it, this.leaf, this.leaf);
+  ABST<Book> n3_1_insert = new Node<Book>(new BooksByPrice(),
+      this.watchman, this.n4_1_insert, this.leaf);
+  ABST<Book> n3_3_insert = new Node<Book>(new BooksByPrice(),
+      this.animal, this.leaf, this.leaf);
+  ABST<Book> n3_4_insert = new Node<Book>(new BooksByPrice(),
+      this.it, this.leaf, this.leaf);
   // level 2
-  ABST<Book> n2_1_insert = new Node<Book>(new BooksByPrice(), this.misery, this.n3_1_insert, this.leaf);
-  ABST<Book> n2_2_insert = new Node<Book>(new BooksByPrice(), this.hamlet, this.n3_3_insert, this.n3_4_insert);
+  ABST<Book> n2_1_insert = new Node<Book>(new BooksByPrice(),
+      this.misery, this.n3_1_insert, this.leaf);
+  ABST<Book> n2_2_insert = new Node<Book>(new BooksByPrice(),
+      this.hamlet, this.n3_3_insert, this.n3_4_insert);
   // level 1
-  ABST<Book> n1_1_insert = new Node<Book>(new BooksByPrice(), this.romeo, this.n2_1_insert, this.n2_2_insert);
+  ABST<Book> n1_1_insert = new Node<Book>(new BooksByPrice(),
+      this.romeo, this.n2_1_insert, this.n2_2_insert);
 
   //price tree for getRight
-  ABST<Book> n2_2_right_1 = new Node<Book>(new BooksByPrice(), this.hamlet, this.leaf, this.n3_4);
+  ABST<Book> n2_2_right_1 = new Node<Book>(new BooksByPrice(),
+      this.hamlet, this.leaf, this.n3_4);
 
   // price tree for getRight
   // level 3
-  ABST<Book> n3_3_right = new Node<Book>(new BooksByPrice(), this.animal, this.leaf, this.leaf);
-  ABST<Book> n3_4_right = new Node<Book>(new BooksByPrice(), this.it, this.leaf, this.leaf);
+  ABST<Book> n3_3_right = new Node<Book>(new BooksByPrice(),
+      this.animal, this.leaf, this.leaf);
+  ABST<Book> n3_4_right = new Node<Book>(new BooksByPrice(),
+      this.it, this.leaf, this.leaf);
   // level 2
-  ABST<Book> n2_1_right = new Node<Book>(new BooksByPrice(), this.misery, this.leaf, this.leaf);
-  ABST<Book> n2_2_right = new Node<Book>(new BooksByPrice(), this.hamlet, this.n3_3_right, this.n3_4_right);
+  ABST<Book> n2_1_right = new Node<Book>(new BooksByPrice(),
+      this.misery, this.leaf, this.leaf);
+  ABST<Book> n2_2_right = new Node<Book>(new BooksByPrice(),
+      this.hamlet, this.n3_3_right, this.n3_4_right);
   // level 1
-  ABST<Book> n1_1_right = new Node<Book>(new BooksByPrice(), this.romeo, this.n2_1_right, this.n2_2_right);
+  ABST<Book> n1_1_right = new Node<Book>(new BooksByPrice(),
+      this.romeo, this.n2_1_right, this.n2_2_right);
 
   /*
    * TREES THAT USE TITLE
@@ -760,31 +800,44 @@ class ExamplesBooks {
   // make a tree by book title
   // level 3
   ABST<Book> leaf_title = new Leaf<Book>(new BooksByTitle());
-  ABST<Book> n3_1_title = new Node<Book>(new BooksByTitle(), this.animal, this.leaf_title, this.leaf_title);
-  ABST<Book> n3_2_title = new Node<Book>(new BooksByTitle(), this.hamlet, this.leaf_title, this.leaf_title);
-  ABST<Book> n3_3_title = new Node<Book>(new BooksByTitle(), this.romeo, this.leaf_title, this.leaf_title);
-  ABST<Book> n3_4_title = new Node<Book>(new BooksByTitle(), this.mockingbird, this.leaf_title, this.leaf_title);
+  ABST<Book> n3_1_title = new Node<Book>(new BooksByTitle(),
+      this.animal, this.leaf_title, this.leaf_title);
+  ABST<Book> n3_2_title = new Node<Book>(new BooksByTitle(),
+      this.hamlet, this.leaf_title, this.leaf_title);
+  ABST<Book> n3_3_title = new Node<Book>(new BooksByTitle(),
+      this.romeo, this.leaf_title, this.leaf_title);
+  ABST<Book> n3_4_title = new Node<Book>(new BooksByTitle(),
+      this.mockingbird, this.leaf_title, this.leaf_title);
   // level 2
-  ABST<Book> n2_1_title = new Node<Book>(new BooksByTitle(), this.watchman, this.n3_1_title, this.n3_2_title);
-  ABST<Book> n2_2_title = new Node<Book>(new BooksByTitle(), this.gatsby, this.n3_3_title, this.n3_4_title);
+  ABST<Book> n2_1_title = new Node<Book>(new BooksByTitle(),
+      this.watchman, this.n3_1_title, this.n3_2_title);
+  ABST<Book> n2_2_title = new Node<Book>(new BooksByTitle(),
+      this.gatsby, this.n3_3_title, this.n3_4_title);
   // level 1
-  ABST<Book> n1_1_title = new Node<Book>(new BooksByTitle(), this.misery, this.n2_1_title, this.n2_2_title);
+  ABST<Book> n1_1_title = new Node<Book>(new BooksByTitle(),
+      this.misery, this.n2_1_title, this.n2_2_title);
 
   // title tree for testInsert
   // level 4
-  ABST<Book> n4_4_title_insert = new Node<Book>(new BooksByTitle(), this.it, this.leaf_title, this.leaf_title);
+  ABST<Book> n4_4_title_insert = new Node<Book>(new BooksByTitle(),
+      this.it, this.leaf_title, this.leaf_title);
   // level 3
-  ABST<Book> n3_2_title_insert = new Node<Book>(new BooksByTitle(), this.hamlet, this.leaf_title, this.n4_4_title_insert);
+  ABST<Book> n3_2_title_insert = new Node<Book>(new BooksByTitle(),
+      this.hamlet, this.leaf_title, this.n4_4_title_insert);
   // level 2
-  ABST<Book> n2_1_title_insert = new Node<Book>(new BooksByTitle(), this.watchman, this.n3_1_title, this.n3_2_title_insert);
+  ABST<Book> n2_1_title_insert = new Node<Book>(new BooksByTitle(),
+      this.watchman, this.n3_1_title, this.n3_2_title_insert);
   // level 1
-  ABST<Book> n1_1_title_insert = new Node<Book>(new BooksByTitle(), this.misery, this.n2_1_title_insert, this.n2_2_title);
+  ABST<Book> n1_1_title_insert = new Node<Book>(new BooksByTitle(),
+      this.misery, this.n2_1_title_insert, this.n2_2_title);
 
   // title tree for getRight
   // level 2
-  ABST<Book> n2_1_title_getRight = new Node<Book>(new BooksByTitle(), this.watchman, this.leaf_title, this.n3_2_title);
+  ABST<Book> n2_1_title_getRight = new Node<Book>(new BooksByTitle(),
+      this.watchman, this.leaf_title, this.n3_2_title);
   // level 1
-  ABST<Book> n1_1_title_getRight = new Node<Book>(new BooksByTitle(), this.misery, this.n2_1_title_getRight, this.n2_2_title);
+  ABST<Book> n1_1_title_getRight = new Node<Book>(new BooksByTitle(),
+      this.misery, this.n2_1_title_getRight, this.n2_2_title);
 
   /*
    * TREES THAT USE AUTHOR
@@ -794,48 +847,79 @@ class ExamplesBooks {
   // make tree by author title
   // level 4
   ABST<Book> leaf_author = new Leaf<Book>(new BooksByAuthor());
-  ABST<Book> n4_1_author = new Node<Book>(new BooksByAuthor(), this.button, this.leaf_author, this.leaf_author);
+  ABST<Book> n4_1_author = new Node<Book>(new BooksByAuthor(),
+      this.button, this.leaf_author, this.leaf_author);
   // level 3
-  ABST<Book> n3_1_author = new Node<Book>(new BooksByAuthor(), this.eightyfour, this.n4_1_author, this.leaf_author);
-  ABST<Book> n3_4_author = new Node<Book>(new BooksByAuthor(), this.hamlet, this.leaf_author, this.leaf_author);
+  ABST<Book> n3_1_author = new Node<Book>(new BooksByAuthor(),
+      this.eightyfour, this.n4_1_author, this.leaf_author);
+  ABST<Book> n3_4_author = new Node<Book>(new BooksByAuthor(),
+      this.hamlet, this.leaf_author, this.leaf_author);
   // level 2
-  ABST<Book> n2_1_author = new Node<Book>(new BooksByAuthor(), this.watchman, this.n3_1_author, this.leaf_author);
-  ABST<Book> n2_2_author = new Node<Book>(new BooksByAuthor(), this.catcher, this.leaf_author, this.n3_4_author);
+  ABST<Book> n2_1_author = new Node<Book>(new BooksByAuthor(),
+      this.watchman, this.n3_1_author, this.leaf_author);
+  ABST<Book> n2_2_author = new Node<Book>(new BooksByAuthor(),
+      this.catcher, this.leaf_author, this.n3_4_author);
   // level 1
-  ABST<Book> n1_1_author = new Node<Book>(new BooksByAuthor(), this.prejudice, this.n2_1_author, this.n2_2_author);
+  ABST<Book> n1_1_author = new Node<Book>(new BooksByAuthor(),
+      this.prejudice, this.n2_1_author, this.n2_2_author);
 
   // author tree for testInsert -> adds bartleby
   // level 4
-  ABST<Book> n4_1_author_insert = new Node<Book>(new BooksByAuthor(), this.button, this.leaf_author, this.leaf_author);
+  ABST<Book> n4_1_author_insert = new Node<Book>(new BooksByAuthor(),
+      this.button, this.leaf_author, this.leaf_author);
   // level 3
-  ABST<Book> n3_1_author_insert = new Node<Book>(new BooksByAuthor(), this.eightyfour, this.n4_1_author_insert, this.leaf_author);
-  ABST<Book> n3_2_author_insert = new Node<Book>(new BooksByAuthor(), this.bartleby, this.leaf_author, this.leaf_author);
-  ABST<Book> n3_4_author_insert = new Node<Book>(new BooksByAuthor(), this.hamlet, this.leaf_author, this.leaf_author);
+  ABST<Book> n3_1_author_insert = new Node<Book>(new BooksByAuthor(),
+      this.eightyfour, this.n4_1_author_insert, this.leaf_author);
+  ABST<Book> n3_2_author_insert = new Node<Book>(new BooksByAuthor(),
+      this.bartleby, this.leaf_author, this.leaf_author);
+  ABST<Book> n3_4_author_insert = new Node<Book>(new BooksByAuthor(),
+      this.hamlet, this.leaf_author, this.leaf_author);
   // level 2
-  ABST<Book> n2_1_author_insert = new Node<Book>(new BooksByAuthor(), this.watchman, this.n3_1_author_insert, this.n3_2_author_insert);
-  ABST<Book> n2_2_author_insert = new Node<Book>(new BooksByAuthor(), this.catcher, this.leaf_author, this.n3_4_author_insert);
+  ABST<Book> n2_1_author_insert = new Node<Book>(new BooksByAuthor(),
+      this.watchman, this.n3_1_author_insert, this.n3_2_author_insert);
+  ABST<Book> n2_2_author_insert = new Node<Book>(new BooksByAuthor(),
+      this.catcher, this.leaf_author, this.n3_4_author_insert);
   // level 1
-  ABST<Book> n1_1_author_insert = new Node<Book>(new BooksByAuthor(), this.prejudice, this.n2_1_author_insert, this.n2_2_author_insert);
+  ABST<Book> n1_1_author_insert = new Node<Book>(new BooksByAuthor(),
+      this.prejudice, this.n2_1_author_insert, this.n2_2_author_insert);
 
 
   // title tree for getRight -> omits benjamin button
   // level 3
-  ABST<Book> n3_1_author_getRight = new Node<Book>(new BooksByAuthor(), this.eightyfour, this.leaf_author, this.leaf_author);
-  ABST<Book> n3_4_author_getRight = new Node<Book>(new BooksByAuthor(), this.hamlet, this.leaf_author, this.leaf_author);
+  ABST<Book> n3_1_author_getRight = new Node<Book>(new BooksByAuthor(),
+      this.eightyfour, this.leaf_author, this.leaf_author);
+  ABST<Book> n3_4_author_getRight = new Node<Book>(new BooksByAuthor(),
+      this.hamlet, this.leaf_author, this.leaf_author);
   // level 2
-  ABST<Book> n2_1_author_getRight = new Node<Book>(new BooksByAuthor(), this.watchman, this.n3_1_author_getRight, this.leaf_author);
-  ABST<Book> n2_2_author_getRight = new Node<Book>(new BooksByAuthor(), this.catcher, this.leaf_author, this.n3_4_author_getRight);
+  ABST<Book> n2_1_author_getRight = new Node<Book>(new BooksByAuthor(),
+      this.watchman, this.n3_1_author_getRight, this.leaf_author);
+  ABST<Book> n2_2_author_getRight = new Node<Book>(new BooksByAuthor(),
+      this.catcher, this.leaf_author, this.n3_4_author_getRight);
   // level 1
-  ABST<Book> n1_1_author_getRight = new Node<Book>(new BooksByAuthor(), this.prejudice, this.n2_1_author_getRight, this.n2_2_author_getRight);
+  ABST<Book> n1_1_author_getRight = new Node<Book>(new BooksByAuthor(),
+      this.prejudice, this.n2_1_author_getRight, this.n2_2_author_getRight);
 
   // tests for insert method
   boolean testInsert(Tester t) {
-    return t.checkExpect(this.n1_1.insert(this.gatsby), this.n1_1_insert)
-        && t.checkExpect(this.n1_1_title.insert(this.it), this.n1_1_title_insert)
-        && t.checkExpect(this.n1_1_author.insert(this.bartleby), this.n1_1_author_insert)
-        && t.checkExpect(this.leaf.insert(this.bartleby), new Node<Book>(this.leaf.order, this.bartleby, this.leaf, this.leaf))
-        && t.checkExpect(this.leaf_title.insert(this.bartleby), new Node<Book>(this.leaf_title.order, this.bartleby, this.leaf_title, this.leaf_title))
-        && t.checkExpect(this.leaf_author.insert(this.bartleby), new Node<Book>(this.leaf_author.order, this.bartleby, this.leaf_author, this.leaf_author));
+    return t.checkExpect(this.n1_1.insert(this.gatsby),
+        this.n1_1_insert)
+        && t.checkExpect(this.n1_1_title.insert(this.it),
+            this.n1_1_title_insert)
+        && t.checkExpect(this.n1_1_author.insert(this.bartleby),
+            this.n1_1_author_insert)
+        && t.checkExpect(this.leaf.insert(this.bartleby),
+            new Node<Book>(this.leaf.order,
+                this.bartleby,
+                this.leaf,
+                this.leaf))
+        && t.checkExpect(this.leaf_title.insert(this.bartleby),
+            new Node<Book>(this.leaf_title.order,
+                this.bartleby,
+                this.leaf_title,
+                this.leaf_title))
+        && t.checkExpect(this.leaf_author.insert(this.bartleby),
+            new Node<Book>(this.leaf_author.order,
+                this.bartleby, this.leaf_author, this.leaf_author));
   }
 
   // tests for present method
@@ -866,9 +950,12 @@ class ExamplesBooks {
         && t.checkExpect(this.n1_1_author.getLeftmost(), this.button)
         && t.checkExpect(this.n2_2_author.getLeftmost(), this.catcher)
         && t.checkExpect(this.n3_1_author.getLeftmost(), this.button)
-        && t.checkException(new RuntimeException("No leftmost item of an empty tree"), this.leaf, "getLeftmost")
-        && t.checkException(new RuntimeException("No leftmost item of an empty tree"), this.leaf_title, "getLeftmost")
-        && t.checkException(new RuntimeException("No leftmost item of an empty tree"), this.leaf_author, "getLeftmost");
+        && t.checkException(new RuntimeException("No leftmost item of an empty tree"),
+            this.leaf, "getLeftmost")
+        && t.checkException(new RuntimeException("No leftmost item of an empty tree"),
+            this.leaf_title, "getLeftmost")
+        && t.checkException(new RuntimeException("No leftmost item of an empty tree"),
+            this.leaf_author, "getLeftmost");
   }
 
   // tests for leftHelper
@@ -881,10 +968,7 @@ class ExamplesBooks {
         && t.checkExpect(this.n3_4_title.leftHelper(this.mockingbird), this.mockingbird)
         && t.checkExpect(this.n1_1_author.leftHelper(this.romeo), this.button)
         && t.checkExpect(this.n2_2_author.leftHelper(this.catcher), this.catcher)
-        && t.checkExpect(this.n3_1_author.leftHelper(this.watchman), this.button)
-        && t.checkException(new RuntimeException("No leftmost item of an empty tree"), this.leaf, "getLeftmost")
-        && t.checkException(new RuntimeException("No leftmost item of an empty tree"), this.leaf_title, "getLeftmost")
-        && t.checkException(new RuntimeException("No leftmost item of an empty tree"), this.leaf_author, "getLeftmost");
+        && t.checkExpect(this.n3_1_author.leftHelper(this.watchman), this.button);
   }
 
   //tests for getRight
@@ -893,9 +977,12 @@ class ExamplesBooks {
         && t.checkExpect(this.n1_1.getRight(), this.n1_1_right)
         && t.checkExpect(this.n1_1_title.getRight(), this.n1_1_title_getRight)
         && t.checkExpect(this.n1_1_author.getRight(), this.n1_1_author_getRight)
-        && t.checkException(new RuntimeException("No right of an empty tree"), this.leaf, "getRight")
-        && t.checkException(new RuntimeException("No right of an empty tree"), this.leaf_title, "getRight")
-        && t.checkException(new RuntimeException("No right of an empty tree"), this.leaf_author, "getRight");
+        && t.checkException(new RuntimeException("No right of an empty tree"),
+            this.leaf, "getRight")
+        && t.checkException(new RuntimeException("No right of an empty tree"),
+            this.leaf_title, "getRight")
+        && t.checkException(new RuntimeException("No right of an empty tree"),
+            this.leaf_author, "getRight");
   }
 
   // tests for RightHelper
