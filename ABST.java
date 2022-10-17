@@ -74,7 +74,7 @@ interface IBST<T> {
   // gets the right side of this tree
   ABST<T> getRight();
   // helps getRight
-  ABST<T> rightHelper(ABST<T> tree);
+  ABST<T> rightHelper(T data);
   // checks if this tree is the same as the given one
   boolean sameTree(ABST<T> tree);
   // checks if this node is the same as the given one
@@ -131,8 +131,8 @@ class Leaf<T> extends ABST<T> {
   }
 
   // helps getRight
-  public ABST<T> rightHelper(ABST<T> tree) {
-    return tree;
+  public ABST<T> rightHelper(T data) {
+    return this;
   }
 
   // checks if this tree is the same as the given one
@@ -207,9 +207,18 @@ class Node<T> extends ABST<T> {
 
   // gets the right side of this tree
   public ABST<T> getRight() {
-    return new Node<T>(this.order, this.data, this.left.rightHelper(this.left), this.right);
+    T LEFT_MOST = this.getLeftmost();
+    return this.rightHelper(LEFT_MOST);
   }
-
+  
+  // helps getRight
+  public ABST<T> rightHelper(T leftmost) {
+    if (this.order.compare(this.data, leftmost) == 0) {
+      return this;
+    } else {
+      return new Node<T>(this.order, this.data, this.left.rightHelper(leftmost), this.right.rightHelper(leftmost));
+    } 
+  }
 
   // checks if this tree is the same as the given one
   public boolean sameTree(ABST<T> tree) {
@@ -271,27 +280,22 @@ class ExamplesBooks {
   ABST<Book> n3_1 = new Node<Book>(new BooksByPrice(), this.watchman, this.leaf, this.leaf);
   ABST<Book> n3_3 = new Node<Book>(new BooksByPrice(), this.animal, this.leaf, this.leaf);
   ABST<Book> n3_4 = new Node<Book>(new BooksByPrice(), this.it, this.leaf, this.leaf);
-
   // level 2
   ABST<Book> n2_1 = new Node<Book>(new BooksByPrice(), this.misery, this.n3_1, this.leaf);
   ABST<Book> n2_2 = new Node<Book>(new BooksByPrice(), this.hamlet, this.n3_3, this.n3_4);
-
   // level 1
   ABST<Book> n1_1 = new Node<Book>(new BooksByPrice(), this.romeo, this.n2_1, this.n2_2);
 
   // price tree for testInsert
   // level 4
   ABST<Book> n4_1_insert = new Node<Book>(new BooksByPrice(), this.gatsby, this.leaf, this.leaf);  
-
   // level 3
   ABST<Book> n3_1_insert = new Node<Book>(new BooksByPrice(), this.watchman, this.n4_1_insert, this.leaf);
   ABST<Book> n3_3_insert = new Node<Book>(new BooksByPrice(), this.animal, this.leaf, this.leaf);
   ABST<Book> n3_4_insert = new Node<Book>(new BooksByPrice(), this.it, this.leaf, this.leaf);
-
   // level 2
   ABST<Book> n2_1_insert = new Node<Book>(new BooksByPrice(), this.misery, this.n3_1_insert, this.leaf);
   ABST<Book> n2_2_insert = new Node<Book>(new BooksByPrice(), this.hamlet, this.n3_3_insert, this.n3_4_insert);
-
   // level 1
   ABST<Book> n1_1_insert = new Node<Book>(new BooksByPrice(), this.romeo, this.n2_1_insert, this.n2_2_insert);
 
@@ -299,14 +303,12 @@ class ExamplesBooks {
   // level 3
   ABST<Book> n3_3_right = new Node<Book>(new BooksByPrice(), this.animal, this.leaf, this.leaf);
   ABST<Book> n3_4_right = new Node<Book>(new BooksByPrice(), this.it, this.leaf, this.leaf);
-
   // level 2
   ABST<Book> n2_1_right = new Node<Book>(new BooksByPrice(), this.misery, this.leaf, this.leaf);
   ABST<Book> n2_2_right = new Node<Book>(new BooksByPrice(), this.hamlet, this.n3_3_right, this.n3_4_right);
-
   // level 1
   ABST<Book> n1_1_right = new Node<Book>(new BooksByPrice(), this.romeo, this.n2_1_right, this.n2_2_right);
-  
+ 
   // make a tree by book title
   // level 3
   ABST<Book> leaf_title = new Leaf<Book>(new BooksByTitle());
@@ -367,13 +369,13 @@ class ExamplesBooks {
         && t.checkException(new RuntimeException("No leftmost item of an empty tree"), this.leaf, "getLeftmost");
   }
 
-//  //tests for getRight
-//  boolean testGetRight(Tester t) {
-//    return t.checkExpect(this.n2_2.getRight(), this.n2_2_right)          // this test returned the right node (n3_4), but i changed it so it would return everything but the left (including current nodes data)
-//        && t.checkExpect(this.n1_1.getRight(), this.n1_1_right)
-//        && t.checkExpect(this.n1_1.title.getRight(), this.n1_1_title_getRight)
-//        && t.checkException(new RuntimeException("No right of an empty tree"), this.leaf, "getRight");
-//  }
+  //tests for getRight
+  boolean testGetRight(Tester t) {
+    return t.checkExpect(this.n2_2.getRight(), this.n2_2_right)
+        && t.checkExpect(this.n1_1.getRight(), this.n1_1_right)
+        && t.checkExpect(this.n1_1_title.getRight(), this.n1_1_title_getRight)
+        && t.checkException(new RuntimeException("No right of an empty tree"), this.leaf, "getRight");
+  }
 //
 //  //tests for sameTree
 //  boolean testSameTree(Tester t) {
