@@ -2,12 +2,34 @@ import tester.Tester;
 import java.util.Comparator;
 
 interface IList<T> {
-
+  // reverses this list
+  IList<T> reverse();
+  // helps reverse
+  IList<T> reverseHelper(IList<T> data);
 }
 
 class MtList<T> implements IList<T> {
   MtList() {};
 
+  /*
+   * fields:
+   *  none
+   * methods:
+   *  this.reverse() ... IList<T>
+   *  this.reverseHelper(IList<T>) ... IList<T>
+   * methods for fields:
+   *  none
+   */
+
+  // reverses this list
+  public IList<T> reverse() {
+    return this;
+  }
+
+  // helper for reverse
+  public IList<T> reverseHelper(IList<T> data) {
+    return data;
+  }
 }
 
 class ConsList<T> implements IList<T> {
@@ -17,6 +39,27 @@ class ConsList<T> implements IList<T> {
   ConsList(T first, IList<T> rest) {
     this.first = first;
     this.rest = rest;
+  }
+
+  /*
+   * fields:
+   *  this.first ... T
+   *  this.rest ... IList<T>
+   * methods:
+   *  this.reverse() ... IList<T>
+   *  this.reverseHelper(IList<T>) ... IList<T>
+   * methods for fields:
+   *  none
+   */
+
+  // reverses this list
+  public IList<T> reverse() {
+    return this.rest.reverseHelper(new ConsList<T>(this.first, new MtList<T>()));
+  }
+
+  // helper for reverse
+  public IList<T> reverseHelper(IList<T> data) {
+    return this.rest.reverseHelper(new ConsList<T>(this.first, data));
   }
 }
 
@@ -30,36 +73,64 @@ class Book {
     this.price = price;
   }
 
-  // checks if this book is the same the given book
-  public boolean sameBook(Book bk) {
-    return this.title.equals(bk.title)
-        && this.author.equals(bk.title)
-        && this.price == bk.price;
-  }
+  /*
+   * fields:
+   *  this.title ... String
+   *  this.author ... String
+   *  this.price ... int
+   * methods:
+   *  none
+   * methods for fields:
+   *  none
+   */
 }
 
 class BooksByTitle implements Comparator<Book> {
 
+  /*
+   * fields:
+   *  none
+   * methods:
+   *  compare(Book, Book) ... int
+   * methods for fields:
+   *  none
+   */
+
   public int compare(Book b1, Book b2) {
     return b1.title.compareTo(b2.title);
   }
-
 }
 
 class BooksByAuthor implements Comparator<Book> {
 
+  /*
+   * fields:
+   *  none
+   * methods:
+   *  compare(Book, Book) ... int
+   * methods for fields:
+   *  none
+   */
+
   public int compare(Book b1, Book b2) {
     return b1.author.compareTo(b2.author);
   }
-
 }
 
 class BooksByPrice implements Comparator<Book> {
 
+  /*
+   * fields:
+   *  none
+   * methods:
+   *  compare(Book, Book) ... int
+   * methods for fields:
+   *  none
+   */
+
   public int compare(Book b1, Book b2) {
     return b1.price - b2.price;
   }
-
 }
 
 interface IBST<T> {
@@ -78,16 +149,17 @@ interface IBST<T> {
   // checks if this tree is the same as the given one
   boolean sameTree(ABST<T> tree);
   // checks if this node is the same as the given one
-  boolean sameNode(ABST<T> node);
+  boolean sameNode(Node<T> node);
+  // checks if this leaf is the same as the given
+  boolean sameLeaf(Leaf<T> leaf);
   // checks if this tree has the same data as the given one
   boolean sameData(ABST<T> tree);
   // searches this tree for the given data
-  boolean inTree(Node<T> node);
+  boolean inTree(ABST<T> node);
   // lists the items in this tree
   IList<T> buildList();
   // helps buildList
-  IList<T> buildHelper();
-
+  IList<T> buildHelper(IList<T> list);
 }
 
 abstract class ABST<T> implements IBST<T> {
@@ -96,7 +168,6 @@ abstract class ABST<T> implements IBST<T> {
   ABST(Comparator<T> order) {
     this.order = order;
   }
-
 }
 
 class Leaf<T> extends ABST<T> {
@@ -137,21 +208,27 @@ class Leaf<T> extends ABST<T> {
 
   // checks if this tree is the same as the given one
   public boolean sameTree(ABST<T> tree) {
+    return tree.sameLeaf(this);
+  }
+
+  // checks if this leaf is the same as the given one
+  public boolean sameLeaf(Leaf<T> leaf) {
     return true;
   }
 
   // checks if this node is the same as the given one
-  public boolean sameNode(ABST<T> node) {
-    return true;
+  public boolean sameNode(Node<T> node) {
+    return false;
   }
 
   // checks if this tree has the same data as the given one
   public boolean sameData(ABST<T> tree) {
-    return false;
+    return tree.inTree(this)
+        && this.inTree(tree);
   }
 
   // searches this tree for the given data
-  public boolean inTree(Node<T> node) {
+  public boolean inTree(ABST<T> node) {
     return true;
   }
 
@@ -161,8 +238,8 @@ class Leaf<T> extends ABST<T> {
   }
 
   // helps buildList
-  public IList<T> buildHelper() {
-    return new ConsList<T>(this.left.buildList(), this.right.buildList());
+  public IList<T> buildHelper(IList<T> list) {
+    return list;
   }
 
 }
@@ -227,8 +304,13 @@ class Node<T> extends ABST<T> {
   // checks if this node is the same as the given one
   public boolean sameNode(Node<T> node) {
     return (node.order.compare(this.data, node.data) == 0)
-        && this.left.sameNode(node.left)
-        && this.right.sameNode(node.right);
+        && this.left.sameTree(node.left)
+        && this.right.sameTree(node.right);
+  }
+
+  // checks if this leaf is the same as the given one
+  public boolean sameLeaf(Leaf<T> leaf) {
+    return false;
   }
 
   // checks if this tree has the same data as the given one
@@ -238,20 +320,20 @@ class Node<T> extends ABST<T> {
   }
 
   // searches this tree for the given data
-  public boolean inTree(Node<T> node) {
-    return this.present(this.data)
-        && node.sameData(this.left)
-        && node.sameData(this.right);
+  public boolean inTree(ABST<T> node) {
+    return node.present(this.data)
+        && this.left.inTree(node)
+        && this.right.inTree(node);
   }
 
   // lists the items in this tree
   public IList<T> buildList() {
-    return new ConsList<T>(this.data, this.buildHelper());
+    return this.buildHelper(new MtList<T>()).reverse();
   }
 
-  // helps buildList
-  public IList<T> buildHelper() {
-    return new ConsList<T>(this.left.buildList(), this.right.buildList());
+  // accumulates data for buildList
+  public IList<T> buildHelper(IList<T> list) {
+    return this.right.buildHelper(new ConsList<T>(this.data, this.left.buildHelper(list)));
   }
 
 }
@@ -274,7 +356,7 @@ class ExamplesBooks {
   Book hamlet = new Book("Hamlet", "William Shakespeare", 60);
   Book romeo = new Book("Romeo and Juliet", "William Shakespeare", 50);
   Book bartleby = new Book("Bartleby, the Scrivener", "Herman Melville", 10000);
-  
+
   /*
    * TREES THAT USE PRICE
    * V V V V V V V V V V V
@@ -317,7 +399,7 @@ class ExamplesBooks {
   ABST<Book> n2_2_right = new Node<Book>(new BooksByPrice(), this.hamlet, this.n3_3_right, this.n3_4_right);
   // level 1
   ABST<Book> n1_1_right = new Node<Book>(new BooksByPrice(), this.romeo, this.n2_1_right, this.n2_2_right);
-  
+
   /*
    * TREES THAT USE TITLE
    * V V V V V V V V V V V
@@ -351,12 +433,12 @@ class ExamplesBooks {
   ABST<Book> n2_1_title_getRight = new Node<Book>(new BooksByTitle(), this.watchman, this.leaf_title, this.n3_2_title);
   // level 1
   ABST<Book> n1_1_title_getRight = new Node<Book>(new BooksByTitle(), this.misery, this.n2_1_title_getRight, this.n2_2_title);
-  
+
   /*
    * TREES THAT USE AUTHOR
    * V V V V V V V V V V V
    */
-  
+
   // make tree by author title
   // level 4
   ABST<Book> leaf_author = new Leaf<Book>(new BooksByAuthor());
@@ -369,7 +451,7 @@ class ExamplesBooks {
   ABST<Book> n2_2_author = new Node<Book>(new BooksByAuthor(), this.catcher, this.leaf_author, this.n3_4_author);
   // level 1
   ABST<Book> n1_1_author = new Node<Book>(new BooksByAuthor(), this.prejudice, this.n2_1_author, this.n2_2_author);
-  
+
   // author tree for testInsert -> adds bartleby
   // level 4
   ABST<Book> n4_1_author_insert = new Node<Book>(new BooksByAuthor(), this.button, this.leaf_author, this.leaf_author);
@@ -429,15 +511,29 @@ class ExamplesBooks {
         && t.checkExpect(this.n1_1_title.getLeftmost(), this.animal)
         && t.checkExpect(this.n2_2_title.getLeftmost(), this.romeo)
         && t.checkExpect(this.n3_4_title.getLeftmost(), this.mockingbird)
+        && t.checkExpect(this.n1_1_author.getLeftmost(), this.button)
+        && t.checkExpect(this.n2_2_author.getLeftmost(), this.catcher)
+        && t.checkExpect(this.n3_1_author.getLeftmost(), this.button)
         && t.checkException(new RuntimeException("No leftmost item of an empty tree"), this.leaf, "getLeftmost")
         && t.checkException(new RuntimeException("No leftmost item of an empty tree"), this.leaf_title, "getLeftmost")
         && t.checkException(new RuntimeException("No leftmost item of an empty tree"), this.leaf_author, "getLeftmost");
   }
-  
-//  // tests for leftHelper
-//  boolean testLeftHelper(Tester t) {
-//    return ???
-//  }
+
+  // tests for leftHelper
+  boolean testLeftHelper(Tester t) {
+    return t.checkExpect(this.n1_1.leftHelper(this.romeo), this.watchman)
+        && t.checkExpect(this.n2_2.leftHelper(this.hamlet), this.animal)
+        && t.checkExpect(this.n3_4.leftHelper(this.it), this.it)
+        && t.checkExpect(this.n1_1_title.leftHelper(this.misery), this.animal)
+        && t.checkExpect(this.n2_2_title.leftHelper(this.gatsby), this.romeo)
+        && t.checkExpect(this.n3_4_title.leftHelper(this.mockingbird), this.mockingbird)
+        && t.checkExpect(this.n1_1_author.leftHelper(this.romeo), this.button)
+        && t.checkExpect(this.n2_2_author.leftHelper(this.catcher), this.catcher)
+        && t.checkExpect(this.n3_1_author.leftHelper(this.watchman), this.button)
+        && t.checkException(new RuntimeException("No leftmost item of an empty tree"), this.leaf, "getLeftmost")
+        && t.checkException(new RuntimeException("No leftmost item of an empty tree"), this.leaf_title, "getLeftmost")
+        && t.checkException(new RuntimeException("No leftmost item of an empty tree"), this.leaf_author, "getLeftmost");
+  }
 
   //tests for getRight
   boolean testGetRight(Tester t) {
@@ -449,69 +545,120 @@ class ExamplesBooks {
         && t.checkException(new RuntimeException("No right of an empty tree"), this.leaf_title, "getRight")
         && t.checkException(new RuntimeException("No right of an empty tree"), this.leaf_author, "getRight");
   }
-  
-//  // tests for RightHelper
-//  boolean testRightHelper(Tester t) {
-//    return ???
-//  }
-//
-//  //tests for sameTree
-//  boolean testSameTree(Tester t) {
-//    return t.checkExpect(this.n2_2.sameTree(this.n2_2), true)
-//        && t.checkExpect(this.n2_2.sameTree(this.n1_1), false)
-//        && t.checkExpect(this.n2_2.sameTree(this.leaf), false)
-//        && t.checkExpect(this.n1_1_title.sameTree(this.n1_1_title), true)
-//        && t.checkExpect(this.n1_1_title.sameTree(this.n2_2_title), false)
-//        && t.checkExpect(this.n2_1_title.sameTree(this.n1_1_title), false)
-//        && t.checkExpect(this.n1_1_title.sameTree(this.leaf_title), false);
-//  }
-//
-//  //tests for sameNode
-//  boolean testSameNode(Tester t) {
-//    return t.checkExpect(this.n2_2.sameNode(this.n2_2), true)
-//        && t.checkExpect(this.n2_2.sameNode(this.n1_1), false)
-//        && t.checkExpect(this.n2_2.sameNode(this.leaf), false)
-//        && t.checkExpect(this.n1_1_title.sameTree(this.n1_1_title), true)
-//        && t.checkExpect(this.n1_1_title.sameTree(this.n2_2_title), false)
-//        && t.checkExpect(this.n2_1_title.sameTree(this.n1_1_title), false)
-//        && t.checkExpect(this.n1_1_title.sameTree(this.leaf_title), false);
-//  }
-//
-//  //tests for sameData
-//  boolean testSameData(Tester t) {
-//    return t.checkExpect(this.n2_2.sameData(this.n2_2), true)
-//        && t.checkExpect(this.n2_2.sameData(this.n1_1), true)
-//        && t.checkExpect(this.n2_2.sameData(this.leaf), true)
-//        && t.checkExpect(this.leaf.sameData(this.n2_2), false)
-//        && t.checkExpect(this.n1_1_title.sameData(this.n1_1_title), true)
-//        && t.checkExpect(this.n1_1_title.sameData(this.n2_2_title), false)
-//        && t.checkExpect(this.n2_1_title.sameData(this.n1_1_title), false)
-//        && t.checkExpect(this.n1_1_title.sameData(this.leaf_title), false);
-//  }
-//
-//  //tests for inTree
-//  boolean testInTree(Tester t) {
-//    return t.checkExpect(this.n2_2.inTree(this.n2_2), true)
-//        && t.checkExpect(this.n2_2.inTree(this.n1_1), false)
-//        && t.checkExpect(this.n2_2.inTree(this.leaf), false)
-//        && t.checkExpect(this.n1_1_title.inTree(this.n1_1_title), true)
-//        && t.checkExpect(this.n1_1_title.inTree(this.n2_2_title), false)
-//        && t.checkExpect(this.n2_1_title.inTree(this.n1_1_title), false)
-//        && t.checkExpect(this.n1_1_title.inTree(this.leaf_title), false);
-//  }
-//
-//  //tests for buildList
-//  boolean testBuildList(Tester t) {
-//    return t.checkExpect(this.n2_2.buildList(),
-//            new ConsList<Book>(this.animal,
-//               new ConsList<Book>(this.hamlet,
-//                  new ConsList<Book>(this.it,
-//                    new MtList<Book>()))))
-//        && t.checkExpect(this.leaf.buildList(), new MtList<Book>())
-//        && t.checkExpect(this.n2_1_title.buildList(),
-//             new ConsList<Book>(this.animal,
-//               new ConsList<Book>(this.watchman,
-//                 new ConsList<Book>(this.hamlet,
-//                   new MtList<Book>()))));
-//  }
+
+  // tests for RightHelper
+  boolean testRightHelper(Tester t) {
+    return t.checkExpect(this.n2_2.rightHelper(this.animal), this.n2_2_right_1)
+        && t.checkExpect(this.n1_1.rightHelper(this.watchman), this.n1_1_right)
+        && t.checkExpect(this.n1_1_title.rightHelper(this.animal), this.n1_1_title_getRight)
+        && t.checkExpect(this.n1_1_author.rightHelper(this.button), this.n1_1_author_getRight);
+  }
+
+  //tests for sameTree
+  boolean testSameTree(Tester t) {
+    return t.checkExpect(this.n2_2.sameTree(this.n2_2), true)
+        && t.checkExpect(this.n2_2.sameTree(this.n1_1), false)
+        && t.checkExpect(this.n2_2.sameTree(this.leaf), false)
+        && t.checkExpect(this.n1_1_title.sameTree(this.n1_1_title), true)
+        && t.checkExpect(this.n1_1_title.sameTree(this.n2_2_title), false)
+        && t.checkExpect(this.n2_1_title.sameTree(this.n1_1_title), false)
+        && t.checkExpect(this.n1_1_title.sameTree(this.leaf_title), false)
+        && t.checkExpect(this.n1_1_author.sameTree(this.n1_1_author), true)
+        && t.checkExpect(this.n1_1_author.sameTree(this.n2_2_author), false)
+        && t.checkExpect(this.n2_1_author.sameTree(this.n1_1_author), false)
+        && t.checkExpect(this.n1_1_author.sameTree(this.leaf_author), false);
+  }
+
+  //tests for sameNode
+  boolean testSameNode(Tester t) {
+    return t.checkExpect(this.n2_2.sameNode((Node<Book>)this.n2_2), true)
+        && t.checkExpect(this.n2_2.sameNode((Node<Book>)this.n1_1), false)
+        && t.checkExpect(this.n1_1_title.sameNode((Node<Book>)this.n1_1_title), true)
+        && t.checkExpect(this.n1_1_title.sameNode((Node<Book>)this.n2_2_title), false)
+        && t.checkExpect(this.n2_1_title.sameNode((Node<Book>)this.n1_1_title), false)
+        && t.checkExpect(this.n1_1_author.sameNode((Node<Book>)this.n1_1_author), true)
+        && t.checkExpect(this.n1_1_author.sameNode((Node<Book>)this.n2_2_author), false)
+        && t.checkExpect(this.n2_1_author.sameNode((Node<Book>)this.n1_1_author), false);
+  }
+
+  //tests for sameLeaf
+  boolean testSameLeaf(Tester t) {
+    return t.checkExpect(this.leaf.sameLeaf((Leaf<Book>)this.leaf), true)
+        && t.checkExpect(this.leaf_title.sameLeaf((Leaf<Book>)this.leaf_title), true)
+        && t.checkExpect(this.leaf_author.sameLeaf((Leaf<Book>)this.leaf_author), true)
+        && t.checkExpect(this.leaf.sameLeaf((Leaf<Book>)this.leaf_author), true)
+        && t.checkExpect(this.leaf_title.sameLeaf((Leaf<Book>)this.leaf), true)
+        && t.checkExpect(this.leaf_author.sameLeaf((Leaf<Book>)this.leaf_title), true);
+  }
+
+  //tests for sameData
+  boolean testSameData(Tester t) {
+    return t.checkExpect(this.n2_2.sameData(this.n2_2), true)
+        && t.checkExpect(this.n2_2.sameData(this.n1_1), false)
+        && t.checkExpect(this.n2_2.sameData(this.leaf), false)
+        && t.checkExpect(this.leaf.sameData(this.n2_2), false)
+        && t.checkExpect(this.n1_1_title.sameData(this.n1_1_title), true)
+        && t.checkExpect(this.n1_1_title.sameData(this.n2_2_title), false)
+        && t.checkExpect(this.n2_1_title.sameData(this.n1_1_title), false)
+        && t.checkExpect(this.n1_1_title.sameData(this.leaf_title), false)
+        && t.checkExpect(this.n1_1_author.sameData(this.n1_1_author), true)
+        && t.checkExpect(this.n1_1_author.sameData(this.n2_2_author), false)
+        && t.checkExpect(this.n2_1_author.sameData(this.n1_1_author), false)
+        && t.checkExpect(this.n1_1_author.sameData(this.leaf_author), false);
+  }
+
+  //tests for inTree
+  boolean testInTree(Tester t) {
+    return t.checkExpect(this.n2_2.inTree(this.n2_2), true)
+        && t.checkExpect(this.n2_2.inTree(this.n1_1), true)
+        && t.checkExpect(this.n2_2.inTree(this.leaf), false)
+        && t.checkExpect(this.n1_1_title.inTree(this.n1_1_title), true)
+        && t.checkExpect(this.n1_1_title.inTree(this.n2_2_title), false)
+        && t.checkExpect(this.n2_1_title.inTree(this.n1_1_title), true)
+        && t.checkExpect(this.n1_1_title.inTree(this.leaf_title), false)
+        && t.checkExpect(this.n1_1_author.inTree(this.n1_1_author), true)
+        && t.checkExpect(this.n1_1_author.inTree(this.n2_2_author), false)
+        && t.checkExpect(this.n2_1_author.inTree(this.n1_1_author), true)
+        && t.checkExpect(this.n1_1_author.inTree(this.leaf_author), false);
+  }
+
+  //tests for buildList
+  boolean testBuildList(Tester t) {
+    return t.checkExpect(this.n2_2.buildList(),
+        new ConsList<Book>(this.animal,
+            new ConsList<Book>(this.hamlet,
+                new ConsList<Book>(this.it,
+                    new MtList<Book>()))))
+        && t.checkExpect(this.n2_1_title.buildList(),
+            new ConsList<Book>(this.animal,
+                new ConsList<Book>(this.watchman,
+                    new ConsList<Book>(this.hamlet,
+                        new MtList<Book>()))))
+        && t.checkExpect(this.n2_1_author.buildList(),
+            new ConsList<Book>(this.button,
+                new ConsList<Book>(this.eightyfour,
+                    new ConsList<Book>(this.watchman,
+                        new MtList<Book>()))))
+        && t.checkExpect(this.leaf.buildList(), new MtList<Book>());
+  }
+
+  //tests for buildHelper
+  boolean testBuildHelper(Tester t) {
+    return t.checkExpect(this.n2_2.buildHelper(new MtList<Book>()),
+        new ConsList<Book>(this.it,
+            new ConsList<Book>(this.hamlet,
+                new ConsList<Book>(this.animal,
+                    new MtList<Book>()))))
+        && t.checkExpect(this.n2_1_title.buildHelper(new MtList<Book>()),
+            new ConsList<Book>(this.hamlet,
+                new ConsList<Book>(this.watchman,
+                    new ConsList<Book>(this.animal,
+                        new MtList<Book>()))))
+        && t.checkExpect(this.n2_1_author.buildHelper(new MtList<Book>()),
+            new ConsList<Book>(this.watchman,
+                new ConsList<Book>(this.eightyfour,
+                    new ConsList<Book>(this.button,
+                        new MtList<Book>()))))
+        && t.checkExpect(this.leaf.buildHelper(new MtList<Book>()), new MtList<Book>());
+  }
 }
