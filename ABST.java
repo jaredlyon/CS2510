@@ -28,6 +28,15 @@ class MtList<T> implements IList<T> {
 
   // helper for reverse
   public IList<T> reverseHelper(IList<T> data) {
+
+    /*
+     * fields of data:
+     *  none
+     * methods of data:
+     *  this.reverse() ... IList<T>
+     *  this.reverseHelper(IList<T>) ... IList<T>
+     */
+
     return data;
   }
 }
@@ -59,6 +68,15 @@ class ConsList<T> implements IList<T> {
 
   // helper for reverse
   public IList<T> reverseHelper(IList<T> data) {
+
+    /*
+     * fields of data:
+     *  none
+     * methods of data:
+     *  this.reverse() ... IList<T>
+     *  this.reverseHelper(IList<T>) ... IList<T>
+     */
+
     return this.rest.reverseHelper(new ConsList<T>(this.first, data));
   }
 }
@@ -97,6 +115,16 @@ class BooksByTitle implements Comparator<Book> {
    */
 
   public int compare(Book b1, Book b2) {
+
+    /*
+     * fields of b1, b2:
+     *  this.title ... String
+     *  this.author ... String
+     *  this.price ... int
+     * methods:
+     *  none
+     */
+
     return b1.title.compareTo(b2.title);
   }
 }
@@ -113,6 +141,16 @@ class BooksByAuthor implements Comparator<Book> {
    */
 
   public int compare(Book b1, Book b2) {
+
+    /*
+     * fields of b1, b2:
+     *  this.title ... String
+     *  this.author ... String
+     *  this.price ... int
+     * methods:
+     *  none
+     */
+
     return b1.author.compareTo(b2.author);
   }
 }
@@ -129,6 +167,16 @@ class BooksByPrice implements Comparator<Book> {
    */
 
   public int compare(Book b1, Book b2) {
+
+    /*
+     * fields of b1, b2:
+     *  this.title ... String
+     *  this.author ... String
+     *  this.price ... int
+     * methods:
+     *  none
+     */
+
     return b1.price - b2.price;
   }
 }
@@ -168,6 +216,16 @@ abstract class ABST<T> implements IBST<T> {
   ABST(Comparator<T> order) {
     this.order = order;
   }
+
+  /*
+   * fields:
+   *  this.order ... Comparator<T>
+   * methods:
+   *  none
+   * methods for fields:
+   *  this.order.compare(Book, Book) ... int
+   */
+
 }
 
 class Leaf<T> extends ABST<T> {
@@ -175,6 +233,27 @@ class Leaf<T> extends ABST<T> {
   Leaf(Comparator<T> order) {
     super(order);
   }
+
+  /*
+   * fields:
+   *  none
+   * methods:
+   *  this.insert(T) ... ABST<T>
+   *  this.present(T) ... boolean
+   *  this.getLeftmost() ... T
+   *  this.leftHelper(T) ... T
+   *  this.getRight() ... ABST<T>
+   *  this.rightHelper(T) ... ABST<T>
+   *  this.sameTree(ABST<T>) ... boolean
+   *  this.sameLeaf(Leaf<T>) ... boolean
+   *  this.sameNode(Node<T>) ... boolean
+   *  this.sameData(ABST<T>) ... boolean
+   *  this.inTree(ABST<T>) ... boolean
+   *  this.buildList() ... IList<T>
+   *  this.buildHelper(IList<T>) ... IList<T>
+   * methods for fields:
+   *  none
+   */
 
   // inserts an item into the correct place
   public ABST<T> insert(T data) {
@@ -208,27 +287,130 @@ class Leaf<T> extends ABST<T> {
 
   // checks if this tree is the same as the given one
   public boolean sameTree(ABST<T> tree) {
+
+    /*
+     * fields of tree:
+     *  tree.order ... Comparator<T>
+     * methods of tree:
+     *  tree.insert(T) ... ABST<T>
+     *  tree.present(T) ... boolean
+     *  tree.getLeftmost() ... T
+     *  tree.leftHelper(T) ... T
+     *  tree.getRight() ... ABST<T>
+     *  tree.rightHelper(T) ... ABST<T>
+     *  tree.sameTree(ABST<T>) ... boolean
+     *  tree.sameLeaf(Leaf<T>) ... boolean
+     *  tree.sameNode(Node<T>) ... boolean
+     *  tree.sameData(ABST<T>) ... boolean
+     *  tree.inTree(ABST<T>) ... boolean
+     *  tree.buildList() ... IList<T>
+     *  tree.buildHelper(IList<T>) ... IList<T>
+     */
+
     return tree.sameLeaf(this);
   }
 
   // checks if this leaf is the same as the given one
   public boolean sameLeaf(Leaf<T> leaf) {
+
+    /*
+     * fields of leaf:
+     *  leaf.order ... Comparator<T>
+     * methods of leaf:
+     *  leaf.insert(T) ... ABST<T>
+     *  leaf.present(T) ... boolean
+     *  leaf.getLeftmost() ... T
+     *  leaf.leftHelper(T) ... T
+     *  leaf.getRight() ... ABST<T>
+     *  leaf.rightHelper(T) ... ABST<T>
+     *  leaf.sameTree(ABST<T>) ... boolean
+     *  leaf.sameLeaf(Leaf<T>) ... boolean
+     *  leaf.sameNode(Node<T>) ... boolean
+     *  leaf.sameData(ABST<T>) ... boolean
+     *  leaf.inTree(ABST<T>) ... boolean
+     *  leaf.buildList() ... IList<T>
+     *  leaf.buildHelper(IList<T>) ... IList<T>
+     */
+
     return true;
   }
 
   // checks if this node is the same as the given one
   public boolean sameNode(Node<T> node) {
+
+    /*
+     * fields of node:
+     *  node.order ... Comparator<T>
+     *  node.data ... T
+     *  node.left ... ABST<T>
+     *  node.right ... ABST<T>
+     * methods of node:
+     *  node.insert(T) ... ABST<T>
+     *  node.present(T) ... boolean
+     *  node.getLeftmost() ... T
+     *  node.leftHelper(T) ... T
+     *  node.getRight() ... ABST<T>
+     *  node.rightHelper(T) ... ABST<T>
+     *  node.sameTree(ABST<T>) ... boolean
+     *  node.sameLeaf(Leaf<T>) ... boolean
+     *  node.sameNode(Node<T>) ... boolean
+     *  node.sameData(ABST<T>) ... boolean
+     *  node.inTree(ABST<T>) ... boolean
+     *  node.buildList() ... IList<T>
+     *  node.buildHelper(IList<T>) ... IList<T>
+     */
+
     return false;
   }
 
   // checks if this tree has the same data as the given one
   public boolean sameData(ABST<T> tree) {
+
+    /*
+     * fields of tree:
+     *  tree.order ... Comparator<T>
+     * methods of tree:
+     *  tree.insert(T) ... ABST<T>
+     *  tree.present(T) ... boolean
+     *  tree.getLeftmost() ... T
+     *  tree.leftHelper(T) ... T
+     *  tree.getRight() ... ABST<T>
+     *  tree.rightHelper(T) ... ABST<T>
+     *  tree.sameTree(ABST<T>) ... boolean
+     *  tree.sameLeaf(Leaf<T>) ... boolean
+     *  tree.sameNode(Node<T>) ... boolean
+     *  tree.sameData(ABST<T>) ... boolean
+     *  tree.inTree(ABST<T>) ... boolean
+     *  tree.buildList() ... IList<T>
+     *  tree.buildHelper(IList<T>) ... IList<T>
+     */
+
     return tree.inTree(this)
         && this.inTree(tree);
   }
 
   // searches this tree for the given data
   public boolean inTree(ABST<T> node) {
+
+    /*
+     * fields of node:
+     *  node.order ... Comparator<T>
+     * methods of tree:
+     *  node.insert(T) ... ABST<T>
+     *  node.present(T) ... boolean
+     *  node.getLeftmost() ... T
+     *  node.leftHelper(T) ... T
+     *  node.getRight() ... ABST<T>
+     *  node.rightHelper(T) ... ABST<T>
+     *  node.sameTree(ABST<T>) ... boolean
+     *  node.sameLeaf(Leaf<T>) ... boolean
+     *  node.sameNode(Node<T>) ... boolean
+     *  node.sameData(ABST<T>) ... boolean
+     *  node.inTree(ABST<T>) ... boolean
+     *  node.buildList() ... IList<T>
+     *  node.buildHelper(IList<T>) ... IList<T>
+     */
+
     return true;
   }
 
@@ -239,6 +421,16 @@ class Leaf<T> extends ABST<T> {
 
   // helps buildList
   public IList<T> buildHelper(IList<T> list) {
+
+    /*
+     * fields of list:
+     *  list.first ... T
+     *  list.rest ... IList<T>
+     * methods of list:
+     *  list.reverse() ... IList<T>
+     *  list.reverseHelper(IList<T>) ... IList<T>
+     */
+
     return list;
   }
 
@@ -255,6 +447,54 @@ class Node<T> extends ABST<T> {
     this.left = left;
     this.right = right;
   }
+
+  /*
+   * fields:
+   *  this.data ... T
+   *  this.left ... ABST<T>
+   *  this.right ... ABST<T>
+   * methods:
+   *  this.insert(T) ... ABST<T>
+   *  this.present(T) ... boolean
+   *  this.getLeftmost() ... T
+   *  this.leftHelper(T) ... T
+   *  this.getRight() ... ABST<T>
+   *  this.rightHelper(T) ... ABST<T>
+   *  this.sameTree(ABST<T>) ... boolean
+   *  this.sameLeaf(Leaf<T>) ... boolean
+   *  this.sameNode(Node<T>) ... boolean
+   *  this.sameData(ABST<T>) ... boolean
+   *  this.inTree(ABST<T>) ... boolean
+   *  this.buildList() ... IList<T>
+   *  this.buildHelper(IList<T>) ... IList<T>
+   * methods for fields:
+   *  this.left.insert(T) ... ABST<T>
+   *  this.left.present(T) ... boolean
+   *  this.left.getLeftmost() ... T
+   *  this.left.leftHelper(T) ... T
+   *  this.left.getRight() ... ABST<T>
+   *  this.left.rightHelper(T) ... ABST<T>
+   *  this.left.sameTree(ABST<T>) ... boolean
+   *  this.left.sameLeaf(Leaf<T>) ... boolean
+   *  this.left.sameNode(Node<T>) ... boolean
+   *  this.left.sameData(ABST<T>) ... boolean
+   *  this.left.inTree(ABST<T>) ... boolean
+   *  this.left.buildList() ... IList<T>
+   *  this.left.buildHelper(IList<T>) ... IList<T>
+   *  this.right.insert(T) ... ABST<T>
+   *  this.right.present(T) ... boolean
+   *  this.right.getLeftmost() ... T
+   *  this.right.leftHelper(T) ... T
+   *  this.right.getRight() ... ABST<T>
+   *  this.right.rightHelper(T) ... ABST<T>
+   *  this.right.sameTree(ABST<T>) ... boolean
+   *  this.right.sameLeaf(Leaf<T>) ... boolean
+   *  this.right.sameNode(Node<T>) ... boolean
+   *  this.right.sameData(ABST<T>) ... boolean
+   *  this.right.inTree(ABST<T>) ... boolean
+   *  this.right.buildList() ... IList<T>
+   *  this.right.buildHelper(IList<T>) ... IList<T>
+   */
 
   // inserts an item into the correct place
   public ABST<T> insert(T data) {
@@ -298,11 +538,54 @@ class Node<T> extends ABST<T> {
 
   // checks if this tree is the same as the given one
   public boolean sameTree(ABST<T> tree) {
+
+    /*
+     * fields of tree:
+     *  tree.order ... Comparator<T>
+     * methods of tree:
+     *  tree.insert(T) ... ABST<T>
+     *  tree.present(T) ... boolean
+     *  tree.getLeftmost() ... T
+     *  tree.leftHelper(T) ... T
+     *  tree.getRight() ... ABST<T>
+     *  tree.rightHelper(T) ... ABST<T>
+     *  tree.sameTree(ABST<T>) ... boolean
+     *  tree.sameLeaf(Leaf<T>) ... boolean
+     *  tree.sameNode(Node<T>) ... boolean
+     *  tree.sameData(ABST<T>) ... boolean
+     *  tree.inTree(ABST<T>) ... boolean
+     *  tree.buildList() ... IList<T>
+     *  tree.buildHelper(IList<T>) ... IList<T>
+     */
+
     return tree.sameNode(this);
   }
 
   // checks if this node is the same as the given one
   public boolean sameNode(Node<T> node) {
+
+    /*
+     * fields of node:
+     *  node.order ... Comparator<T>
+     *  node.data ... T
+     *  node.left ... ABST<T>
+     *  node.right ... ABST<T>
+     * methods of node:
+     *  node.insert(T) ... ABST<T>
+     *  node.present(T) ... boolean
+     *  node.getLeftmost() ... T
+     *  node.leftHelper(T) ... T
+     *  node.getRight() ... ABST<T>
+     *  node.rightHelper(T) ... ABST<T>
+     *  node.sameTree(ABST<T>) ... boolean
+     *  node.sameLeaf(Leaf<T>) ... boolean
+     *  node.sameNode(Node<T>) ... boolean
+     *  node.sameData(ABST<T>) ... boolean
+     *  node.inTree(ABST<T>) ... boolean
+     *  node.buildList() ... IList<T>
+     *  node.buildHelper(IList<T>) ... IList<T>
+     */
+
     return (node.order.compare(this.data, node.data) == 0)
         && this.left.sameTree(node.left)
         && this.right.sameTree(node.right);
@@ -310,17 +593,77 @@ class Node<T> extends ABST<T> {
 
   // checks if this leaf is the same as the given one
   public boolean sameLeaf(Leaf<T> leaf) {
+
+    /*
+     * fields of leaf:
+     *  leaf.order ... Comparator<T>
+     * methods of leaf:
+     *  leaf.insert(T) ... ABST<T>
+     *  leaf.present(T) ... boolean
+     *  leaf.getLeftmost() ... T
+     *  leaf.leftHelper(T) ... T
+     *  leaf.getRight() ... ABST<T>
+     *  leaf.rightHelper(T) ... ABST<T>
+     *  leaf.sameTree(ABST<T>) ... boolean
+     *  leaf.sameLeaf(Leaf<T>) ... boolean
+     *  leaf.sameNode(Node<T>) ... boolean
+     *  leaf.sameData(ABST<T>) ... boolean
+     *  leaf.inTree(ABST<T>) ... boolean
+     *  leaf.buildList() ... IList<T>
+     *  leaf.buildHelper(IList<T>) ... IList<T>
+     */
+
     return false;
   }
 
   // checks if this tree has the same data as the given one
   public boolean sameData(ABST<T> tree) {
+
+    /*
+     * fields of tree:
+     *  tree.order ... Comparator<T>
+     * methods of tree:
+     *  tree.insert(T) ... ABST<T>
+     *  tree.present(T) ... boolean
+     *  tree.getLeftmost() ... T
+     *  tree.leftHelper(T) ... T
+     *  tree.getRight() ... ABST<T>
+     *  tree.rightHelper(T) ... ABST<T>
+     *  tree.sameTree(ABST<T>) ... boolean
+     *  tree.sameLeaf(Leaf<T>) ... boolean
+     *  tree.sameNode(Node<T>) ... boolean
+     *  tree.sameData(ABST<T>) ... boolean
+     *  tree.inTree(ABST<T>) ... boolean
+     *  tree.buildList() ... IList<T>
+     *  tree.buildHelper(IList<T>) ... IList<T>
+     */
+
     return tree.inTree(this)
         && this.inTree(tree);
   }
 
   // searches this tree for the given data
   public boolean inTree(ABST<T> node) {
+
+    /*
+     * fields of node:
+     *  node.order ... Comparator<T>
+     * methods of tree:
+     *  node.insert(T) ... ABST<T>
+     *  node.present(T) ... boolean
+     *  node.getLeftmost() ... T
+     *  node.leftHelper(T) ... T
+     *  node.getRight() ... ABST<T>
+     *  node.rightHelper(T) ... ABST<T>
+     *  node.sameTree(ABST<T>) ... boolean
+     *  node.sameLeaf(Leaf<T>) ... boolean
+     *  node.sameNode(Node<T>) ... boolean
+     *  node.sameData(ABST<T>) ... boolean
+     *  node.inTree(ABST<T>) ... boolean
+     *  node.buildList() ... IList<T>
+     *  node.buildHelper(IList<T>) ... IList<T>
+     */
+
     return node.present(this.data)
         && this.left.inTree(node)
         && this.right.inTree(node);
@@ -333,9 +676,18 @@ class Node<T> extends ABST<T> {
 
   // accumulates data for buildList
   public IList<T> buildHelper(IList<T> list) {
+
+    /*
+     * fields of list:
+     *  list.first ... T
+     *  list.rest ... IList<T>
+     * methods of list:
+     *  list.reverse() ... IList<T>
+     *  list.reverseHelper(IList<T>) ... IList<T>
+     */
+
     return this.right.buildHelper(new ConsList<T>(this.data, this.left.buildHelper(list)));
   }
-
 }
 
 
