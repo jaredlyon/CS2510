@@ -712,9 +712,9 @@ class Node<T> extends ABST<T> {
 
 class ExamplesBooks {
   ExamplesBooks() {
-    
+
   }
-  
+
   // list of books
   Book gatsby = new Book("The Great Gatsby", "F. Scott Fitzgerald", 20);
   Book button = new Book("The Curious Case of Benjamin Button", "F. Scott Fitzgerald", 25);
@@ -1099,5 +1099,46 @@ class ExamplesBooks {
                     new ConsList<Book>(this.button,
                         new MtList<Book>()))))
         && t.checkExpect(this.leaf.buildHelper(new MtList<Book>()), new MtList<Book>());
+  }
+
+  //examples for IList reverse
+  IList<Integer> test1 = new ConsList<Integer>(1,
+      new ConsList<Integer>(2,
+          new ConsList<Integer>(3,
+              new MtList<Integer>())));
+  
+  IList<Integer> test1Reversed = new ConsList<Integer>(3,
+      new ConsList<Integer>(2,
+          new ConsList<Integer>(1,
+              new MtList<Integer>())));
+  
+  IList<Integer> mtInt = new MtList<Integer>();
+  
+  IList<String> test2 = new ConsList<String>("Hello",
+      new ConsList<String>("Goodbye",
+          new ConsList<String>("Fundies 2",
+              new MtList<String>())));
+  
+  IList<String> test2Reversed = new ConsList<String>("Fundies 2",
+      new ConsList<String>("Goodbye",
+          new ConsList<String>("Hello",
+              new MtList<String>())));
+  
+  IList<String> mtStr = new MtList<String>();
+  
+  IList<Double> mtDouble = new MtList<Double>();
+
+  //tests for reverse
+  boolean testReverse(Tester t) {
+    return t.checkExpect(this.test1.reverse(), this.test1Reversed)
+        && t.checkExpect(this.test2.reverse(), this.test2Reversed)
+        && t.checkExpect(this.mtDouble.reverse(), this.mtDouble);
+  }
+  
+  //tests for reverseHelper
+  boolean testReverseHelper(Tester t) {
+    return t.checkExpect(this.test1.reverseHelper(this.mtInt), this.test1Reversed)
+        && t.checkExpect(this.test2.reverseHelper(this.mtStr), this.test2Reversed)
+        && t.checkExpect(this.mtDouble.reverseHelper(this.mtDouble), this.mtDouble);
   }
 }
