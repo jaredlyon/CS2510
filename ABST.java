@@ -207,8 +207,7 @@ class Node<T> extends ABST<T> {
 
   // gets the right side of this tree
   public ABST<T> getRight() {
-    T LEFT_MOST = this.getLeftmost();
-    return this.rightHelper(LEFT_MOST);
+    return this.rightHelper(this.getLeftmost());
   }
 
   // helps getRight
@@ -378,7 +377,7 @@ class ExamplesBooks {
   ABST<Book> n3_2_author_insert = new Node<Book>(new BooksByAuthor(), this.bartleby, this.leaf_author, this.leaf_author);
   ABST<Book> n3_4_author_insert = new Node<Book>(new BooksByAuthor(), this.hamlet, this.leaf_author, this.leaf_author);
   // level 2
-  ABST<Book> n2_1_author_insert = new Node<Book>(new BooksByAuthor(), this.watchman, this.n3_1_author_insert, this.leaf_author);
+  ABST<Book> n2_1_author_insert = new Node<Book>(new BooksByAuthor(), this.watchman, this.n3_1_author_insert, this.n3_2_author_insert);
   ABST<Book> n2_2_author_insert = new Node<Book>(new BooksByAuthor(), this.catcher, this.leaf_author, this.n3_4_author_insert);
   // level 1
   ABST<Book> n1_1_author_insert = new Node<Book>(new BooksByAuthor(), this.prejudice, this.n2_1_author_insert, this.n2_2_author_insert);
@@ -389,7 +388,7 @@ class ExamplesBooks {
   ABST<Book> n3_1_author_getRight = new Node<Book>(new BooksByAuthor(), this.eightyfour, this.leaf_author, this.leaf_author);
   ABST<Book> n3_4_author_getRight = new Node<Book>(new BooksByAuthor(), this.hamlet, this.leaf_author, this.leaf_author);
   // level 2
-  ABST<Book> n2_1_author_getRight = new Node<Book>(new BooksByAuthor(), this.watchman, this.n3_1_author_insert, this.leaf_author);
+  ABST<Book> n2_1_author_getRight = new Node<Book>(new BooksByAuthor(), this.watchman, this.n3_1_author_getRight, this.leaf_author);
   ABST<Book> n2_2_author_getRight = new Node<Book>(new BooksByAuthor(), this.catcher, this.leaf_author, this.n3_4_author_getRight);
   // level 1
   ABST<Book> n1_1_author_getRight = new Node<Book>(new BooksByAuthor(), this.prejudice, this.n2_1_author_getRight, this.n2_2_author_getRight);
@@ -439,7 +438,10 @@ class ExamplesBooks {
     return t.checkExpect(this.n2_2.getRight(), this.n2_2_right_1)
         && t.checkExpect(this.n1_1.getRight(), this.n1_1_right)
         && t.checkExpect(this.n1_1_title.getRight(), this.n1_1_title_getRight)
-        && t.checkException(new RuntimeException("No right of an empty tree"), this.leaf, "getRight");
+        && t.checkExpect(this.n1_1_author.getRight(), this.n1_1_author_getRight)
+        && t.checkException(new RuntimeException("No right of an empty tree"), this.leaf, "getRight")
+        && t.checkException(new RuntimeException("No right of an empty tree"), this.leaf_title, "getRight")
+        && t.checkException(new RuntimeException("No right of an empty tree"), this.leaf_author, "getRight");
   }
   //
   //  //tests for sameTree
