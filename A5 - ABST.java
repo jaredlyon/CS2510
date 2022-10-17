@@ -715,6 +715,12 @@ class ExamplesBooks {
 
   }
 
+  // BooksByTitle, BooksByAuthor, BooksByPrive
+  
+  Comparator<Book> byTitle = new BooksByTitle();
+  Comparator<Book> byAuthor = new BooksByAuthor();
+  Comparator<Book> byPrice = new BooksByPrice();
+  
   // list of books
   Book gatsby = new Book("The Great Gatsby", "F. Scott Fitzgerald", 20);
   Book button = new Book("The Curious Case of Benjamin Button", "F. Scott Fitzgerald", 25);
@@ -899,6 +905,24 @@ class ExamplesBooks {
   ABST<Book> n1_1_author_getRight = new Node<Book>(new BooksByAuthor(),
       this.prejudice, this.n2_1_author_getRight, this.n2_2_author_getRight);
 
+  // tests for BooksByTitle method
+  boolean testBooksByTitle(Tester t) {
+    return t.checkExpect(byTitle.compare(this.gatsby, this.gatsby), 0)
+        && t.checkExpect(byTitle.compare(this.gatsby, this.it), 11);
+  }
+  
+  // tests for BooksByAuthor method
+  boolean testBooksByAuthor(Tester t) {
+    return t.checkExpect(byAuthor.compare(this.watchman, this.mockingbird), 0)
+        && t.checkExpect(byAuthor.compare(this.gatsby, this.watchman), -2);
+  }
+  
+  // tests for BooksByPrice method
+  boolean testBooksByPrice(Tester t) {
+    return t.checkExpect(byPrice.compare(this.gatsby, this.gatsby), 0)
+        && t.checkExpect(byPrice.compare(this.gatsby, this.it), -50);
+  }
+  
   // tests for insert method
   boolean testInsert(Tester t) {
     return t.checkExpect(this.n1_1.insert(this.gatsby),
