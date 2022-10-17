@@ -432,6 +432,11 @@ class ExamplesBooks {
         && t.checkException(new RuntimeException("No leftmost item of an empty tree"), this.leaf_title, "getLeftmost")
         && t.checkException(new RuntimeException("No leftmost item of an empty tree"), this.leaf_author, "getLeftmost");
   }
+  
+//  // tests for leftHelper
+//  boolean testLeftHelper(Tester t) {
+//    return ???
+//  }
 
   //tests for getRight
   boolean testGetRight(Tester t) {
@@ -443,65 +448,69 @@ class ExamplesBooks {
         && t.checkException(new RuntimeException("No right of an empty tree"), this.leaf_title, "getRight")
         && t.checkException(new RuntimeException("No right of an empty tree"), this.leaf_author, "getRight");
   }
-  //
-  //  //tests for sameTree
-  //  boolean testSameTree(Tester t) {
-  //    return t.checkExpect(this.n2_2.sameTree(this.n2_2), true)
-  //        && t.checkExpect(this.n2_2.sameTree(this.n1_1), false)
-  //        && t.checkExpect(this.n2_2.sameTree(this.leaf), false)
-  //        && t.checkExpect(this.n1_1_title.sameTree(this.n1_1_title), true)
-  //        && t.checkExpect(this.n1_1_title.sameTree(this.n2_2_title), false)
-  //        && t.checkExpect(this.n2_1_title.sameTree(this.n1_1_title), false)
-  //        && t.checkExpect(this.n1_1_title.sameTree(this.leaf_title), false);
-  //  }
-  //
-  //  //tests for sameNode
-  //  boolean testSameNode(Tester t) {
-  //    return t.checkExpect(this.n2_2.sameNode(this.n2_2), true)
-  //        && t.checkExpect(this.n2_2.sameNode(this.n1_1), false)
-  //        && t.checkExpect(this.n2_2.sameNode(this.leaf), false)
-  //        && t.checkExpect(this.n1_1_title.sameTree(this.n1_1_title), true)
-  //        && t.checkExpect(this.n1_1_title.sameTree(this.n2_2_title), false)
-  //        && t.checkExpect(this.n2_1_title.sameTree(this.n1_1_title), false)
-  //        && t.checkExpect(this.n1_1_title.sameTree(this.leaf_title), false);
-  //  }
-  //
-  //  //tests for sameData
-  //  boolean testSameData(Tester t) {
-  //    return t.checkExpect(this.n2_2.sameData(this.n2_2), true)
-  //        && t.checkExpect(this.n2_2.sameData(this.n1_1), true)
-  //        && t.checkExpect(this.n2_2.sameData(this.leaf), true)
-  //        && t.checkExpect(this.leaf.sameData(this.n2_2), false)
-  //        && t.checkExpect(this.n1_1_title.sameData(this.n1_1_title), true)
-  //        && t.checkExpect(this.n1_1_title.sameData(this.n2_2_title), false)
-  //        && t.checkExpect(this.n2_1_title.sameData(this.n1_1_title), false)
-  //        && t.checkExpect(this.n1_1_title.sameData(this.leaf_title), false);
-  //  }
-  //
-  //  //tests for inTree
-  //  boolean testInTree(Tester t) {
-  //    return t.checkExpect(this.n2_2.inTree(this.n2_2), true)
-  //        && t.checkExpect(this.n2_2.inTree(this.n1_1), false)
-  //        && t.checkExpect(this.n2_2.inTree(this.leaf), false)
-  //        && t.checkExpect(this.n1_1_title.inTree(this.n1_1_title), true)
-  //        && t.checkExpect(this.n1_1_title.inTree(this.n2_2_title), false)
-  //        && t.checkExpect(this.n2_1_title.inTree(this.n1_1_title), false)
-  //        && t.checkExpect(this.n1_1_title.inTree(this.leaf_title), false);
-  //  }
-  //
-  //  //tests for buildList
-  //  boolean testBuildList(Tester t) {
-  //    return t.checkExpect(this.n2_2.buildList(),
-  //            new ConsList<Book>(this.animal,
-  //               new ConsList<Book>(this.hamlet,
-  //                  new ConsList<Book>(this.it,
-  //                    new MtList<Book>()))))
-  //        && t.checkExpect(this.leaf.buildList(), new MtList<Book>())
-  //        && t.checkExpect(this.n2_1_title.buildList(),
-  //             new ConsList<Book>(this.animal,
-  //               new ConsList<Book>(this.watchman,
-  //                 new ConsList<Book>(this.hamlet,
-  //                   new MtList<Book>()))));
-  //  }
-
+  
+//  // tests for RightHelper
+//  boolean testRightHelper(Tester t) {
+//    return ???
+//  }
+//
+//  //tests for sameTree
+//  boolean testSameTree(Tester t) {
+//    return t.checkExpect(this.n2_2.sameTree(this.n2_2), true)
+//        && t.checkExpect(this.n2_2.sameTree(this.n1_1), false)
+//        && t.checkExpect(this.n2_2.sameTree(this.leaf), false)
+//        && t.checkExpect(this.n1_1_title.sameTree(this.n1_1_title), true)
+//        && t.checkExpect(this.n1_1_title.sameTree(this.n2_2_title), false)
+//        && t.checkExpect(this.n2_1_title.sameTree(this.n1_1_title), false)
+//        && t.checkExpect(this.n1_1_title.sameTree(this.leaf_title), false);
+//  }
+//
+//  //tests for sameNode
+//  boolean testSameNode(Tester t) {
+//    return t.checkExpect(this.n2_2.sameNode(this.n2_2), true)
+//        && t.checkExpect(this.n2_2.sameNode(this.n1_1), false)
+//        && t.checkExpect(this.n2_2.sameNode(this.leaf), false)
+//        && t.checkExpect(this.n1_1_title.sameTree(this.n1_1_title), true)
+//        && t.checkExpect(this.n1_1_title.sameTree(this.n2_2_title), false)
+//        && t.checkExpect(this.n2_1_title.sameTree(this.n1_1_title), false)
+//        && t.checkExpect(this.n1_1_title.sameTree(this.leaf_title), false);
+//  }
+//
+//  //tests for sameData
+//  boolean testSameData(Tester t) {
+//    return t.checkExpect(this.n2_2.sameData(this.n2_2), true)
+//        && t.checkExpect(this.n2_2.sameData(this.n1_1), true)
+//        && t.checkExpect(this.n2_2.sameData(this.leaf), true)
+//        && t.checkExpect(this.leaf.sameData(this.n2_2), false)
+//        && t.checkExpect(this.n1_1_title.sameData(this.n1_1_title), true)
+//        && t.checkExpect(this.n1_1_title.sameData(this.n2_2_title), false)
+//        && t.checkExpect(this.n2_1_title.sameData(this.n1_1_title), false)
+//        && t.checkExpect(this.n1_1_title.sameData(this.leaf_title), false);
+//  }
+//
+//  //tests for inTree
+//  boolean testInTree(Tester t) {
+//    return t.checkExpect(this.n2_2.inTree(this.n2_2), true)
+//        && t.checkExpect(this.n2_2.inTree(this.n1_1), false)
+//        && t.checkExpect(this.n2_2.inTree(this.leaf), false)
+//        && t.checkExpect(this.n1_1_title.inTree(this.n1_1_title), true)
+//        && t.checkExpect(this.n1_1_title.inTree(this.n2_2_title), false)
+//        && t.checkExpect(this.n2_1_title.inTree(this.n1_1_title), false)
+//        && t.checkExpect(this.n1_1_title.inTree(this.leaf_title), false);
+//  }
+//
+//  //tests for buildList
+//  boolean testBuildList(Tester t) {
+//    return t.checkExpect(this.n2_2.buildList(),
+//            new ConsList<Book>(this.animal,
+//               new ConsList<Book>(this.hamlet,
+//                  new ConsList<Book>(this.it,
+//                    new MtList<Book>()))))
+//        && t.checkExpect(this.leaf.buildList(), new MtList<Book>())
+//        && t.checkExpect(this.n2_1_title.buildList(),
+//             new ConsList<Book>(this.animal,
+//               new ConsList<Book>(this.watchman,
+//                 new ConsList<Book>(this.hamlet,
+//                   new MtList<Book>()))));
+//  }
 }
