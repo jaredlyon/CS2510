@@ -49,12 +49,36 @@ class Player {
     return new Player(this.speed, this.size, this.color, this.x + this.speed, this.y);
   }
   
+  
   // move the player left
   Player moveLeft() {
     return new Player(this.speed, this.size, this.color, this.x - this.speed, this.y);
   }
   
+  // determines if a collision occurs
+  Player collide(Enemy e) {
+    if (this.distanceTo(e) == 0) {
+      if (this.size > e.size) {
+        return this.grow();
+      }
+        else {
+          return this.kill();
+        }
+      }
+    else {
+      return this;
+    }
+  }
+  
+  // determines the distance between player and enemy
+  double distanceTo(Enemy e) {
+    return Math.sqrt((this.x - e.x)*(this.x - e.x) - (this.y - e.y)*(this.y - e.y));
+  }
+  
   // kill the player
+  Player kill() {
+    return new Player(this.speed, 0, this.color, this.x, this.y);
+  }
   
   // grow the player
   Player grow() {
