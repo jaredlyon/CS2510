@@ -56,11 +56,14 @@ class Player {
   }
   
   // determines if a collision occurs
-  Player collide(Enemy e) {
+  Player collide(Enemy e) {                // needs to be able to grow player and kill enemy
     if (this.distanceTo(e) == 0) {
       if (this.size > e.size) {
         return this.grow();
-      }
+          }
+        else if(this.size == e.size) {
+          return this;
+        }
         else {
           return this.kill();
         }
@@ -72,7 +75,7 @@ class Player {
   
   // determines the distance between player and enemy
   double distanceTo(Enemy e) {
-    return Math.sqrt((this.x - e.x)*(this.x - e.x) - (this.y - e.y)*(this.y - e.y));
+    return Math.sqrt((this.x - e.x)*(this.x - e.x) + (this.y - e.y)*(this.y - e.y));
   }
   
   // kill the player
@@ -122,7 +125,21 @@ class Enemy {
     return new Enemy(this.speed, this.size, this.color, this.x + this.speed, this.y);
   }
   
-  // kills the enemy ?
+  // determines the distance between player and enemy
+  double distanceTo(Enemy e) {
+    return Math.sqrt((this.x - e.x)*(this.x - e.x) - (this.y - e.y)*(this.y - e.y));
+  }
+  
+  // kill the enemy
+  Enemy kill() {
+    return new Enemy(this.speed, 0, this.color, this.x, this.y);
+  }
+  
+  // Do we want the enemy to be able to behave as a player?
+  // grow the enemy                
+  Enemy grow() {
+    return new Enemy(this.speed, this.size + 1, this.color, this.x, this.y);
+  }
 }
 
 interface IList<T> {
@@ -183,5 +200,53 @@ class FishWorld extends World {
 class ExamplesGame {
   ExamplesGame() {
     
+  }
+  
+  // examples of Player and enemies
+  Player p1 = new Player (10, 10, Color.BLUE, 300, 200);
+  Enemy e1 = new Enemy (10, 5, Color.GREEN, 300, 200);       // give random starting pts for enemies
+  Enemy e2 = new Enemy (10, 5, Color.GREEN, 500, 100); 
+  Enemy e3 = new Enemy (10, 10, Color.YELLOW, 300, 200);
+  Enemy e4 = new Enemy (10, 10, Color.YELLOW, 0, 0); 
+  Enemy e5 = new Enemy (10, 20, Color.RED, 300, 200);
+  Enemy e6 = new Enemy (10, 20, Color.RED, 57, 337); 
+  
+  
+  // tests for distanceTo method
+  boolean testDistanceTo(Tester t) {
+    return t.checkInexact(this.p1.distanceTo(e1), 0.0, 0.00001)
+        && t.checkInexact(this.p1.distanceTo(e2), 223.60679, 0.00001)
+        && t.checkInexact(this.p1.distanceTo(e3), 0.0, 0.00001)
+        && t.checkInexact(this.p1.distanceTo(e4), 360.55513, 0.00001)
+        && t.checkInexact(this.p1.distanceTo(e5), 0.0, 0.00001)
+        && t.checkInexact(this.p1.distanceTo(e6), 278.95877, 0.00001);
+  }
+  
+  // tests for collide method
+  boolean testCollide(Tester t) {
+    return t.checkExpect(this.p1.collide(this.e1), 
+            new Player(this.p1.speed, this.p1.size + 1, this.p1.color, this.p1.x, this.p1.y))
+        && t.checkExpect(this.p1.collide(this.e2), this.p1)
+        && t.checkExpect(this.p1.collide(this.e3), this.p1)
+        && t.checkExpect(this.p1.collide(this.e4), this.p1)
+        && t.checkExpect(this.p1.collide(this.e5), 
+            new Player(this.p1.speed, 0, this.p1.color, this.p1.x, this.p1.y))
+        && t.checkExpect(this.p1.collide(this.e6), this.p1);
+  }
+  
+  // tests for kill method
+  boolean testKill(Tester t) {
+    return t.checkExpect(this.p1.kill(), new Player(this.p1.speed, 0, this.p1.color, this.p1.x, this.p1.y))
+        && t.checkExpect(this.e1.kill(), new Enemy(this.e1.speed, 0, this.e1.color, this.e1.x, this.e1.y))
+        && t.checkExpect(this.e2.kill(), new Enemy(this.e2.speed, 0, this.e2.color, this.e2.x, this.e2.y))
+        && t.checkExpect(this.e3.kill(), new Enemy(this.e3.speed, 0, this.e3.color, this.e3.x, this.e3.y));
+  }
+  
+  // tests for grow method
+  boolean testGrow(Tester t) {
+    return t.checkExpect(this.p1.grow(), new Player(this.p1.speed, this.p1.size + 1, this.p1.color, this.p1.x, this.p1.y))
+        && t.checkExpect(this.e1.grow(), new Enemy(this.e1.speed, this.e1.size + 1, this.e1.color, this.e1.x, this.e1.y))
+        && t.checkExpect(this.e2.grow(), new Enemy(this.e2.speed, this.e2.size + 1, this.e2.color, this.e2.x, this.e2.y))
+        && t.checkExpect(this.e3.grow(), new Enemy(this.e3.speed, this.e3.size + 1, this.e3.color, this.e3.x, this.e3.y));  
   }
 }
