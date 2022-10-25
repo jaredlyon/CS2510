@@ -201,10 +201,15 @@ class ConsList<T> implements IList<T> {
 }
 
 class Collide implements Predicate<Enemy> {
+  Player player;
+  
+  Collide(Player player) {
+    this.player = player;
+  }
 
   //is the given enemy next to the player?
   public boolean test(Enemy e) {
-    return Math.sqrt((this.x - e.x) * (this.x - e.x) + (this.y - e.y) * (this.y - e.y));
+    return (Math.sqrt((player.x - e.x) * (player.x - e.x) + (player.y - e.y) * (player.y - e.y))) < player.size;
   } 
 }
 
@@ -216,11 +221,11 @@ class Move implements Function<Enemy, Enemy> {
   }
 }
 
-class MakeScene implements BiFunction<Player, Enemy, WorldScene> {
+class MakeScene implements BiFunction<Enemy, WorldScene, WorldScene> {
   
   // draws the scene
-  public WorldScene apply(Player player, IList<Enemy> enemies) {
-    return new 
+  public WorldScene apply(Enemy enemy, WorldScene scene) {
+    return scene.placeImageXY(enemy.draw(), enemy.x, enemy.y);
   }
 }
 
@@ -235,7 +240,8 @@ class FishWorld extends World {
 
   // draws the dots onto the background
   public WorldScene makeScene() {
-    return //this needs to be changed to foldr
+    WorldScene intermediate = new WorldScene(600, 400).placeImageXY(this.player.draw(), this.player.x, this.player.y);
+    return this.enemies.foldr(new MakeScene(), intermediate);
   }
 
   // move the enemies onTick and check for collisions
