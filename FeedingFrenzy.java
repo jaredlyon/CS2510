@@ -3,6 +3,9 @@ import javalib.worldimages.*;
 import javalib.funworld.*;
 import java.awt.Color;
 import java.util.Random;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 class Player {
   int speed;
@@ -55,24 +58,6 @@ class Player {
     return new Player(this.speed, this.size, this.color, this.x - this.speed, this.y);
   }
   
-  // determines if a collision occurs
-  Player collide(Enemy e) {                // needs to be able to grow player and kill enemy
-    if (this.distanceTo(e) == 0) {
-      if (this.size > e.size) {
-        return this.grow();
-          }
-        else if(this.size == e.size) {
-          return this;
-        }
-        else {
-          return this.kill();
-        }
-      }
-    else {
-      return this;
-    }
-  }
-  
   // determines the distance between player and enemy
   double distanceTo(Enemy e) {
     return Math.sqrt((this.x - e.x)*(this.x - e.x) + (this.y - e.y)*(this.y - e.y));
@@ -101,7 +86,7 @@ class Enemy {
     this.speed = speed;
     this.color = color;
     Random rand = new Random(); // randomly places the enemy on screen
-    this.x = rand.nextInt(600);
+    this.x = 0; //always starts the enemies on the left
     this.y = rand.nextInt(400);
     this.size = rand.nextInt(25); // gives this enemy a random size
   }
@@ -143,31 +128,41 @@ class Enemy {
 }
 
 interface IList<T> {
-  // draws fish from this list onto the given scene
-  WorldScene draw(WorldScene acc);
+  //filter this list by the given predicate
+  IList<T> filter(Predicate<T> pred);
   
-  // moves this list of Fish
-  IList<T> move();
+  //ormap this list by the given predicate
+  boolean ormap(Predicate<T> pred);
+  
+  //maps a function onto each member of the list, producing a list of the results
+  <U> IList<U> map(Function<T, U> fun);
+  
+  //combines the items in this list using the given function
+  <U> U foldr(BiFunction<T, U, U> fun, U base);
 }
 
 class MtList<T> implements IList<T> {
   
-  MtList() {
-    
-  }
-
-  @Override
-  public WorldScene draw(WorldScene acc) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public IList<T> move() {
-    // TODO Auto-generated method stub
-    return null;
+  //filter this list by the given predicate
+  public IList<T> filter(Predicate<T> pred) {
+    return this;
   }
   
+  //ormap this list by the given predicate
+  public boolean ormap(Predicate<T> pred) {
+    return false;
+  }
+
+  //maps a function onto each member of the list, producing a list of the results
+  public <U> IList<U> map(Function<T, U> fun) {
+    // TODO Auto-generated method stub
+    return new MtList<U>();
+  }
+
+  //combines the items in this list using the given function
+  public <U> U foldr(BiFunction<T, U, U> fun, U base) {
+    return base;
+  }
 }
 
 class ConsList<T> implements IList<T> {
@@ -179,22 +174,92 @@ class ConsList<T> implements IList<T> {
     this.rest = rest;
   }
 
-  @Override
-  public WorldScene draw(WorldScene acc) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public IList<T> move() {
-    // TODO Auto-generated method stub
-    return null;
+  //filter this list by the given predicate
+  public IList<T> filter(Predicate<T> pred) {
+    if (pred.test(this.first)) {
+      return new ConsList<T>(this.first, this.rest.filter(pred));
+    }
+    else {
+      return this.rest.filter(pred);
+    }
   }
   
+  //ormap this list by the given predicate
+  public boolean ormap(Predicate<T> pred) {
+    return pred.test(this.first) || this.rest.ormap(pred);
+  }
+
+  //maps a function onto each member of the list, producing a list of the results
+  public <U> IList<U> map(Function<T, U> fun) {
+    return new ConsList<U>(fun.apply(this.first), this.rest.map(fun));
+  }
+
+  //combines the items in this list using the given function
+  public <U> U foldr(BiFunction<T, U, U> fun, U base) {
+    return fun.apply(this.first, this.rest.foldr(fun, base));
+  }
+}
+
+class Collide implements Predicate<Enemy> {
+
+  //is the given enemy next to the player?
+  public boolean test(Enemy e) {
+    return Math.sqrt((this.x - e.x) * (this.x - e.x) + (this.y - e.y) * (this.y - e.y));
+  } 
+}
+
+class Move implements Function<Enemy, Enemy> {
+
+  // moves the enemy
+  public Enemy apply(Enemy x) {
+    return new Enemy(x.speed, x.size, x.color, x.x + x.speed, x.y);
+  }
+}
+
+class MakeScene implements BiFunction<Player, Enemy, WorldScene> {
+  
+  // draws the scene
+  public WorldScene apply(Player player, IList<Enemy> enemies) {
+    return new 
+  }
 }
 
 class FishWorld extends World {
-  
+  Player player;
+  IList<Enemy> enemies;
+
+  FishWorld(Player player, IList<Enemy> enemies) {
+    this.player = player;
+    this.enemies = enemies;
+  }
+
+  // draws the dots onto the background
+  public WorldScene makeScene() {
+    return //this needs to be changed to foldr
+  }
+
+  // move the enemies onTick and check for collisions
+  public World onTick() {
+    // move everything
+    // decide if players dies --> ormap
+    // decide if player grows --> ormap
+    // delete dead enemy from list --> filter
+  }
+
+  // move up
+  public World onKeyEvent(String key) {
+    if (key.equals("up")) {
+      return new FishWorld(this.player.moveUp(), this.enemies);
+    } else if (key.equals("down")) {
+      return new FishWorld(this.player.moveDown(), this.enemies);
+    } else if (key.equals("right")) {
+      return new FishWorld(this.player.moveRight(), this.enemies);
+    } else if (key.equals("left")) {
+      return new FishWorld(this.player.moveLeft(), this.enemies);
+    } else {
+      return this;
+    }
+  }
 }
 
 class ExamplesGame {
