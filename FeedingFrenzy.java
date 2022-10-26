@@ -230,10 +230,12 @@ class MakeScene implements BiFunction<Enemy, WorldScene, WorldScene> {
 class FishWorld extends World {
   Player player;
   IList<Enemy> enemies;
+  int tickCounter;
 
   FishWorld(Player player, IList<Enemy> enemies) {
     this.player = player;
     this.enemies = enemies;
+    this.tickCounter = 0;
   }
 
   // draws the dots onto the background
@@ -244,12 +246,17 @@ class FishWorld extends World {
 
   // move the enemies onTick
   public World onTick() {
-    if (this.enemies.ormap(new Collide(this.player))) {
-      // if player is bigger then grow --> .grow()
-      // if player is smaller then die VVV
-        // if player lives == 0 --> return new WorldScene(600, 400).placeImageXY(new TextImage("GAME OVER - YOU DIED", 10, Color.BLACK), 300, 400);
-        // if player lives > 0 --> return new player .lives - 1
-    } else {
+    
+    // IList<Enemy> closest = this.enemies.foldr ...
+    // foldr returns closest fish to player
+    // helper in fish class checks for collision
+    // if player is bigger then grow --> .grow()
+    // if player is smaller then die VVV
+      // if player lives == 0 --> return new WorldScene(600, 400).placeImageXY(new TextImage("GAME OVER - YOU DIED", 10, Color.BLACK), 300, 400);
+      // if player lives > 0 --> return new player .lives - 1
+
+    this.tickCounter += 1;
+    if (tickCounter % 20 == 0) {
       IList<Enemy> add = new ConsList<Enemy>(new Enemy(1, Color.RED), this.enemies); // figure out how to make this less often
       return new FishWorld(this.player, add.map(new Move()));
     }
