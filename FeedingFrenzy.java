@@ -219,6 +219,23 @@ class Move implements Function<Enemy, Enemy> {
   }
 }
 
+class Closest implements BiFunction<Enemy, IList<Enemy>, IList<Enemy>> {
+  Player player;
+  
+  Closest(Player player) {
+    this.player = player;
+  }
+  
+  // finds the closest enemies 
+  public IList<Enemy> apply(Enemy e, IList<Enemy> enemies) {
+    if ((Math.sqrt((player.x - e.x) * (player.x - e.x) + (player.y - e.y) * (player.y - e.y))) < player.size) {
+      return new ConsList<Enemy>(e, enemies);
+    } else {
+      return enemies;
+    }
+  }
+}
+
 class MakeScene implements BiFunction<Enemy, WorldScene, WorldScene> {
   
   // draws the scene
@@ -243,22 +260,47 @@ class FishWorld extends World {
     WorldScene intermediate = new WorldScene(600, 400).placeImageXY(this.player.draw(), this.player.x, this.player.y);
     return this.enemies.foldr(new MakeScene(), intermediate);
   }
+  
+  // gets called by endOfWorld
+  public WorldScene lastScene() {
+    return new WorldScene(600, 400).placeImageXY(new TextImage("GAME OVER - YOU DIED", 10, Color.BLACK), 300, 400);
+  }
 
   // move the enemies onTick
   public World onTick() {
+    // lists the fish close to the player
+    IList<Enemy> closest = this.enemies.foldr(new Closest(this.player), new MtList<Enemy>());
     
-    // IList<Enemy> closest = this.enemies.foldr ...
-    // foldr returns closest fish to player
-    // helper in fish class checks for collision
-    // if player is bigger then grow --> .grow()
-    // if player is smaller then die VVV
-      // if player lives == 0 --> return new WorldScene(600, 400).placeImageXY(new TextImage("GAME OVER - YOU DIED", 10, Color.BLACK), 300, 400);
-      // if player lives > 0 --> return new player .lives - 1
-
+    // adds new enemies
     this.tickCounter += 1;
     if (tickCounter % 20 == 0) {
-      IList<Enemy> add = new ConsList<Enemy>(new Enemy(1, Color.RED), this.enemies); // figure out how to make this less often
+      IList<Enemy> add = new ConsList<Enemy>(new Enemy(1, Color.RED), this.enemies);
       return new FishWorld(this.player, add.map(new Move()));
+    } else if (closest.ormap(e -> e.size > this.player.size)) {
+      // checks if any of the close fish are bigger
+
+      if (player.lives == 0) {
+        // ends the game if the player is out of lives
+        this.endOfWorld("You died.");
+      } else {
+        // returns a new list of enemies with the bigger ones removed
+        this.enemies = this.enemies.filter(e -> e.size < this.player.size);
+        // takes a life from the player
+        this.player.lives = this.player.lives - 1;
+        // return the new world
+        return new FishWorld(this.player, enemies.map(new Move()));
+      }
+    } else if (closest.ormap(e -> e.size < this.player.size)) {
+      // checks if any of the close fish are bigger
+      
+      // returns a new list of enemies with the smaller ones removed
+      this.enemies = this.enemies.filter(e -> e.size > this.player.size);
+      // grows the player
+      this.player.grow();
+      // return the new world
+      return new FishWorld(this.player, enemies.map(new Move()));
+    } else {
+      return this;
     }
   }
 
@@ -304,41 +346,13 @@ class ExamplesGame {
   }
   
   
-//  // tests for distanceTo method
-//  boolean testDistanceTo(Tester t) {
-//    return t.checkInexact(this.p1.distanceTo(e1), 0.0, 0.00001)
-//        && t.checkInexact(this.p1.distanceTo(e2), 223.60679, 0.00001)
-//        && t.checkInexact(this.p1.distanceTo(e3), 0.0, 0.00001)
-//        && t.checkInexact(this.p1.distanceTo(e4), 360.55513, 0.00001)
-//        && t.checkInexact(this.p1.distanceTo(e5), 0.0, 0.00001)
-//        && t.checkInexact(this.p1.distanceTo(e6), 278.95877, 0.00001);
-//  }
-//  
-//  // tests for collide method
-//  boolean testCollide(Tester t) {
-//    return t.checkExpect(this.p1.collide(this.e1), 
-//            new Player(this.p1.speed, this.p1.size + 1, this.p1.color, this.p1.x, this.p1.y))
-//        && t.checkExpect(this.p1.collide(this.e2), this.p1)
-//        && t.checkExpect(this.p1.collide(this.e3), this.p1)
-//        && t.checkExpect(this.p1.collide(this.e4), this.p1)
-//        && t.checkExpect(this.p1.collide(this.e5), 
-//            new Player(this.p1.speed, 0, this.p1.color, this.p1.x, this.p1.y))
-//        && t.checkExpect(this.p1.collide(this.e6), this.p1);
-//  }
-//  
-//  // tests for kill method
-//  boolean testKill(Tester t) {
-//    return t.checkExpect(this.p1.kill(), new Player(this.p1.speed, 0, this.p1.color, this.p1.x, this.p1.y))
-//        && t.checkExpect(this.e1.kill(), new Enemy(this.e1.speed, 0, this.e1.color, this.e1.x, this.e1.y))
-//        && t.checkExpect(this.e2.kill(), new Enemy(this.e2.speed, 0, this.e2.color, this.e2.x, this.e2.y))
-//        && t.checkExpect(this.e3.kill(), new Enemy(this.e3.speed, 0, this.e3.color, this.e3.x, this.e3.y));
-//  }
-//  
-//  // tests for grow method
-//  boolean testGrow(Tester t) {
-//    return t.checkExpect(this.p1.grow(), new Player(this.p1.speed, this.p1.size + 1, this.p1.color, this.p1.x, this.p1.y))
-//        && t.checkExpect(this.e1.grow(), new Enemy(this.e1.speed, this.e1.size + 1, this.e1.color, this.e1.x, this.e1.y))
-//        && t.checkExpect(this.e2.grow(), new Enemy(this.e2.speed, this.e2.size + 1, this.e2.color, this.e2.x, this.e2.y))
-//        && t.checkExpect(this.e3.grow(), new Enemy(this.e3.speed, this.e3.size + 1, this.e3.color, this.e3.x, this.e3.y));  
-//  }
+  // tests for distanceTo method
+  boolean testDistanceTo(Tester t) {
+    return t.checkInexact(this.p1.distanceTo(e1), 0.0, 0.00001)
+        && t.checkInexact(this.p1.distanceTo(e2), 223.60679, 0.00001)
+        && t.checkInexact(this.p1.distanceTo(e3), 0.0, 0.00001)
+        && t.checkInexact(this.p1.distanceTo(e4), 360.55513, 0.00001)
+        && t.checkInexact(this.p1.distanceTo(e5), 0.0, 0.00001)
+        && t.checkInexact(this.p1.distanceTo(e6), 278.95877, 0.00001);
+  }
 }
