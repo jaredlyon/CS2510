@@ -274,7 +274,7 @@ class FishWorld extends World {
     // adds new enemies
     this.tickCounter += 1;
     if (tickCounter % 20 == 0) {
-      IList<Enemy> add = new ConsList<Enemy>(new Enemy(1, Color.RED), this.enemies);
+      IList<Enemy> add = new ConsList<Enemy>(new Enemy(10, Color.RED), this.enemies);
       return new FishWorld(this.player, add.map(new Move()));
     } else if (closest.ormap(e -> e.size > this.player.size)) {
       // checks if any of the close fish are bigger
@@ -302,6 +302,7 @@ class FishWorld extends World {
     } else {
       return this;
     }
+    return new FishWorld(this.player, this.enemies.map(new Move()))
   }
 
   // move up
