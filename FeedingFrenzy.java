@@ -248,7 +248,7 @@ class FishWorld extends World {
     // adds new enemies
     this.tickCounter += 1;
     if (tickCounter % 10 == 0) {
-      IList<Enemy> add = new ConsList<Enemy>(new Enemy(10, Color.RED), this.enemies);
+      IList<Enemy> add = new ConsList<Enemy>(new Enemy(5, Color.RED), this.enemies);
       return new FishWorld(this.player, add.map(new Move()));
     } else if (closest.ormap(e -> e.size > this.player.size)) {
       // checks if any of the close fish are bigger
@@ -308,9 +308,15 @@ class ExamplesGame {
   Enemy e3 = new Enemy (10, 10, Color.RED, 300, 200);
   Enemy e4 = new Enemy (10, 10, Color.RED, 0, 0); 
   Enemy e5 = new Enemy (10, 20, Color.RED, 300, 200);
-  Enemy e6 = new Enemy (10, 20, Color.RED, 57, 337); 
-
+  Enemy e6 = new Enemy (10, 20, Color.RED, 57, 337);
+  
   IList<Enemy> mtEnemies = new MtList<Enemy>();
+  
+  IList<Enemy> lE1 = new ConsList<Enemy>(this.e1,
+                        new ConsList<Enemy>(this.e2,
+                            new ConsList<Enemy>(this.e3,
+                                new ConsList<Enemy>(this.e4,
+                                    new ConsList<Enemy>(this.e5, this.mtEnemies))))); 
 
   // run the game
   boolean testBigBang(Tester t) {
@@ -409,5 +415,28 @@ class ExamplesGame {
 
   // test makeScene
   
-  // test predicates...? i dont think we need to?
+  // test Move predicate
+  void testMovePred(Tester t) {
+    t.checkExpect(new Move().apply(this.e1), 
+        new Enemy(this.e1.speed, this.e1.size, this.e1.color, this.e1.x + this.e1.speed,  this.e1.y));
+    t.checkExpect(new Move().apply(this.e2), 
+        new Enemy(this.e2.speed, this.e2.size, this.e2.color, this.e2.x + this.e2.speed,  this.e2.y));
+    t.checkExpect(new Move().apply(this.e2), 
+        new Enemy(this.e2.speed, this.e2.size, this.e2.color, this.e2.x + this.e2.speed,  this.e2.y));
+  }
+  
+  // test Collide predicate
+  void testCollidePred(Tester t) {
+    t.checkExpect(new Collide(this.p1).test(this.e1), true);
+    t.checkExpect(new Collide(this.p1).test(this.e2), false);
+    t.checkExpect(new Collide(this.p1).test(this.e3), true);
+    t.checkExpect(new Collide(this.p1).test(this.e4), false);
+  }
+  
+  // test Closest predicate
+  void testClosestPred(Tester t) {
+    t.checkExpect(new Closest(this.p1).apply(this.e6, this.lE1), this.lE1);
+    t.checkExpect(new Closest(this.p1).apply(this.e3, this.lE1), new ConsList<Enemy>(this.e3, this.lE1));
+    t.checkExpect(new Closest(this.p1).apply(this.e2, this.lE1), this.lE1);
+  }
 }
