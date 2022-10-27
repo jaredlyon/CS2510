@@ -287,7 +287,7 @@ class FishWorld extends World {
       return new FishWorld(this.player.takeLife(), enemies.map(new Move()));
     }
 
-    // checks if any of the close fish are bigger
+    // checks if any of the close fish are smaller
     if (closest.ormap(e -> e.size <= this.player.size)) {
       // returns a new list of enemies with the colliding ones removed
       this.enemies = this.enemies.filter(new Collide(this.player));
@@ -488,9 +488,23 @@ class ExamplesGame {
     t.checkExpect(f3.worldEnds(), new WorldEnd(true, this.endWinTest)); // win
   }
   
+  // onTick player example
+  Player pO = new Player(10, 10, Color.ORANGE, 300, 200, 3);
+  // onTick enemy example
+  Enemy eO1 = new Enemy(10, 5, Color.RED, 300, 200); // spawns on player and is small
+  IList<Enemy> listO1 = new ConsList<Enemy>(eO1, new MtList<Enemy>());
+  Enemy eO2 = new Enemy(10, 15, Color.RED, 300, 200); // spawns on player and is big
+  IList<Enemy> listO2 = new ConsList<Enemy>(eO2, new MtList<Enemy>());
+  // example worlds
+  FishWorld fO1 = new FishWorld(this.pO, new MtList<Enemy>()); // base case
+  FishWorld fO2 = new FishWorld(this.pO, this.listO1); // grow case
+  FishWorld fO3 = new FishWorld(this.pO, this.listO2); // takeLife case
+  
   // test onTick
   void testOnTick(Tester t) {
-    
+    t.checkExpect(fO1.onTick(), this.fO1); // regular
+    t.checkExpect(fO2.onTick(), new FishWorld(this.pO.grow(), new MtList<Enemy>())); // player grows
+    t.checkExpect(fO3.onTick(), new FishWorld(this.pO.takeLife(), new MtList<Enemy>())); // player loses a life
   }
   
   // test onKeyEvent
