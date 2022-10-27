@@ -279,18 +279,16 @@ class FishWorld extends World {
       return new FishWorld(this.player, add.map(new Move()));
     }
 
+    // checks if any of the close fish are bigger
     if (closest.ormap(e -> e.size > this.player.size)) {
-      // checks if any of the close fish are bigger
-      
       // returns a new list of enemies with the colliding ones removed
       this.enemies = this.enemies.filter(new Collide(this.player));
       // return the new world and takes a life from the player
       return new FishWorld(this.player.takeLife(), enemies.map(new Move()));
     }
 
+    // checks if any of the close fish are bigger
     if (closest.ormap(e -> e.size <= this.player.size)) {
-      // checks if any of the close fish are bigger
-
       // returns a new list of enemies with the colliding ones removed
       this.enemies = this.enemies.filter(new Collide(this.player));
       // return the new world with a grown player
@@ -303,13 +301,13 @@ class FishWorld extends World {
   // moves the player based on key input
   public World onKeyEvent(String key) {
     if (key.equals("up")) {
-      return new FishWorld(this.player.moveUp(), this.enemies);
+      return new FishWorld(this.player.moveUp(), this.enemies.map(new Move()));
     } else if (key.equals("down")) {
-      return new FishWorld(this.player.moveDown(), this.enemies);
+      return new FishWorld(this.player.moveDown(), this.enemies.map(new Move()));
     } else if (key.equals("right")) {
-      return new FishWorld(this.player.moveRight(), this.enemies);
+      return new FishWorld(this.player.moveRight(), this.enemies.map(new Move()));
     } else if (key.equals("left")) {
-      return new FishWorld(this.player.moveLeft(), this.enemies);
+      return new FishWorld(this.player.moveLeft(), this.enemies.map(new Move()));
     } else {
       return new FishWorld(this.player, this.enemies.map(new Move()));
     }
