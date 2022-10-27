@@ -7,6 +7,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+// represents the player
 class Player {
   int speed;
   int size;
@@ -25,14 +26,14 @@ class Player {
     this.lives = 3;
   }
 
-  // constructor for moving the player
-  Player(int speed, int size, Color color, int x, int y) {
+  // constructor for iterating the player
+  Player(int speed, int size, Color color, int x, int y, int lives) {
     this.speed = speed;
     this.size = size;
     this.color = color;
     this.x = x;
     this.y = y;
-    this.lives = 3;
+    this.lives = lives;
   }
 
   // draw this Dot as CircleImage with its size and color
@@ -42,31 +43,36 @@ class Player {
 
   // move the player up
   Player moveUp() {
-    return new Player(this.speed, this.size, this.color, this.x, this.y - this.speed);
+    return new Player(this.speed, this.size, this.color, this.x, this.y - this.speed, this.lives);
   }
 
   // move the player down
   Player moveDown() {
-    return new Player(this.speed, this.size, this.color, this.x, this.y + this.speed);
+    return new Player(this.speed, this.size, this.color, this.x, this.y + this.speed, this.lives);
   }
 
   // move the player right
   Player moveRight() {
-    return new Player(this.speed, this.size, this.color, this.x + this.speed, this.y);
+    return new Player(this.speed, this.size, this.color, this.x + this.speed, this.y, this.lives);
   }
-
 
   // move the player left
   Player moveLeft() {
-    return new Player(this.speed, this.size, this.color, this.x - this.speed, this.y);
+    return new Player(this.speed, this.size, this.color, this.x - this.speed, this.y, this.lives);
   }
 
   // grow the player
   Player grow() {
-    return new Player(this.speed, this.size + 1, this.color, this.x, this.y);
+    return new Player(this.speed, this.size + 1, this.color, this.x, this.y, this.lives);
+  }
+  
+  // take a life from the player
+  Player takeLife() {
+    return new Player(this.speed, this.size, this.color, this.x, this.y, this.lives - 1);
   }
 }
 
+// represents an enemy
 class Enemy {
   int speed;
   int size;
@@ -99,6 +105,7 @@ class Enemy {
   }
 }
 
+// represents a generic list interface
 interface IList<T> {
   //filter this list by the given predicate
   IList<T> filter(Predicate<T> pred);
@@ -113,7 +120,11 @@ interface IList<T> {
   <U> U foldr(BiFunction<T, U, U> fun, U base);
 }
 
+// represents an empty list
 class MtList<T> implements IList<T> {
+  MtList() {
+    
+  }
 
   //filter this list by the given predicate
   public IList<T> filter(Predicate<T> pred) {
@@ -137,6 +148,7 @@ class MtList<T> implements IList<T> {
   }
 }
 
+// represents a generic list with data T
 class ConsList<T> implements IList<T> {
   T first;
   IList<T> rest;
@@ -172,6 +184,8 @@ class ConsList<T> implements IList<T> {
   }
 }
 
+// discerns if this enemy is colliding with a given player
+// note that the behavior is "reversed" to work with the filter function
 class Collide implements Predicate<Enemy> {
   Player player;
 
@@ -181,10 +195,11 @@ class Collide implements Predicate<Enemy> {
 
   //is the given enemy next to the player?
   public boolean test(Enemy e) {
-    return (Math.sqrt((player.x - e.x) * (player.x - e.x) + (player.y - e.y) * (player.y - e.y))) < player.size;
+    return !((Math.sqrt((player.x - e.x) * (player.x - e.x) + (player.y - e.y) * (player.y - e.y))) < player.size);
   } 
 }
 
+// moves an enemy --> used with map
 class Move implements Function<Enemy, Enemy> {
 
   // moves the enemy
@@ -193,6 +208,7 @@ class Move implements Function<Enemy, Enemy> {
   }
 }
 
+// a bifunction used with foldr to discern a list of the closest enemies to the player
 class Closest implements BiFunction<Enemy, IList<Enemy>, IList<Enemy>> {
   Player player;
 
@@ -210,6 +226,7 @@ class Closest implements BiFunction<Enemy, IList<Enemy>, IList<Enemy>> {
   }
 }
 
+// a bifunction used with foldr that assists in the placing of enemies
 class MakeScene implements BiFunction<Enemy, WorldScene, WorldScene> {
 
   // draws the scene
@@ -218,6 +235,7 @@ class MakeScene implements BiFunction<Enemy, WorldScene, WorldScene> {
   }
 }
 
+// represents a FeedingFrenzy game
 class FishWorld extends World {
   Player player;
   IList<Enemy> enemies;
@@ -235,9 +253,18 @@ class FishWorld extends World {
     return this.enemies.foldr(new MakeScene(), intermediate);
   }
 
-  // gets called by endOfWorld
-  public WorldScene lastScene() {
-    return new WorldScene(600, 400).placeImageXY(new TextImage("GAME OVER - YOU DIED", 10, Color.BLACK), 300, 400);
+  // return the end screen if the player dies
+  public WorldEnd worldEnds() {
+    WorldScene endLose = new WorldScene(600, 400).placeImageXY(new TextImage("GAME OVER - YOU DIED", 20, Color.BLACK), 300, 150);
+    WorldScene endWin = new WorldScene(600, 400).placeImageXY(new TextImage("YOU WON - SIZE 20 REACHED", 20, Color.BLACK), 300, 150);
+    
+    if (player.lives == 0) {
+      return new WorldEnd(true, endLose);
+    } else if (player.size == 20) {
+      return new WorldEnd(true, endWin);
+    } else {
+      return new WorldEnd(false, endWin);
+    }
   }
 
   // move the enemies onTick
@@ -245,52 +272,46 @@ class FishWorld extends World {
     // lists the fish close to the player
     IList<Enemy> closest = this.enemies.foldr(new Closest(this.player), new MtList<Enemy>());
 
-    // adds new enemies
+    // adds new enemies every ten ticks
     this.tickCounter += 1;
     if (tickCounter % 10 == 0) {
       IList<Enemy> add = new ConsList<Enemy>(new Enemy(5, Color.RED), this.enemies);
       return new FishWorld(this.player, add.map(new Move()));
-    } else if (closest.ormap(e -> e.size > this.player.size)) {
+    }
+
+    if (closest.ormap(e -> e.size > this.player.size)) {
+      // checks if any of the close fish are bigger
+      
+      // returns a new list of enemies with the colliding ones removed
+      this.enemies = this.enemies.filter(new Collide(this.player));
+      // return the new world and takes a life from the player
+      return new FishWorld(this.player.takeLife(), enemies.map(new Move()));
+    }
+
+    if (closest.ormap(e -> e.size <= this.player.size)) {
       // checks if any of the close fish are bigger
 
-      if (player.lives == 0) {
-        // ends the game if the player is out of lives
-        this.endOfWorld("You died.");
-      } else {
-        // returns a new list of enemies with the bigger ones removed
-        this.enemies = this.enemies.filter(e -> e.size < this.player.size);
-        // takes a life from the player
-        this.player.lives = this.player.lives - 1;
-        // return the new world
-        return new FishWorld(this.player, enemies.map(new Move()));
-      }
-    } else if (closest.ormap(e -> e.size < this.player.size)) {
-      // checks if any of the close fish are bigger
-
-      // returns a new list of enemies with the smaller ones removed
-      this.enemies = this.enemies.filter(e -> e.size > this.player.size);
-      // grows the player
-      this.player.grow();
-      // return the new world
-      return new FishWorld(this.player, enemies.map(new Move()));
+      // returns a new list of enemies with the colliding ones removed
+      this.enemies = this.enemies.filter(new Collide(this.player));
+      // return the new world with a grown player
+      return new FishWorld(this.player.grow(), enemies.map(new Move()));
     } else {
       return this;
     }
-    return new FishWorld(this.player, this.enemies.map(new Move()));
   }
 
-  // move up
+  // moves the player based on key input
   public World onKeyEvent(String key) {
     if (key.equals("up")) {
-      return new FishWorld(this.player.moveUp(), this.enemies.map(new Move()));
+      return new FishWorld(this.player.moveUp(), this.enemies);
     } else if (key.equals("down")) {
-      return new FishWorld(this.player.moveDown(), this.enemies.map(new Move()));
+      return new FishWorld(this.player.moveDown(), this.enemies);
     } else if (key.equals("right")) {
-      return new FishWorld(this.player.moveRight(), this.enemies.map(new Move()));
+      return new FishWorld(this.player.moveRight(), this.enemies);
     } else if (key.equals("left")) {
-      return new FishWorld(this.player.moveLeft(), this.enemies.map(new Move()));
+      return new FishWorld(this.player.moveLeft(), this.enemies);
     } else {
-      return this;
+      return new FishWorld(this.player, this.enemies.map(new Move()));
     }
   }
 }
@@ -301,22 +322,28 @@ class ExamplesGame {
   }
 
   // examples of Player and enemies
-  Player p1 = new Player (10, 10, Color.ORANGE, 300, 200);
-  Player p2 = new Player (10, 20, Color.ORANGE, 200, 300);
-  Enemy e1 = new Enemy (10, 5, Color.RED, 300, 200);       // give random starting pts for enemies
-  Enemy e2 = new Enemy (10, 5, Color.RED, 500, 100); 
-  Enemy e3 = new Enemy (10, 10, Color.RED, 300, 200);
-  Enemy e4 = new Enemy (10, 10, Color.RED, 0, 0); 
-  Enemy e5 = new Enemy (10, 20, Color.RED, 300, 200);
-  Enemy e6 = new Enemy (10, 20, Color.RED, 57, 337);
-  
+  Player p1 = new Player(10, 10, Color.ORANGE, 300, 200, 3);
+  Player p2 = new Player(10, 20, Color.ORANGE, 200, 300, 3);
+  Player p3 = new Player(10, 10, Color.ORANGE, 300, 200, 0);
+  Enemy e1 = new Enemy(10, 5, Color.RED, 300, 200);
+  Enemy e2 = new Enemy(10, 5, Color.RED, 500, 100); 
+  Enemy e3 = new Enemy(10, 10, Color.RED, 300, 200);
+  Enemy e4 = new Enemy(10, 10, Color.RED, 0, 0); 
+  Enemy e5 = new Enemy(10, 20, Color.RED, 300, 200);
+  Enemy e6 = new Enemy(10, 20, Color.RED, 57, 337);
+
   IList<Enemy> mtEnemies = new MtList<Enemy>();
-  
+
   IList<Enemy> lE1 = new ConsList<Enemy>(this.e1,
-                        new ConsList<Enemy>(this.e2,
-                            new ConsList<Enemy>(this.e3,
-                                new ConsList<Enemy>(this.e4,
-                                    new ConsList<Enemy>(this.e5, this.mtEnemies))))); 
+      new ConsList<Enemy>(this.e2,
+          new ConsList<Enemy>(this.e3,
+              new ConsList<Enemy>(this.e4,
+                  new ConsList<Enemy>(this.e5, this.mtEnemies))))); 
+  
+  // examples of some worlds
+  FishWorld f1 = new FishWorld(this.p1, this.mtEnemies); // regular world
+  FishWorld f2 = new FishWorld(this.p3, this.mtEnemies); // lose world
+  FishWorld f3 = new FishWorld(this.p2, this.mtEnemies); // win world
 
   // run the game
   boolean testBigBang(Tester t) {
@@ -335,32 +362,38 @@ class ExamplesGame {
 
   // test moveUp
   void testMoveUp(Tester t) {
-    t.checkExpect(p1.moveUp(), new Player(10, 10, Color.ORANGE, 300, 190));
-    t.checkExpect(p2.moveUp(), new Player(10, 20, Color.ORANGE, 200, 290));
+    t.checkExpect(p1.moveUp(), new Player(10, 10, Color.ORANGE, 300, 190, 3));
+    t.checkExpect(p2.moveUp(), new Player(10, 20, Color.ORANGE, 200, 290, 3));
   }
 
   // test moveDown
   void testMoveDown(Tester t) {
-    t.checkExpect(p1.moveDown(), new Player(10, 10, Color.ORANGE, 300, 210));
-    t.checkExpect(p2.moveDown(), new Player(10, 20, Color.ORANGE, 200, 310));
+    t.checkExpect(p1.moveDown(), new Player(10, 10, Color.ORANGE, 300, 210, 3));
+    t.checkExpect(p2.moveDown(), new Player(10, 20, Color.ORANGE, 200, 310, 3));
   }
 
   // test moveRight
   void testMoveRight(Tester t) {
-    t.checkExpect(p1.moveRight(), new Player(10, 10, Color.ORANGE, 310, 200));
-    t.checkExpect(p2.moveRight(), new Player(10, 20, Color.ORANGE, 210, 300));
+    t.checkExpect(p1.moveRight(), new Player(10, 10, Color.ORANGE, 310, 200, 3));
+    t.checkExpect(p2.moveRight(), new Player(10, 20, Color.ORANGE, 210, 300, 3));
   }
 
   // test moveLeft
   void testMoveLeft(Tester t) {
-    t.checkExpect(p1.moveLeft(), new Player(10, 10, Color.ORANGE, 290, 200));
-    t.checkExpect(p2.moveLeft(), new Player(10, 20, Color.ORANGE, 190, 300));
+    t.checkExpect(p1.moveLeft(), new Player(10, 10, Color.ORANGE, 290, 200, 3));
+    t.checkExpect(p2.moveLeft(), new Player(10, 20, Color.ORANGE, 190, 300, 3));
   }
 
   // test grow
   void testGrow(Tester t) {
-    t.checkExpect(p1.grow(), new Player(10, 11, Color.ORANGE, 300, 200));
-    t.checkExpect(p2.grow(), new Player(10, 21, Color.ORANGE, 200, 300));
+    t.checkExpect(p1.grow(), new Player(10, 11, Color.ORANGE, 300, 200, 3));
+    t.checkExpect(p2.grow(), new Player(10, 21, Color.ORANGE, 200, 300, 3));
+  }
+  
+  // test takeLife
+  void testTakeLife(Tester t) {
+    t.checkExpect(p1.takeLife(), new Player(10, 10, Color.ORANGE, 300, 200, 2));
+    t.checkExpect(p2.takeLife(), new Player(10, 20, Color.ORANGE, 200, 300, 2));
   }
 
   // test draw for enemy
@@ -369,6 +402,7 @@ class ExamplesGame {
     t.checkExpect(e3.draw(), new CircleImage(10, "solid", Color.RED));
   }
 
+  // examples for filter test
   IList<String> mtStrings = new MtList<String>();
   IList<String> strings = new ConsList<String>("hello",
       new ConsList<String>("world",
@@ -392,13 +426,14 @@ class ExamplesGame {
     t.checkExpect(this.ints.ormap(i -> i == 34), false);
   }
 
+  // examples for map test
   IList<String> stringsMap = new ConsList<String>("hello + 1",
       new ConsList<String>("world + 1",
           new ConsList<String>("fundies 2 + 1", mtStrings)));
   IList<Integer> intsMap = new ConsList<Integer>(2,
       new ConsList<Integer>(3,
           new ConsList<Integer>(4, mtInts)));
-  
+
   // test map
   void testMap(Tester t) {
     t.checkExpect(this.mtStrings.map(s -> s + " + 1"), this.mtStrings);
@@ -413,8 +448,6 @@ class ExamplesGame {
     t.checkExpect(this.ints.foldr((n1,  n2) -> n1 + n2, 0), 6);
   }
 
-  // test makeScene
-  
   // test Move predicate
   void testMovePred(Tester t) {
     t.checkExpect(new Move().apply(this.e1), 
@@ -424,19 +457,50 @@ class ExamplesGame {
     t.checkExpect(new Move().apply(this.e2), 
         new Enemy(this.e2.speed, this.e2.size, this.e2.color, this.e2.x + this.e2.speed,  this.e2.y));
   }
-  
-  // test Collide predicate
-  void testCollidePred(Tester t) {
-    t.checkExpect(new Collide(this.p1).test(this.e1), true);
-    t.checkExpect(new Collide(this.p1).test(this.e2), false);
-    t.checkExpect(new Collide(this.p1).test(this.e3), true);
-    t.checkExpect(new Collide(this.p1).test(this.e4), false);
+
+  // test Collide function
+  void testCollide(Tester t) {
+    t.checkExpect(new Collide(this.p1).test(this.e1), false);
+    t.checkExpect(new Collide(this.p1).test(this.e2), true);
+    t.checkExpect(new Collide(this.p1).test(this.e3), false);
+    t.checkExpect(new Collide(this.p1).test(this.e4), true);
   }
-  
-  // test Closest predicate
-  void testClosestPred(Tester t) {
+
+  // test Closest bifunction
+  void testClosest(Tester t) {
     t.checkExpect(new Closest(this.p1).apply(this.e6, this.lE1), this.lE1);
     t.checkExpect(new Closest(this.p1).apply(this.e3, this.lE1), new ConsList<Enemy>(this.e3, this.lE1));
     t.checkExpect(new Closest(this.p1).apply(this.e2, this.lE1), this.lE1);
+  }
+  
+  // test makeScene
+  void testMakeScene(Tester t) {
+    t.checkExpect(f1.makeScene(), new WorldScene(600, 400).placeImageXY(new CircleImage(10, "solid", Color.ORANGE), 300, 200));
+    t.checkExpect(f2.makeScene(), new WorldScene(600, 400).placeImageXY(new CircleImage(10, "solid", Color.ORANGE), 300, 200));
+  }
+  
+  // some worlds for worldEnds test
+  WorldScene endLoseTest = new WorldScene(600, 400).placeImageXY(new TextImage("GAME OVER - YOU DIED", 20, Color.BLACK), 300, 150);
+  WorldScene endWinTest = new WorldScene(600, 400).placeImageXY(new TextImage("YOU WON - SIZE 20 REACHED", 20, Color.BLACK), 300, 150);
+  
+  // test worldEnds
+  void testWorldEnds(Tester t) {
+    t.checkExpect(f1.worldEnds(), new WorldEnd(false, this.endWinTest)); // regular
+    t.checkExpect(f2.worldEnds(), new WorldEnd(true, this.endLoseTest)); // lose
+    t.checkExpect(f3.worldEnds(), new WorldEnd(true, this.endWinTest)); // win
+  }
+  
+  // test onTick
+  void testOnTick(Tester t) {
+    
+  }
+  
+  // test onKeyEvent
+  void testOnKeyEvent(Tester t) {
+    t.checkExpect(f1.onKeyEvent("up"), new FishWorld(new Player(10, 10, Color.ORANGE, 300, 190, 3), this.mtEnemies));
+    t.checkExpect(f1.onKeyEvent("down"), new FishWorld(new Player(10, 10, Color.ORANGE, 300, 210, 3), this.mtEnemies));
+    t.checkExpect(f1.onKeyEvent("left"), new FishWorld(new Player(10, 10, Color.ORANGE, 290, 200, 3), this.mtEnemies));
+    t.checkExpect(f1.onKeyEvent("right"), new FishWorld(new Player(10, 10, Color.ORANGE, 310, 200, 3), this.mtEnemies));
+    t.checkExpect(f1.onKeyEvent("v"), new FishWorld(new Player(10, 10, Color.ORANGE, 300, 200, 3), this.mtEnemies));
   }
 }
