@@ -123,9 +123,12 @@ class Instructor {
   }
 
   public boolean dejavu(Student s) {
-    IList<Course> temp = this.courses.filter(new CheckCourseList(s)); //filters out courses the student isnt in
-    int length = temp.length(); // get the size of the above list
-    return length > 1; // return true if list length is above one
+    //filters out courses the student isnt in
+    IList<Course> temp = this.courses.filter(new CheckCourseList(s));
+    // get the size of the above list
+    int length = temp.length();
+    // return true if list length is above one
+    return length > 1;
   }
 }
 
@@ -228,7 +231,8 @@ class ExamplesRegistrar {
   // test filter
   void testFilter(Tester t) {
     t.checkExpect(this.mtStrings.filter(s -> s.length() > 4), this.mtStrings);
-    t.checkExpect(this.strings.filter(s -> s.length() > 5), new ConsList<String>("fundies 2", mtStrings));
+    t.checkExpect(this.strings.filter(s -> s.length() > 5),
+        new ConsList<String>("fundies 2", mtStrings));
     t.checkExpect(this.ints.filter(i -> i == 3), new ConsList<Integer>(3, mtInts));
   }
 
