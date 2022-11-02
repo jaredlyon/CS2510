@@ -103,7 +103,12 @@ class Course {
     this.name = name;
     this.prof = prof;
     this.students = students;
-
+  }
+  
+  Course(String name, Instructor prof) {
+    this.name = name;
+    this.prof = prof;
+    this.students = new MtList<Student>();
   }
 
   // EFFECT: adds a student to this course
@@ -119,6 +124,11 @@ class Instructor {
 
   Instructor(String name, IList<Course> courses) {
     this.name = name;
+    this.courses = courses;
+  }
+  
+  Instructor(String name) {
+    this.name = name;
     this.courses = new MtList<Course>();
   }
 
@@ -128,7 +138,7 @@ class Instructor {
     // get the size of the above list
     int length = temp.length();
     // return true if list length is above one
-    return length > 1;
+    return length >= 2;
   }
 }
 
@@ -139,6 +149,12 @@ class Student {
   IList<Course> courses;
 
   Student(String name, int id, IList<Course> courses) {
+    this.name = name;
+    this.id = id;
+    this.courses = courses;
+  }
+  
+  Student(String name, int id) {
     this.name = name;
     this.id = id;
     this.courses = new MtList<Course>();
@@ -167,34 +183,34 @@ class ExamplesRegistrar {
   }
 
   // student/instructor/course examples
-  Student s1 = new Student("Liam", 01, new MtList<Course>());
-  Student s2 = new Student("Jared", 02, new MtList<Course>());
-  Student s3 = new Student("Sally", 03, new MtList<Course>());
-  Student s4 = new Student("Jack", 04, new MtList<Course>());
-  Student s5 = new Student("Dan", 05, new MtList<Course>());
-  Student s6 = new Student("Jeff", 05, new MtList<Course>());
+  Student s1 = new Student("Liam", 01);
+  Student s2 = new Student("Jared", 02);
+  Student s3 = new Student("Sally", 03);
+  Student s4 = new Student("Jack", 04);
+  Student s5 = new Student("Dan", 05);
+  Student s6 = new Student("Jeff", 05);
 
-  Instructor i1 = new Instructor("Razzaq", new MtList<Course>());
-  Instructor i2 = new Instructor("Smith", new MtList<Course>());
+  Instructor i1 = new Instructor("Razzaq");
+  Instructor i2 = new Instructor("Smith");
 
-  Course c1 = new Course("Fundies II", this.i1, new MtList<Student>());
-  Course c2 = new Course("Discrete Structures", this.i1, new MtList<Student>());
-  Course c3 = new Course("Physics I", this.i2, new MtList<Student>());
-  Course c4 = new Course("Calculus", this.i2, new MtList<Student>());
+  Course c1 = new Course("Fundies II", this.i1);
+  Course c2 = new Course("Discrete Structures", this.i1);
+  Course c3 = new Course("Physics I", this.i2);
+  Course c4 = new Course("Calculus", this.i2);
   Course c5 = new Course("Fundies I", this.i1, new ConsList<Student>(this.s6,
       new MtList<Student>()));
 
   // initialize test data
   void initData() {
-    this.s1 = new Student("Liam", 01, new MtList<Course>());
-    this.s2 = new Student("Jared", 02, new MtList<Course>());
-    this.s3 = new Student("Sally", 03, new MtList<Course>());
-    this.s4 = new Student("Jack", 04, new MtList<Course>());
-    this.s5 = new Student("Dan", 05, new MtList<Course>());
-    this.s6 = new Student("Jeff", 05, new MtList<Course>());
+    this.s1 = new Student("Liam", 01);
+    this.s2 = new Student("Jared", 02);
+    this.s3 = new Student("Sally", 03);
+    this.s4 = new Student("Jack", 04);
+    this.s5 = new Student("Dan", 05);
+    this.s6 = new Student("Jeff", 05);
 
-    this.i1 = new Instructor("Razzaq", new MtList<Course>());
-    this.i2 = new Instructor("Smith", new MtList<Course>());
+    this.i1 = new Instructor("Razzaq");
+    this.i2 = new Instructor("Smith");
 
     this.i1.courses = new ConsList<Course>(this.c1, this.i1.courses);
     this.i1.courses = new ConsList<Course>(this.c2, this.i1.courses);
@@ -203,9 +219,9 @@ class ExamplesRegistrar {
 
     this.c1 = new Course("Fundies II", this.i1, new ConsList<Student>(this.s1,
         new MtList<Student>()));
-    this.c2 = new Course("Discrete Structures", this.i1, new MtList<Student>());
-    this.c3 = new Course("Physics I", this.i2, new MtList<Student>());
-    this.c4 = new Course("Calculus", this.i2, new MtList<Student>());
+    this.c2 = new Course("Discrete Structures", this.i1);
+    this.c3 = new Course("Physics I", this.i2);
+    this.c4 = new Course("Calculus", this.i2);
     this.c5 = new Course("Fundies I", this.i1, new ConsList<Student>(this.s6,
         new ConsList<Student>(this.s1,
             new MtList<Student>())));
