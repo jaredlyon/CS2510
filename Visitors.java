@@ -1,6 +1,5 @@
 import java.util.function.BiFunction;
 import java.util.function.Function;
-
 import tester.Tester;
 
 // represents an visitor interface
@@ -13,22 +12,22 @@ interface IArithVisitor<R> extends Function<IArith, R> {
 // evaluates an arithmetic tree
 class EvalVisitor implements IArithVisitor<Double> {
 
-  @Override
+  // returns the value of a const
   public Double visitConst(Const c) {
     return c.num;
   }
 
-  @Override
+  // applies a unary function
   public Double visitUnary(UnaryFormula f) {
     return f.func.apply(f.child.accept(this));
   }
 
-  @Override
+  // applies a binary function
   public Double visitBinary(BinaryFormula f) {
     return f.func.apply(f.left.accept(this), f.right.accept(this));
   }
 
-  @Override
+  // applies this
   public Double apply(IArith t) {
     return t.accept(this);
   } 
@@ -37,22 +36,22 @@ class EvalVisitor implements IArithVisitor<Double> {
 // prints an arithmetic tree
 class PrintVisitor implements IArithVisitor<String> {
 
-  @Override
+  // converts a const to a string
   public String visitConst(Const c) {
     return Double.toString(c.num);
   }
 
-  @Override
+  // converts a unary formula to a string
   public String visitUnary(UnaryFormula f) {
-    return f.name + f.child.accept(this);
+    return "(" + f.name + " " + f.child.accept(this) + ")";
   }
 
-  @Override
+  // converts a binary formula to a string
   public String visitBinary(BinaryFormula f) {
-    return f.name + f.left.accept(this) + f.right.accept(this);
+    return "(" + f.name + " " + f.left.accept(this) + " " + f.right.accept(this) + ")";
   }
 
-  @Override
+  // applies this
   public String apply(IArith t) {
     return t.accept(this);
   } 
@@ -61,22 +60,22 @@ class PrintVisitor implements IArithVisitor<String> {
 // doubles the consts in an arithmetic tree
 class DoublerVisitor implements IArithVisitor<IArith> {
 
-  @Override
+  // doubles a const
   public IArith visitConst(Const c) {
     return new Const(c.num * 2);
   }
 
-  @Override
+  // doubles all consts in a unary formula
   public IArith visitUnary(UnaryFormula f) {
     return new UnaryFormula(f.func, f.name, f.child.accept(this));
   }
 
-  @Override
+  // doubles all consts in a binary formula
   public IArith visitBinary(BinaryFormula f) {
     return new BinaryFormula(f.func, f.name, f.left.accept(this), f.right.accept(this));
   }
 
-  @Override
+  // applies this
   public IArith apply(IArith t) {
     return t.accept(this);
   } 
@@ -85,22 +84,22 @@ class DoublerVisitor implements IArithVisitor<IArith> {
 // checks if this arithmetic tree has negative numbers
 class NoNegativeResults implements IArithVisitor<Boolean> {
 
-  @Override
+  // checks if a const is negative
   public Boolean visitConst(Const c) {
-    return c.num < 0;
+    return new EvalVisitor().visitConst(c) < 0;
   }
 
-  @Override
+  // checks for negatives in a unary formula
   public Boolean visitUnary(UnaryFormula f) {
-    return f.child.accept(this);
+    return new EvalVisitor().visitUnary(f) < 0;
   }
 
-  @Override
+  // checks for negatives in a binary formula
   public Boolean visitBinary(BinaryFormula f) {
-    return f.left.accept(this) || f.right.accept(this);
+    return new EvalVisitor().visitBinary(f) < 0;
   }
 
-  @Override
+  // accepts this
   public Boolean apply(IArith t) {
     return t.accept(this);
   } 
@@ -119,7 +118,10 @@ class Const implements IArith{
     this.num = num;
   }
 
-  public <R> R accept(IArithVisitor<R> visitor) { return visitor.visitConst(this); }
+  // accepts a visitor and applies it to this const
+  public <R> R accept(IArithVisitor<R> visitor) {
+    return visitor.visitConst(this);
+  }
 }
 
 // represents a unary formula
@@ -134,7 +136,10 @@ class UnaryFormula implements IArith {
     this.child = child;
   }
 
-  public <R> R accept(IArithVisitor<R> visitor) { return visitor.visitUnary(this); }
+  // accepts a visitor and applies it to this unary formula
+  public <R> R accept(IArithVisitor<R> visitor) {
+    return visitor.visitUnary(this);
+  }
 }
 
 // represents a binary formula
@@ -151,7 +156,10 @@ class BinaryFormula implements IArith {
     this.right = right;
   }
 
-  public <R> R accept(IArithVisitor<R> visitor) { return visitor.visitBinary(this); }
+  // accepts a visitor and applies it to this binary formula
+  public <R> R accept(IArithVisitor<R> visitor) {
+    return visitor.visitBinary(this);
+  }
 }
 
 // represents a sqr unary operation
@@ -211,7 +219,7 @@ class Div implements BiFunction<Double, Double, Double> {
 class ExamplesVisitors {
   // examples of constants
   Const zero = new Const(0.0);
-  
+
   Const one = new Const(1.0);
   Const two = new Const(2.0);
   Const three = new Const(3.0);
@@ -232,44 +240,114 @@ class ExamplesVisitors {
   Const eightNeg = new Const(-8.0);
   Const nineNeg = new Const(-9.0);
 
-  // test functions
+  // test sqr
   void testSqr(Tester t) {
     t.checkExpect(new Sqr().apply(2.0), 4.0);
     t.checkExpect(new Sqr().apply(4.0), 16.0);
     t.checkExpect(new Sqr().apply(6.0), 36.0);
   }
 
+  // test neg
   void testNeg(Tester t) {
     t.checkExpect(new Neg().apply(2.0), -2.0);
     t.checkExpect(new Neg().apply(4.0), -4.0);
     t.checkExpect(new Neg().apply(6.0), -6.0);
   }
 
+  // test plus
   void testPlus(Tester t) {
     t.checkExpect(new Plus().apply(1.0, 2.0), 3.0);
-    t.checkExpect(new Plus().apply(3.0, 4.0), 7.0);
-    t.checkExpect(new Plus().apply(8.0, 1.0), 9.0);
+    t.checkExpect(new Plus().apply(3.0, -4.0), -1.0);
+    t.checkExpect(new Plus().apply(-8.0, -1.0), -9.0);
   }
 
+  // test minus
   void testMinus(Tester t) {
     t.checkExpect(new Minus().apply(7.0, 2.0), 5.0);
-    t.checkExpect(new Minus().apply(7.0, 4.0), 3.0);
-    t.checkExpect(new Minus().apply(2.0, 4.0), -2.0);
+    t.checkExpect(new Minus().apply(7.0, -4.0), 11.0);
+    t.checkExpect(new Minus().apply(-2.0, -4.0), 2.0);
   }
 
+  // test mul
   void testMul(Tester t) {
     t.checkExpect(new Mul().apply(1.0, 2.0), 2.0);
     t.checkExpect(new Mul().apply(-1.0, 2.0), -2.0);
     t.checkExpect(new Mul().apply(-1.0, -2.0), 2.0);
   }
 
+  // test div
   void testDiv(Tester t) {
     t.checkExpect(new Div().apply(4.0, 2.0), 2.0);
     t.checkExpect(new Div().apply(-4.0, 2.0), -2.0);
     t.checkExpect(new Div().apply(-4.0, -2.0), 2.0);
   }
+
+  UnaryFormula neg1 = new UnaryFormula(new Neg(), "neg", this.one);
+  UnaryFormula sqr1 = new UnaryFormula(new Sqr(), "sqr", this.two);
+  BinaryFormula plus1 = new BinaryFormula(new Plus(), "plus", this.two, this.three);
+  BinaryFormula div1 = new BinaryFormula(new Div(), "div", this.neg1, this.plus1);
+  BinaryFormula mul1 = new BinaryFormula(new Mul(), "mul", this.oneNeg, this.two);
+  BinaryFormula mul2 = new BinaryFormula(new Mul(), "mul", this.one, this.two);
   
-  IArith neg = new UnaryFormula(new Neg(), "neg", this.one);
-  IArith plus = new BinaryFormula(new Plus(), "plus", this.two, this.three);
-  IArith div = new BinaryFormula(new Div(), "div", this.neg, this.plus);
+  // test visitConst
+  void testVisitConst(Tester t) {
+    t.checkExpect(new EvalVisitor().visitConst(this.two), 2.0);
+    t.checkExpect(new PrintVisitor().visitConst(this.two), "2.0");
+    t.checkExpect(new DoublerVisitor().visitConst(this.two), this.four);
+    t.checkExpect(new NoNegativeResults().visitConst(this.two), false);
+    t.checkExpect(new NoNegativeResults().visitConst(this.twoNeg), true);
+  }
+  
+  // test visitUnary
+  void testVisitUnary(Tester t) {
+    t.checkExpect(new EvalVisitor().visitUnary(this.neg1), -1.0);
+    t.checkExpect(new PrintVisitor().visitUnary(this.neg1), "(neg 1.0)");
+    t.checkExpect(new DoublerVisitor().visitUnary(this.neg1), new UnaryFormula(new Neg(), "neg", this.two));
+    t.checkExpect(new NoNegativeResults().visitUnary(this.neg1), true);
+    t.checkExpect(new NoNegativeResults().visitUnary(this.sqr1), false);
+  }
+  
+  // test visitBinary
+  void testVisitBinary(Tester t) {
+    t.checkExpect(new EvalVisitor().visitBinary(this.plus1), 5.0);
+    t.checkExpect(new PrintVisitor().visitBinary(this.plus1), "(plus 2.0 3.0)");
+    t.checkExpect(new PrintVisitor().visitBinary(this.div1), "(div (neg 1.0) (plus 2.0 3.0))");
+    t.checkExpect(new DoublerVisitor().visitBinary(this.plus1), new BinaryFormula(new Plus(), "plus", this.four, this.six));
+    t.checkExpect(new NoNegativeResults().visitBinary(this.mul1), true);
+    t.checkExpect(new NoNegativeResults().visitBinary(this.mul2), false);
+    t.checkExpect(new NoNegativeResults().visitBinary(this.div1), true);
+  }
+  
+  // test apply
+  void testApply(Tester t) {
+    t.checkExpect(new EvalVisitor().apply(this.two), 2.0);
+    t.checkExpect(new PrintVisitor().apply(this.two), "2.0");
+    t.checkExpect(new DoublerVisitor().apply(this.two), this.four);
+    t.checkExpect(new NoNegativeResults().apply(this.two), false);
+    t.checkExpect(new NoNegativeResults().apply(this.twoNeg), true);
+  }
+  
+  // test accept
+  void testAccept(Tester t) {
+    // for const
+    t.checkExpect(this.one.accept(new EvalVisitor()), 1.0);
+    t.checkExpect(this.one.accept(new PrintVisitor()), "1.0");
+    t.checkExpect(this.one.accept(new DoublerVisitor()), new Const(2.0));
+    t.checkExpect(this.one.accept(new NoNegativeResults()), false);
+    t.checkExpect(this.oneNeg.accept(new NoNegativeResults()), true);
+    
+    // for unary
+    t.checkExpect(this.neg1.accept(new EvalVisitor()), -1.0);
+    t.checkExpect(this.neg1.accept(new PrintVisitor()), "(neg 1.0)");
+    t.checkExpect(this.neg1.accept(new DoublerVisitor()), new UnaryFormula(new Neg(), "neg", new Const(2.0)));
+    t.checkExpect(this.neg1.accept(new NoNegativeResults()), true);
+    t.checkExpect(this.sqr1.accept(new NoNegativeResults()), false);
+    
+    // for binary
+    t.checkExpect(this.mul1.accept(new EvalVisitor()), -2.0);
+    t.checkExpect(this.mul1.accept(new PrintVisitor()), "(mul -1.0 2.0)");
+    t.checkExpect(this.mul1.accept(new DoublerVisitor()), new BinaryFormula(new Mul(), "mul", new Const(-2.0), new Const(4.0)));
+    t.checkExpect(this.mul1.accept(new NoNegativeResults()), true);
+    t.checkExpect(this.mul2.accept(new NoNegativeResults()), false);
+  }
 }
