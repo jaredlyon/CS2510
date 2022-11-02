@@ -4,8 +4,13 @@ import tester.Tester;
 
 // represents an visitor interface
 interface IArithVisitor<R> extends Function<IArith, R> {
+  // visits a const
   R visitConst(Const c);
+
+  // visits a unary formula
   R visitUnary(UnaryFormula f);
+
+  // visits a binary formula
   R visitBinary(BinaryFormula f);
 }
 
@@ -82,21 +87,25 @@ class DoublerVisitor implements IArithVisitor<IArith> {
 }
 
 // checks if this arithmetic tree has negative numbers
+// returns true if there are no negative results
 class NoNegativeResults implements IArithVisitor<Boolean> {
 
   // checks if a const is negative
   public Boolean visitConst(Const c) {
-    return new EvalVisitor().visitConst(c) < 0;
+    return new EvalVisitor().visitConst(c) > 0;
   }
 
   // checks for negatives in a unary formula
   public Boolean visitUnary(UnaryFormula f) {
-    return new EvalVisitor().visitUnary(f) < 0;
+    return new EvalVisitor().visitUnary(f) > 0
+        && new EvalVisitor().apply(f.child) > 0;
   }
 
   // checks for negatives in a binary formula
   public Boolean visitBinary(BinaryFormula f) {
-    return new EvalVisitor().visitBinary(f) < 0;
+    return new EvalVisitor().visitBinary(f) > 0
+        && new EvalVisitor().apply(f.left) > 0
+        && new EvalVisitor().apply(f.right) > 0;
   }
 
   // accepts this
@@ -111,7 +120,7 @@ interface IArith {
 }
 
 // represents a number
-class Const implements IArith{
+class Const implements IArith {
   double num;
 
   Const(double num) {
@@ -288,66 +297,70 @@ class ExamplesVisitors {
   BinaryFormula div1 = new BinaryFormula(new Div(), "div", this.neg1, this.plus1);
   BinaryFormula mul1 = new BinaryFormula(new Mul(), "mul", this.oneNeg, this.two);
   BinaryFormula mul2 = new BinaryFormula(new Mul(), "mul", this.one, this.two);
-  
+
   // test visitConst
   void testVisitConst(Tester t) {
     t.checkExpect(new EvalVisitor().visitConst(this.two), 2.0);
     t.checkExpect(new PrintVisitor().visitConst(this.two), "2.0");
     t.checkExpect(new DoublerVisitor().visitConst(this.two), this.four);
-    t.checkExpect(new NoNegativeResults().visitConst(this.two), false);
-    t.checkExpect(new NoNegativeResults().visitConst(this.twoNeg), true);
+    t.checkExpect(new NoNegativeResults().visitConst(this.two), true);
+    t.checkExpect(new NoNegativeResults().visitConst(this.twoNeg), false);
   }
-  
+
   // test visitUnary
   void testVisitUnary(Tester t) {
     t.checkExpect(new EvalVisitor().visitUnary(this.neg1), -1.0);
     t.checkExpect(new PrintVisitor().visitUnary(this.neg1), "(neg 1.0)");
-    t.checkExpect(new DoublerVisitor().visitUnary(this.neg1), new UnaryFormula(new Neg(), "neg", this.two));
-    t.checkExpect(new NoNegativeResults().visitUnary(this.neg1), true);
-    t.checkExpect(new NoNegativeResults().visitUnary(this.sqr1), false);
+    t.checkExpect(new DoublerVisitor().visitUnary(this.neg1),
+        new UnaryFormula(new Neg(), "neg", this.two));
+    t.checkExpect(new NoNegativeResults().visitUnary(this.neg1), false);
+    t.checkExpect(new NoNegativeResults().visitUnary(this.sqr1), true);
   }
-  
+
   // test visitBinary
   void testVisitBinary(Tester t) {
     t.checkExpect(new EvalVisitor().visitBinary(this.plus1), 5.0);
     t.checkExpect(new PrintVisitor().visitBinary(this.plus1), "(plus 2.0 3.0)");
     t.checkExpect(new PrintVisitor().visitBinary(this.div1), "(div (neg 1.0) (plus 2.0 3.0))");
-    t.checkExpect(new DoublerVisitor().visitBinary(this.plus1), new BinaryFormula(new Plus(), "plus", this.four, this.six));
-    t.checkExpect(new NoNegativeResults().visitBinary(this.mul1), true);
-    t.checkExpect(new NoNegativeResults().visitBinary(this.mul2), false);
-    t.checkExpect(new NoNegativeResults().visitBinary(this.div1), true);
+    t.checkExpect(new DoublerVisitor().visitBinary(this.plus1),
+        new BinaryFormula(new Plus(), "plus", this.four, this.six));
+    t.checkExpect(new NoNegativeResults().visitBinary(this.mul1), false);
+    t.checkExpect(new NoNegativeResults().visitBinary(this.mul2), true);
+    t.checkExpect(new NoNegativeResults().visitBinary(this.div1), false);
   }
-  
+
   // test apply
   void testApply(Tester t) {
     t.checkExpect(new EvalVisitor().apply(this.two), 2.0);
     t.checkExpect(new PrintVisitor().apply(this.two), "2.0");
     t.checkExpect(new DoublerVisitor().apply(this.two), this.four);
-    t.checkExpect(new NoNegativeResults().apply(this.two), false);
-    t.checkExpect(new NoNegativeResults().apply(this.twoNeg), true);
+    t.checkExpect(new NoNegativeResults().apply(this.two), true);
+    t.checkExpect(new NoNegativeResults().apply(this.twoNeg), false);
   }
-  
+
   // test accept
   void testAccept(Tester t) {
     // for const
     t.checkExpect(this.one.accept(new EvalVisitor()), 1.0);
     t.checkExpect(this.one.accept(new PrintVisitor()), "1.0");
     t.checkExpect(this.one.accept(new DoublerVisitor()), new Const(2.0));
-    t.checkExpect(this.one.accept(new NoNegativeResults()), false);
-    t.checkExpect(this.oneNeg.accept(new NoNegativeResults()), true);
-    
+    t.checkExpect(this.one.accept(new NoNegativeResults()), true);
+    t.checkExpect(this.oneNeg.accept(new NoNegativeResults()), false);
+
     // for unary
     t.checkExpect(this.neg1.accept(new EvalVisitor()), -1.0);
     t.checkExpect(this.neg1.accept(new PrintVisitor()), "(neg 1.0)");
-    t.checkExpect(this.neg1.accept(new DoublerVisitor()), new UnaryFormula(new Neg(), "neg", new Const(2.0)));
-    t.checkExpect(this.neg1.accept(new NoNegativeResults()), true);
-    t.checkExpect(this.sqr1.accept(new NoNegativeResults()), false);
-    
+    t.checkExpect(this.neg1.accept(new DoublerVisitor()),
+        new UnaryFormula(new Neg(), "neg", new Const(2.0)));
+    t.checkExpect(this.neg1.accept(new NoNegativeResults()), false);
+    t.checkExpect(this.sqr1.accept(new NoNegativeResults()), true);
+
     // for binary
     t.checkExpect(this.mul1.accept(new EvalVisitor()), -2.0);
     t.checkExpect(this.mul1.accept(new PrintVisitor()), "(mul -1.0 2.0)");
-    t.checkExpect(this.mul1.accept(new DoublerVisitor()), new BinaryFormula(new Mul(), "mul", new Const(-2.0), new Const(4.0)));
-    t.checkExpect(this.mul1.accept(new NoNegativeResults()), true);
-    t.checkExpect(this.mul2.accept(new NoNegativeResults()), false);
+    t.checkExpect(this.mul1.accept(new DoublerVisitor()),
+        new BinaryFormula(new Mul(), "mul", new Const(-2.0), new Const(4.0)));
+    t.checkExpect(this.mul1.accept(new NoNegativeResults()), false);
+    t.checkExpect(this.mul2.accept(new NoNegativeResults()), true);
   }
 }
