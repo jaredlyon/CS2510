@@ -1,5 +1,6 @@
 import tester.Tester;
 import java.util.function.Predicate;
+import java.util.function.*;
 
 //represents a generic list interface
 interface IList<T> {
@@ -7,14 +8,6 @@ interface IList<T> {
   // ormap this list by the given predicate
   boolean ormap(Predicate<T> pred);
 
-  // checks if a student is in a list of courses
-  boolean checkCourse(Student c);
-  
-  // checks if a student is in a list of students
-  public boolean checkStudentList(Student c);
-
-  // helper for dejavu
-  boolean dejavuHelper(Student c, int acc);
 }
 
 //represents an empty list
@@ -28,20 +21,6 @@ class MtList<T> implements IList<T> {
     return false;
   }
 
-  // checks if a student is in a list of courses
-  public boolean checkCourse(Student c) {
-    return false;
-  }
-  
-  // checks if a student is in a list of students
-  public boolean checkStudentList(Student c) {
-    return false;
-  }
-
-  // helper for dejavu
-  public boolean dejavuHelper(Student c, int acc) {
-    return acc >= 2;
-  }
 }
 
 //represents a generic list with data T
@@ -59,40 +38,66 @@ class ConsList<T> implements IList<T> {
     return pred.test(this.first) || this.rest.ormap(pred);
   }
 
-  // checks if a student is in a list of courses
-  public boolean checkCourse(Student c) {
-    return (this.first.checkStudentList(c) || this.rest.checkCourse(c);
-  }
-  
-  // checks if a student is in a list of students
-  public boolean checkStudentList(Student c) {
-    return this.students.ormap(new checkStudent(c));
-  }
-
-  // helper for dejavu
-  public boolean dejavuHelper(Student c, int acc) {
-    if (this.first.checkStudentList(c)) {
-      return this.rest.dejavuHelper(c, acc + 1);
-    }
-    else {
-      return this.rest.dejavuHelper(c, acc);
-    }
-  }
-
 }
 
-class checkStudent implements Predicate<Student> {
+class CheckStudent implements Predicate<Student> {
   Student c;
   
-  checkStudent(Student c) {
+  CheckStudent(Student c) {
     this.c = c;
   }
   
   // checks if two students are the same
   public boolean test(Student stu) {
-    return c.equals(stu);
+    return c.compareId(stu);
   }
   
+}
+
+//class ReplaceCourse implements Predicate<Course> {
+//  Course old;
+//  
+//  ReplaceCourse(Course old) {
+//    this.old = old;
+//  }
+//  
+//  
+//  public boolean test(Course c) {
+//    if (old.isSameCourse(c)) {
+//      old = c;
+//    }
+//    return new ConsList<Course>(old, new MtList<Course>());
+//  }
+//}
+
+class CheckCourseList implements Predicate<Course> {
+  Student s;
+  
+  CheckCourseList(Student s) {
+    this.s = s;
+  }
+  
+  public boolean test(Course c) {
+    return c.students.ormap(new CheckStudent(s));
+  }
+  
+}
+
+class CheckDejavu implements Predicate<Course> {
+  Student s;
+  int acc;
+  
+  CheckDejavu(Student s, int acc) {
+    this.s = s;
+    this.acc = acc;
+  }
+  
+  public boolean test(Course c) {
+    if (c.students.ormap(new CheckStudent(s))) {
+      this.acc = this.acc + 1;
+    }
+    return this.acc >= 2;
+  }
 }
 
 class Course {
@@ -106,6 +111,12 @@ class Course {
     this.students = students;
 
   }
+  
+  // checks if two courses are the same
+  boolean isSameCourse(Course c) {
+    return c.name == this.name;
+  }
+  
 }
 
 class Instructor {
@@ -119,8 +130,13 @@ class Instructor {
 
   // determines if a student is in the instructors class more than once
   boolean dejavu(Student c) {
-    return this.courses.dejavuHelper(c, 0);
+    return this.courses.ormap(new CheckDejavu(c, 0));
   }
+  
+  void find(Course c) {
+    this.courses.ormap(new ReplaceCourse(c));
+  }
+
 
 }
 
@@ -135,15 +151,22 @@ class Student {
     this.courses = new MtList<Course>();
   }
 
+  // checks if two students ids are the same
+  boolean compareId(Student s) {
+    return this.id == s.id;
+  }
+  
   // EFFECT: adds a course to a student and a student to a course
   void enroll(Course c) {
     this.courses = new ConsList<Course>(c, this.courses);
     c.students = new ConsList<Student>(this, c.students);
+//    c.prof.find(c);
   }
-
+  
   // determines if the student and given student are in any of the same classes
   boolean classmates(Student c) {
-    return this.courses.checkCourse(c);
+    // return this.courses.checkCourse(c);
+    return this.courses.ormap(new CheckCourseList(c));
   }
 
 }
@@ -219,6 +242,18 @@ class ExamplesRegistrar {
     t.checkExpect(this.s1.classmates(this.s3), false);
     t.checkExpect(this.s3.classmates(this.s2), false);
     t.checkExpect(this.s3.classmates(this.s5), false);
+  }
+  
+  // tests for compareId method
+  
+  void testCompareId(Tester t) {
+    
+    initData();
+    
+    t.checkExpect(this.s1.compareId(this.s2), false);
+    t.checkExpect(this.s2.compareId(this.s1), false);
+    t.checkExpect(this.s1.compareId(this.s1), true);
+    t.checkExpect(this.s2.compareId(this.s2), true);
   }
 
   // tests dejavu method
