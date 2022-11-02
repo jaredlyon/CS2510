@@ -42,56 +42,56 @@ class ConsList<T> implements IList<T> {
 
 class CheckStudent implements Predicate<Student> {
   Student c;
-  
+
   CheckStudent(Student c) {
     this.c = c;
   }
-  
+
   // checks if two students are the same
   public boolean test(Student stu) {
     return c.compareId(stu);
   }
-  
+
 }
 
-//class ReplaceCourse implements Predicate<Course> {
-//  Course old;
-//  
-//  ReplaceCourse(Course old) {
-//    this.old = old;
-//  }
-//  
-//  
-//  public boolean test(Course c) {
-//    if (old.isSameCourse(c)) {
-//      old = c;
-//    }
-//    return new ConsList<Course>(old, new MtList<Course>());
-//  }
-//}
+class ReplaceCourse implements Predicate<Course> {
+  Course old;
+  
+  ReplaceCourse(Course old) {
+    this.old = old;
+  }
+  
+  
+  public boolean test(Course c) {
+    if (old.isSameCourse(c)) {
+      old = c;
+    }
+    return new ConsList<Course>(old, new MtList<Course>());
+  }
+}
 
 class CheckCourseList implements Predicate<Course> {
   Student s;
-  
+
   CheckCourseList(Student s) {
     this.s = s;
   }
-  
+
   public boolean test(Course c) {
     return c.students.ormap(new CheckStudent(s));
   }
-  
+
 }
 
 class CheckDejavu implements Predicate<Course> {
   Student s;
   int acc;
-  
+
   CheckDejavu(Student s, int acc) {
     this.s = s;
     this.acc = acc;
   }
-  
+
   public boolean test(Course c) {
     if (c.students.ormap(new CheckStudent(s))) {
       this.acc = this.acc + 1;
@@ -111,12 +111,12 @@ class Course {
     this.students = students;
 
   }
-  
+
   // checks if two courses are the same
   boolean isSameCourse(Course c) {
     return c.name == this.name;
   }
-  
+
 }
 
 class Instructor {
@@ -132,7 +132,7 @@ class Instructor {
   boolean dejavu(Student c) {
     return this.courses.ormap(new CheckDejavu(c, 0));
   }
-  
+
   void find(Course c) {
     this.courses.ormap(new ReplaceCourse(c));
   }
@@ -155,14 +155,14 @@ class Student {
   boolean compareId(Student s) {
     return this.id == s.id;
   }
-  
+
   // EFFECT: adds a course to a student and a student to a course
   void enroll(Course c) {
     this.courses = new ConsList<Course>(c, this.courses);
     c.students = new ConsList<Student>(this, c.students);
-//    c.prof.find(c);
+    //    c.prof.find(c);
   }
-  
+
   // determines if the student and given student are in any of the same classes
   boolean classmates(Student c) {
     // return this.courses.checkCourse(c);
@@ -213,7 +213,7 @@ class ExamplesRegistrar {
   void testEnroll(Tester t) {
 
     initData();
-    
+
     t.checkExpect(this.c1.students, new MtList<Student>());
     t.checkExpect(this.s1.courses, new MtList<Course>());
     this.s1.enroll(this.c1);
@@ -222,8 +222,8 @@ class ExamplesRegistrar {
     this.s2.enroll(this.c1);
     t.checkExpect(this.s2.courses, new ConsList<Course>(this.c1, new MtList<Course>()));
     t.checkExpect(this.c1.students, new ConsList<Student>(this.s2, 
-                                      new ConsList<Student>(this.s1,
-                                         new MtList<Student>())));
+        new ConsList<Student>(this.s1,
+            new MtList<Student>())));
     t.checkExpect(this.c2.students, new MtList<Course>());
   }
 
@@ -243,13 +243,13 @@ class ExamplesRegistrar {
     t.checkExpect(this.s3.classmates(this.s2), false);
     t.checkExpect(this.s3.classmates(this.s5), false);
   }
-  
+
   // tests for compareId method
-  
+
   void testCompareId(Tester t) {
-    
+
     initData();
-    
+
     t.checkExpect(this.s1.compareId(this.s2), false);
     t.checkExpect(this.s2.compareId(this.s1), false);
     t.checkExpect(this.s1.compareId(this.s1), true);
@@ -291,11 +291,11 @@ class ExamplesRegistrar {
   IList<Integer> ints = new ConsList<Integer>(1,
       new ConsList<Integer>(2,
           new ConsList<Integer>(3, mtInts)));
-  
+
   // tests for ormap
   void testOrMap(Tester t) {
     t.checkExpect(this.mtStrings.ormap(s -> s.length() > 4), false);
     t.checkExpect(this.strings.ormap(s -> s.length() > 5), true);
     t.checkExpect(this.ints.ormap(i -> i == 34), false);
-}
+  }
 }
