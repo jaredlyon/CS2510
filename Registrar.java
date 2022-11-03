@@ -80,7 +80,7 @@ class CheckStudent implements Predicate<Student> {
   }
 }
 
-//checks if this student is in a course
+// checks if this student is in a course
 class CheckCourseList implements Predicate<Course> {
   Student s;
 
@@ -103,12 +103,14 @@ class Course {
     this.name = name;
     this.prof = prof;
     this.students = students;
+    this.prof.addCourse(this);
   }
-  
+
   Course(String name, Instructor prof) {
     this.name = name;
     this.prof = prof;
     this.students = new MtList<Student>();
+    this.prof.addCourse(this);
   }
 
   // EFFECT: adds a student to this course
@@ -126,7 +128,7 @@ class Instructor {
     this.name = name;
     this.courses = courses;
   }
-  
+
   Instructor(String name) {
     this.name = name;
     this.courses = new MtList<Course>();
@@ -139,6 +141,10 @@ class Instructor {
     int length = temp.length();
     // return true if list length is above one
     return length >= 2;
+  }
+
+  void addCourse(Course c) {
+    this.courses = new ConsList<Course>(c, this.courses);
   }
 }
 
@@ -153,7 +159,7 @@ class Student {
     this.id = id;
     this.courses = courses;
   }
-  
+
   Student(String name, int id) {
     this.name = name;
     this.id = id;
@@ -192,6 +198,7 @@ class ExamplesRegistrar {
 
   Instructor i1 = new Instructor("Razzaq");
   Instructor i2 = new Instructor("Smith");
+  Instructor i3 = new Instructor("Fertuck");
 
   Course c1 = new Course("Fundies II", this.i1);
   Course c2 = new Course("Discrete Structures", this.i1);
@@ -211,6 +218,7 @@ class ExamplesRegistrar {
 
     this.i1 = new Instructor("Razzaq");
     this.i2 = new Instructor("Smith");
+    this.i3 = new Instructor("Fertuck");
 
     this.i1.courses = new ConsList<Course>(this.c1, this.i1.courses);
     this.i1.courses = new ConsList<Course>(this.c2, this.i1.courses);
@@ -239,6 +247,8 @@ class ExamplesRegistrar {
 
   // test ormap
   void testOrMap(Tester t) {
+    this.initData();
+
     t.checkExpect(this.mtStrings.ormap(s -> s.length() > 4), false);
     t.checkExpect(this.strings.ormap(s -> s.length() > 5), true);
     t.checkExpect(this.ints.ormap(i -> i == 34), false);
@@ -246,6 +256,8 @@ class ExamplesRegistrar {
 
   // test filter
   void testFilter(Tester t) {
+    this.initData();
+
     t.checkExpect(this.mtStrings.filter(s -> s.length() > 4), this.mtStrings);
     t.checkExpect(this.strings.filter(s -> s.length() > 5),
         new ConsList<String>("fundies 2", mtStrings));
@@ -254,6 +266,8 @@ class ExamplesRegistrar {
 
   // test length
   void testLength(Tester t) {
+    this.initData();
+
     t.checkExpect(this.mtStrings.length(), 0);
     t.checkExpect(this.strings.length(), 3);
     t.checkExpect(this.ints.length(), 3);
@@ -261,12 +275,16 @@ class ExamplesRegistrar {
 
   // test CheckStudent predicate
   void testCheckStudent(Tester t) {
+    this.initData();
+
     t.checkExpect(new CheckStudent(this.s1).test(this.s2), false);
     t.checkExpect(new CheckStudent(this.s5).test(this.s6), true);
   }
 
   // test CheckCourseList predicate
   void testCheckCourseList(Tester t) { 
+    this.initData();
+
     t.checkExpect(new CheckCourseList(this.s6).test(this.c5), true);
     t.checkExpect(new CheckCourseList(this.s1).test(this.c5), true);
     t.checkExpect(new CheckCourseList(this.s1).test(this.c3), false);
@@ -297,9 +315,22 @@ class ExamplesRegistrar {
     t.checkExpect(this.i2.dejavu(this.s1), false);
   }
 
+  // test addCourse
+  void testAddCourse(Tester t) {
+    this.initData();
+
+    this.i3.addCourse(this.c1);
+    t.checkExpect(this.i3.courses, new ConsList<Course>(this.c1,
+        new MtList<Course>()));
+    this.i3.addCourse(this.c2);
+    t.checkExpect(this.i3.courses, new ConsList<Course>(this.c2,
+        new ConsList<Course>(this.c1,
+            new MtList<Course>())));
+  }
+
   // tests for compareId method
   void testCompareId(Tester t) {
-    initData();
+    this.initData();
 
     t.checkExpect(this.s1.compareId(this.s2), false);
     t.checkExpect(this.s2.compareId(this.s1), false);
@@ -309,7 +340,7 @@ class ExamplesRegistrar {
 
   // tests enroll method
   void testEnroll(Tester t) {
-    initData();
+    this.initData();
 
     t.checkExpect(this.c1.students, new ConsList<Student>(this.s1,
         new MtList<Student>()));
@@ -324,7 +355,7 @@ class ExamplesRegistrar {
 
   // tests classmates method
   void testClassmates(Tester t) {
-    initData();
+    this.initData();
 
     this.s1.enroll(this.c1);
     this.s2.enroll(this.c1);
