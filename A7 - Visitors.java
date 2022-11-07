@@ -98,14 +98,14 @@ class NoNegativeResults implements IArithVisitor<Boolean> {
   // checks for negatives in a unary formula
   public Boolean visitUnary(UnaryFormula f) {
     return new EvalVisitor().visitUnary(f) >= 0
-        && new EvalVisitor().apply(f.child) >= 0;
+        && new NoNegativeResults().apply(f.child);
   }
 
   // checks for negatives in a binary formula
   public Boolean visitBinary(BinaryFormula f) {
     return new EvalVisitor().visitBinary(f) >= 0
-        && new EvalVisitor().apply(f.left) >= 0
-        && new EvalVisitor().apply(f.right) >= 0;
+        && new NoNegativeResults().apply(f.left)
+        && new NoNegativeResults().apply(f.right);
   }
 
   // accepts this
