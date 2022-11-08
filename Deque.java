@@ -9,9 +9,25 @@ abstract class ANode<T> {
   ANode<T> prev;
   
   
-  void connectNext(ANode<T> node) {};                            // Why are these both empty?
+  // inserts the given node into the sentinel
+  void insert(ANode<T> node) {
+    this.prev.connect(node);
+    this.prev = node;
+    node.next = this;
+    
+  }
   
-  void connectPrev(ANode<T> node) {};
+  // connects one side of the node into the deque
+  void connect(ANode<T> node) {
+    this.next = node;
+    node.prev = this;
+  }
+  
+  // removes the current node and connects the next and previous nodes
+  void remove() {
+    this.next.prev = this.prev;
+    this.prev.next = this.next;
+  }
   
   // finds the node that passed the predicate
   ANode<T> findNode(Predicate<T> pred) {
@@ -46,19 +62,6 @@ class Node<T> extends ANode<T> {
   }
   
   
-  // connects the next and given nodes through next and previous
-  void connectNext(ANode<T> node) {
-    this.next = node;
-    node.prev = this;
-  }
-  
-  // connects the previous and given nodes through next and previous
-  void connectPrev(ANode<T> node) {
-    this.prev = node;
-    node.next = this;
-  }
-  
-  
   // finds node that passes the predicate
   ANode<T> findNode(Predicate<T> pred) {
     if (pred.test(this)) {
@@ -77,30 +80,6 @@ class Sentinel<T> extends ANode<T>{
   Sentinel() {
     this.next = this;
     this.prev = this;
-  }
-  
-  // inserts the given node into the sentinel
-  void insertNext(ANode<T> node) {
-    this.next.connectNext(node);
-    this.next = node;
-  }
-  
-  // inserts the given node into the sentinel
-  void insertPrev(ANode<T> node) {
-    this.prev.connectPrev(node);
-    this.prev = node;
-  }
-  
-  // removes node from the head of the deque
-  void removeHead() {
-    this.next = this.next.next;               // this is really ugly code, it needs a helper to declutter
-    this.next.next.prev = this;  
-  }
-  
-  // removes node from the tail of the deque
-  void removeTail() {
-    this.prev = this.prev.prev;               // this is really ugly code, it needs a helper to declutter
-    this.prev.prev.next = this;
   }
 
 }
@@ -127,23 +106,23 @@ class Deque<T> {
   // EFFECT: adds a node to the head of the deque
   void addAtHead(T data) {
     Node<T> node = new Node<T>(data);
-    this.header.insertNext(node);
+    this.header.next.insert(node);
   }
   
   // EFFECT: adds a node to the tail of the deque
   void addAtTail(T data) {
     Node<T> node = new Node<T>(data);
-    this.header.insertPrev(node);
+    this.header.prev.insert(node);
   }
   
   // EFFECT: removes a node from the head of the deque
   void removeFromHead() {
-    this.header.removeHead();
+    this.header.next.remove();
   }
   
   // EFFECT: removes a node from the tail of the deque.
   void removeFromTail() {
-    this.header.removeTail();
+    this.header.prev.remove();
   }
   
   // finds the node that passed the given predicate
