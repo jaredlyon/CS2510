@@ -1,3 +1,5 @@
+import java.util.function.Predicate;
+
 import tester.Tester;
 
 abstract class ANode<T> {
@@ -31,6 +33,31 @@ class Node<T> extends ANode<T> {
     this.prev.next = this;
     
   }
+  
+  
+  // connects the next and given nodes through next and previous
+  void connectNext(ANode<T> node) {
+    this.next = node;
+    node.prev = this;
+  }
+  
+  // connects the previous and given nodes through next and previous
+  void connectPrev(ANode<T> node) {
+    this.prev = node;
+    node.next = this;
+  }
+  
+  
+  // finds node that passes the predicate
+  Node<T> findNode(Predicate<T> pred) {
+    if (pred.apply(this)) {
+      return this;
+    }
+    else {
+      return this.next.findNode(pred);
+    }
+  }
+  
 }
 
 
@@ -40,6 +67,36 @@ class Sentinel<T> extends ANode<T>{
     this.next = this;
     this.prev = this;
   }
+  
+  // inserts the given node into the sentinel
+  void insertNext(ANode<T> node) {
+    this.next.connectNext(node);
+    this.next = node;
+  }
+  
+  // inserts the given node into the sentinel
+  void insertPrev(ANode<T> node) {
+    this.prev.connectPrev(node);
+    this.prev = node;
+  }
+  
+  // removes node from the head of the deque
+  void removeHead() {
+    this.next = this.next.next;               // this is really ugly code, it needs a helper to declutter
+    this.next.next.prev = this;  
+  }
+  
+  // removes node from the tail of the deque
+  void removeTail() {
+    this.prev = this.prev.prev;              // this is really ugly code, it needs a helper to declutter
+    this.prev.prev.next = this;
+  }
+  
+  // finds the node that passed the predicate
+  Node<T> findNode(Predicate<T> pred) {                         // if the findNode method ends back up at sentinel, give exception
+    return new RuntimeException("No such node exists");
+  }
+
 }
 
 
@@ -60,29 +117,36 @@ class Deque<T> {
     return 0;
   }
   
+  // CHANGE THE NEXT AND PREV OF EACH TO SKIP OR ADD NEW NODE
+  
+
+  
+  
   // adds a node to the head of the deque
-  Deque<T> addAtHead() {
-    return null;
+  void addAtHead(T data) {
+    Node<T> node = new Node<T>(data);
+    this.header.insertNext(node);
   }
   
   // adds a node to the tail of the deque
-  Deque<T> addAtTail() {
-    return null;
+  void addAtTail(T data) {
+    Node<T> node = new Node<T>(data);
+    this.header.insertPrev(node);
   }
   
   // removes a node from the head of the deque
-  Deque<T> removeFromHead() {
-    return null;
+  void removeFromHead() {
+    this.header.removeHead();
   }
   
   // removes a node from the tail of the deque.
-  Deque<T> removeFromTail() {
-    return null;
+  void removeFromTail() {
+    this.header.removeTail();
   }
   
   // finds the node that passed the given predicate
   Node<T> find(Predicate<T> pred) {
-    return null;
+    return this.header.next.findNode(pred);                     // field of a field
   }
   
   // removes the given node from the deque
