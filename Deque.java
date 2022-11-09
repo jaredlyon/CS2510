@@ -29,11 +29,13 @@ abstract class ANode<T> {
     this.prev.next = this.next;
   }
   
-  // finds the node that passed the predicate
+  // finds node that passes the predicate
   ANode<T> findNode(Predicate<T> pred) {
     return this;
   }
+  
 }
+  
 
 
 class Node<T> extends ANode<T> {
@@ -61,10 +63,9 @@ class Node<T> extends ANode<T> {
     
   }
   
-  
   // finds node that passes the predicate
   ANode<T> findNode(Predicate<T> pred) {
-    if (pred.test(this)) {
+    if (pred.test(this.data)) {
       return this;
     }
     else {
@@ -127,12 +128,37 @@ class Deque<T> {
   
   // finds the node that passed the given predicate
   ANode<T> find(Predicate<T> pred) {
-    return this.header.next.findNode(pred);                     // field of a field
+    return this.header.next.findNode(pred);                     // field of a field, but this is allowed
   }
   
   // removes the given node from the deque
-  Deque<T> removeNode(Node<T> node) {
-    return null;
+  void removeNode(Node<T> node) {
+    this.find(new SameNode<T>()).remove();                      // fix data type
+  }                                                           // finds the given node, then calls remove on it
+}
+
+class SameNode<T> implements Predicate<T> {
+
+  // determines if two nodes are the same
+  public boolean test(T t) {
+    return t.equals(this);
+  }
+  
+}
+
+class LessThanThree implements Predicate<String> {
+  
+  // checks if the strings length is less than three
+  public boolean test(String t) {
+    return 3 > t.length();
+  }
+}
+
+class FirstD implements Predicate<String> {
+  
+  // checks if the strings first letter is d
+  public boolean test(String t) {
+    return t.substring(0, 1).equals("d");
   }
 }
 
@@ -173,12 +199,14 @@ class ExamplesDeque {
     
     this.sentalpha.next = this.abc;
     this.sentalpha.prev = this.def;
+    this.def.next = this.sentalpha;
     this.def.prev = this.cde;
     this.cde.next = this.def;
     this.cde.prev = this.bcd;
     this.bcd.next = this.cde;
     this.bcd.prev = this.abc;
     this.abc.next = this.bcd;
+    this.abc.prev = this.sentalpha;
     
     this.dequealpha = new Deque<String>(this.sentalpha);
     
@@ -194,25 +222,31 @@ class ExamplesDeque {
     
     this.sentlength.next = this.dog;
     this.sentlength.prev = this.banana;
+    this.banana.next = this.sentlength;
     this.banana.prev = this.apple;
     this.apple.next = this.banana;
     this.apple.prev = this.four;
     this.four.next = this.apple;
     this.four.prev = this.dog;
     this.dog.next = this.four;
+    this.dog.prev = this.sentlength;
     
     this.dequelength = new Deque<String>(this.sentlength);
   }
   
   // tests for addAtHead method
-  void testAddAtHead(Tester t) {                                    // EXPECTED NODE NEEDS TO UPDATE
+  void testAddAtHead(Tester t) {
     this.initData();
     t.checkExpect(this.sentalpha.next, this.abc);
     this.dequealpha.addAtHead("zab");
+    this.zab.next = this.abc;
+    this.zab.prev = this.sentalpha;
     t.checkExpect(this.sentalpha.next, this.zab);
     
     t.checkExpect(this.sentlength.next, this.dog);
     this.dequelength.addAtHead("hi");
+    this.hi.next = this.dog;
+    this.hi.prev = this.sentlength;
     t.checkExpect(this.sentlength.next, this.hi);
   }
   
@@ -221,10 +255,14 @@ class ExamplesDeque {
     this.initData();
     t.checkExpect(this.sentalpha.prev, this.def);
     this.dequealpha.addAtTail("efg");
+    this.efg.next = this.sentalpha;
+    this.efg.prev = this.def;
     t.checkExpect(this.sentalpha.prev, this.efg);
     
     t.checkExpect(this.sentlength.prev, this.banana);
     this.dequelength.addAtTail("welcome");
+    this.welcome.next = this.sentlength;
+    this.welcome.prev = this.banana;
     t.checkExpect(this.sentlength.prev, this.welcome);
   }
   
