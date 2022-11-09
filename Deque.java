@@ -11,7 +11,6 @@ abstract class ANode<T> {
   
   // inserts the given node into the sentinel
   void insert(ANode<T> node) {
-    this.prev.connect(node);
     this.prev = node;
     node.next = this;
     
@@ -82,7 +81,7 @@ class Sentinel<T> extends ANode<T>{
     this.next = this;
     this.prev = this;
   }
-
+  
 }
 
 
@@ -108,12 +107,14 @@ class Deque<T> {
   void addAtHead(T data) {
     Node<T> node = new Node<T>(data);
     this.header.next.insert(node);
+    this.header.connect(node);
   }
   
   // EFFECT: adds a node to the tail of the deque
   void addAtTail(T data) {
     Node<T> node = new Node<T>(data);
     this.header.prev.insert(node);
+    this.header.connect(node);
   }
   
   // EFFECT: removes a node from the head of the deque
@@ -132,25 +133,31 @@ class Deque<T> {
   }
   
   // removes the given node from the deque
-  void removeNode(Node<T> node) {
-    this.find(new SameNode<T>()).remove();                      // fix data type
+  void removeNode(ANode<T> node) {
+    this.find(new SameNode<T>(node)).remove();                      // fix data type
   }                                                           // finds the given node, then calls remove on it
 }
 
 class SameNode<T> implements Predicate<T> {
 
+  ANode<T> node;
+  
+  SameNode(ANode<T> node) {
+    this.node = node;
+  }
+
   // determines if two nodes are the same
   public boolean test(T t) {
-    return t.equals(this);
+    return t.equals(node);
   }
   
 }
 
-class LessThanThree implements Predicate<String> {
+class LessThanFour implements Predicate<String> {
   
-  // checks if the strings length is less than three
+  // checks if the strings length is less than four
   public boolean test(String t) {
-    return 3 > t.length();
+    return 4 > t.length();
   }
 }
 
@@ -239,15 +246,11 @@ class ExamplesDeque {
     this.initData();
     t.checkExpect(this.sentalpha.next, this.abc);
     this.dequealpha.addAtHead("zab");
-    this.zab.next = this.abc;
-    this.zab.prev = this.sentalpha;
-    t.checkExpect(this.sentalpha.next, this.zab);
+    t.checkExpect(this.sentalpha.next, this.abc.prev);
     
     t.checkExpect(this.sentlength.next, this.dog);
     this.dequelength.addAtHead("hi");
-    this.hi.next = this.dog;
-    this.hi.prev = this.sentlength;
-    t.checkExpect(this.sentlength.next, this.hi);
+    t.checkExpect(this.sentlength.next, this.dog.prev);
   }
   
   // tests for addAtTail method
@@ -255,16 +258,37 @@ class ExamplesDeque {
     this.initData();
     t.checkExpect(this.sentalpha.prev, this.def);
     this.dequealpha.addAtTail("efg");
-    this.efg.next = this.sentalpha;
-    this.efg.prev = this.def;
-    t.checkExpect(this.sentalpha.prev, this.efg);
+    t.checkExpect(this.sentalpha.prev, this.def.next);
     
     t.checkExpect(this.sentlength.prev, this.banana);
     this.dequelength.addAtTail("welcome");
-    this.welcome.next = this.sentlength;
-    this.welcome.prev = this.banana;
-    t.checkExpect(this.sentlength.prev, this.welcome);
+    t.checkExpect(this.sentlength.prev, this.banana.next);
   }
+  
+  // tests for insert helper method
+  void testInsert(Tester t) {
+    this.initData();
+    this.abc.insert(this.zab);
+    t.checkExpect(this.zab.next, this.abc);
+    t.checkExpect(this.abc.prev, this.zab);
+    
+    this.apple.insert(this.welcome);
+    t.checkExpect(this.welcome.next, this.apple);
+    t.checkExpect(this.apple.prev, this.welcome);
+  }
+  
+  // tests for connect helper method
+  void testConnect(Tester t) {
+    this.initData();
+    this.sentalpha.connect(this.zab);
+    t.checkExpect(this.zab.prev, this.sentalpha);
+    t.checkExpect(this.sentalpha.next, this.zab);
+    
+    this.abc.connect(this.dog);
+    t.checkExpect(this.dog.prev, this.abc);
+    t.checkExpect(this.abc.next, this.dog);
+  }
+  
   
   // tests for removeFromTail method
   void testRemoveFromHead(Tester t) {
@@ -290,4 +314,72 @@ class ExamplesDeque {
     t.checkExpect(this.sentlength.prev, this.apple);
   }
   
+  // tests for the remove helper method
+  void testRemove(Tester t) {
+    this.initData();
+    
+    this.abc.remove();
+    t.checkExpect(this.sentalpha.next, this.bcd);
+    t.checkExpect(this.bcd.prev, this.sentalpha);
+    this.bcd.remove();
+    t.checkExpect(this.sentalpha.next, this.cde);
+    t.checkExpect(this.cde.prev, this.sentalpha);
+    this.def.remove();
+    t.checkExpect(this.sentalpha.prev, this.cde);
+    t.checkExpect(this.cde.next, this.sentalpha);
+    
+    this.dog.remove();
+    t.checkExpect(this.sentlength.next, this.four);
+    t.checkExpect(this.four.prev, this.sentlength);
+    this.apple.remove();
+    t.checkExpect(this.four.next, this.banana);
+    t.checkExpect(this.banana.prev, this.four);
+    
+  }
+   
+  
+  // tests for the find method
+  void testFind(Tester t) {
+    this.initData();
+    t.checkExpect(this.dequealpha.find(new FirstD()), this.def);
+    t.checkExpect(this.dequelength.find(new FirstD()), this.dog);
+    t.checkExpect(this.dequelength.find(new LessThanFour()), this.dog);
+    t.checkExpect(this.dequealpha.find(new SameNode<String>(this.dog)), this.dequealpha.header);
+    t.checkExpect(this.dequelength.find(new SameNode<String>(this.bcd)), this.dequelength.header);
+  }
+  
+  // tests for the find helper method
+  void testFindNode(Tester t) {
+    this.initData();
+    t.checkExpect(this.abc.findNode(new LessThanFour()), this.abc);
+    t.checkExpect(this.banana.findNode(new LessThanFour()), this.sentlength);
+    t.checkExpect(this.dog.findNode(new LessThanFour()), this.dog);
+    t.checkExpect(this.abc.findNode(new FirstD()), this.def);
+    t.checkExpect(this.dog.findNode(new FirstD()), this.dog);
+    t.checkExpect(this.four.findNode(new FirstD()), this.sentlength); 
+  }
+  
+  // tests for removenode method                                  // also needs a case where given node is sentinel
+  void testRemoveNode(Tester t) {
+    this.initData();
+    this.dequealpha.removeNode(this.abc);
+    t.checkExpect(this.dequealpha.header.next, this.bcd);
+    
+    this.dequealpha.removeNode(this.bcd);
+    t.checkExpect(this.dequealpha.header.next, this.cde);
+    
+    this.initData();
+    this.dequealpha.removeNode(this.dog);
+    t.checkExpect(this.dequealpha, this.dequealpha);                 // deque remains unchanged
+    
+    this.dequelength.removeNode(this.dog);
+    t.checkExpect(this.dequelength.header.next, this.four);
+    
+    this.dequelength.removeNode(this.apple);
+    t.checkExpect(this.dequelength.header.next.next, this.banana);
+    
+    this.initData();
+    this.dequelength.removeNode(this.abc);
+    t.checkExpect(this.dequelength, this.dequelength);              // deque remains unchanged
+  }
 }
