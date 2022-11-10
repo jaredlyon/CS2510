@@ -1,4 +1,3 @@
-import java.awt.Color;
 import java.util.*;
 import tester.Tester;
 
@@ -51,10 +50,11 @@ class PermutationCode {
 
     for (int i = 0; i < source.length(); i++) {
       char decodedChar = source.charAt(i); // get character at i
+      
       if (decodedChar == ' ') {
         result = result + decodedChar; // checks for spaces
       } else {
-        int decodedIndex = alphabet.indexOf(decodedChar); // what index in alphabet is char?
+        int decodedIndex = this.alphabet.indexOf(decodedChar); // what index in alphabet is char?
         char encodedChar = this.code.get(decodedIndex); // what char at the coded index corresponds?
         result = result + encodedChar; // append char to result
       }
@@ -69,11 +69,12 @@ class PermutationCode {
 
     for (int i = 0; i < code.length(); i++) {
       char encodedChar = code.charAt(i); // get character at i
+      
       if (encodedChar == ' ') {
         result = result + encodedChar; // checks for spaces
       } else {
-        int encodedIndex = alphabet.indexOf(encodedChar); // what index in the alphabet is i?
-        char decodedChar = this.code.get(encodedIndex); // what code index corresponds?
+        int encodedIndex = this.code.indexOf(encodedChar); // what index in the alphabet is i?
+        char decodedChar = this.alphabet.get(encodedIndex); // what code index corresponds?
         result = result + decodedChar; // append char to result
       }
     }
@@ -102,8 +103,39 @@ class ExamplesPermutationCode {
   String encoded2 = "dliow";
   String encoded3 = "ufmwrvh gdl";
   String encoded4 = "jared";
+  
+  PermutationCode unkeyedCode = new PermutationCode();
  
   // test initEncoder
+  void testInitEncoder(Tester t) {
+    t.checkExpect(unkeyedCode.code.size(), 26);
+    t.checkExpect(unkeyedCode.code.contains('a'), true);
+    t.checkExpect(unkeyedCode.code.contains('b'), true);
+    t.checkExpect(unkeyedCode.code.contains('c'), true);
+    t.checkExpect(unkeyedCode.code.contains('d'), true);
+    t.checkExpect(unkeyedCode.code.contains('e'), true);
+    t.checkExpect(unkeyedCode.code.contains('f'), true);
+    t.checkExpect(unkeyedCode.code.contains('g'), true);
+    t.checkExpect(unkeyedCode.code.contains('h'), true);
+    t.checkExpect(unkeyedCode.code.contains('i'), true);
+    t.checkExpect(unkeyedCode.code.contains('j'), true);
+    t.checkExpect(unkeyedCode.code.contains('k'), true);
+    t.checkExpect(unkeyedCode.code.contains('l'), true);
+    t.checkExpect(unkeyedCode.code.contains('m'), true);
+    t.checkExpect(unkeyedCode.code.contains('n'), true);
+    t.checkExpect(unkeyedCode.code.contains('o'), true);
+    t.checkExpect(unkeyedCode.code.contains('p'), true);
+    t.checkExpect(unkeyedCode.code.contains('q'), true);
+    t.checkExpect(unkeyedCode.code.contains('r'), true);
+    t.checkExpect(unkeyedCode.code.contains('s'), true);
+    t.checkExpect(unkeyedCode.code.contains('t'), true);
+    t.checkExpect(unkeyedCode.code.contains('u'), true);
+    t.checkExpect(unkeyedCode.code.contains('v'), true);
+    t.checkExpect(unkeyedCode.code.contains('w'), true);
+    t.checkExpect(unkeyedCode.code.contains('x'), true);
+    t.checkExpect(unkeyedCode.code.contains('y'), true);
+    t.checkExpect(unkeyedCode.code.contains('z'), true);
+  }
   
   // test encode
   void testEncode(Tester t) {
@@ -119,5 +151,11 @@ class ExamplesPermutationCode {
     t.checkExpect(keyedCode.decode(encoded2), decoded2);
     t.checkExpect(keyedCode.decode(encoded3), decoded3);
     t.checkExpect(keyedCode.decode(encoded4), decoded4);
+  }
+  
+  // test encode decode
+  void testEncodeDecode(Tester t) {
+    t.checkExpect(keyedCode.decode(keyedCode.encode(decoded1)), decoded1);
+    t.checkExpect(keyedCode.encode(keyedCode.decode(encoded1)), encoded1);
   }
 }
