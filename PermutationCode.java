@@ -73,8 +73,8 @@ class PermutationCode {
       if (encodedChar == ' ') {
         result = result + encodedChar; // checks for spaces
       } else {
-        int encodedIndex = this.code.indexOf(encodedChar); // what index in the alphabet is i?
-        char decodedChar = this.alphabet.get(encodedIndex); // what code index corresponds?
+        int encodedIndex = this.code.indexOf(encodedChar); // what index in the code is i?
+        char decodedChar = this.alphabet.get(encodedIndex); // what alphabet index corresponds?
         result = result + decodedChar; // append char to result
       }
     }
