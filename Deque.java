@@ -24,11 +24,13 @@ abstract class ANode<T> {
     node.prev = this;
   }
   
+  // pulls the data field of the given node
+  T findData() {
+    throw new RuntimeException("Cannot remove from an empty list");
+  }
+  
   // EFFECT: removes the current node and connects the next and previous nodes
   void remove() {
-    if (this.next == this.prev) {
-      throw new RuntimeException("Cannot remove from an empty list");
-    }
     this.next.prev = this.prev;
     this.prev.next = this.next;
   }
@@ -46,8 +48,6 @@ abstract class ANode<T> {
  
 }
   
-
-
 class Node<T> extends ANode<T> {
   T data;
 
@@ -67,6 +67,11 @@ class Node<T> extends ANode<T> {
     this.next.prev = this;
     this.prev.next = this;
     
+  }
+  
+  // pulls the data field of the given node
+  T findData() {
+    return this.data;
   }
   
   // determines the number of nodes in a deque
@@ -96,6 +101,13 @@ class Sentinel<T> extends ANode<T> {
   Sentinel() {
     this.next = this;
     this.prev = this;
+  }
+  
+  void remove() {
+    if (this.next == this.prev) {
+      throw new RuntimeException("Cannot remove from an empty list");
+    }
+    this.next.remove();
   }
 }
 
@@ -133,18 +145,18 @@ class Deque<T> {
   
   // gets the removed node from the head
   // EFFECT: removes a node from the head of the deque
-  ANode<T> removeFromHead() {
+  T removeFromHead() {
     ANode<T> removed = this.header.next;
     this.header.next.remove();
-    return removed;
+    return removed.findData();
   }
   
   // gets the removed node from the tail
   // EFFECT: removes a node from the tail of the deque.
-  ANode<T> removeFromTail() {
+  T removeFromTail() {
     ANode<T> removed = this.header.prev;
     this.header.prev.remove();
-    return removed;
+    return removed.findData();
   }
   
   // finds the node that passed the given predicate
@@ -238,10 +250,7 @@ class ExamplesDeque {
     this.hi = new Node<String>("hi");
     this.welcome = new Node<String>("welcome");
     
-
   }
-  
-
   
   // tests for FirstD predicate
   void testFirstD(Tester t) {
@@ -340,30 +349,40 @@ class ExamplesDeque {
   void testRemoveFromHead(Tester t) {
     this.initData();
     t.checkExpect(this.sent2.next, this.abc);
-    t.checkExpect(this.deque2.removeFromHead(), this.abc);
+    t.checkExpect(this.deque2.removeFromHead(), "abc");
     t.checkExpect(this.sent2.next, this.bcd);
     
     t.checkExpect(this.sent3.next, this.dog);
-    t.checkExpect(this.deque3.removeFromHead(), this.dog);
+    t.checkExpect(this.deque3.removeFromHead(), "dog");
     t.checkExpect(this.sent3.next, this.four);
     
-    // t.checkException("Check for empty deque", 
-    //    new RuntimeException("Cannot remove from an empty list"), this.deque1.header, "remove");
+    t.checkException("Check for empty deque", 
+        new RuntimeException("Cannot remove from an empty list"), this.deque1.header, "remove");
   }
   
   // tests for removeFromTail method
   void testRemoveFromTail(Tester t) {
     this.initData();
     t.checkExpect(this.sent2.prev, this.def);
-    t.checkExpect(this.deque2.removeFromTail(), this.def);
+    t.checkExpect(this.deque2.removeFromTail(), "def");
     t.checkExpect(this.sent2.prev, this.cde);
     
     t.checkExpect(this.sent3.prev, this.banana);
-    t.checkExpect(this.deque3.removeFromTail(), this.banana);
+    t.checkExpect(this.deque3.removeFromTail(), "banana");
     t.checkExpect(this.sent3.prev, this.apple);
-    
-    // t.checkException("Check for empty deque", 
-    //    new RuntimeException("Cannot remove from an empty list"), this.deque1.header, "remove");
+
+    t.checkException("Check for empty deque", 
+        new RuntimeException("Cannot remove from an empty list"), this.deque1.header, "remove");
+  }
+  
+  // tests for findData method
+  void testFindData(Tester t) {
+    this.initData();
+    t.checkExpect(this.abc.findData(), "abc");
+    t.checkExpect(this.dog.findData(), "dog");
+    t.checkException("Check for empty deque", 
+        new RuntimeException("Cannot remove from an empty list"), 
+        new Sentinel<String>(), "findData");
   }
   
   // tests for the remove helper method
@@ -379,8 +398,9 @@ class ExamplesDeque {
     this.def.remove();
     t.checkExpect(this.sent2.prev, this.cde);
     t.checkExpect(this.cde.next, this.sent2);
+    this.cde.remove();
     t.checkException("Check for empty deque", 
-        new RuntimeException("Cannot remove from an empty list"), this.cde, "remove");
+        new RuntimeException("Cannot remove from an empty list"), this.sent2, "remove");
     
     this.dog.remove();
     t.checkExpect(this.sent3.next, this.four);
