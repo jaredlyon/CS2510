@@ -1,8 +1,5 @@
 import java.util.function.Predicate;
-
 import tester.Tester;
-
-
 
 abstract class ANode<T> {
   ANode<T> next;
@@ -42,7 +39,10 @@ abstract class ANode<T> {
   }
   
   // EFFECT: removes the given node from the deque
-  void removeNodeHelper(Deque<T> deque) {};
+  void removeNodeHelper(Deque<T> deque) {
+    // this does not do anything because it is inherited by sentinel
+    // and we do not want anything to happen when the method is given a sentinel
+  }
  
 }
   
@@ -51,7 +51,6 @@ abstract class ANode<T> {
 class Node<T> extends ANode<T> {
   T data;
 
-  
   Node(T data) {
     this.data = data;
     this.next = null;
@@ -59,11 +58,11 @@ class Node<T> extends ANode<T> {
   }
   
   Node(T data, ANode<T> next, ANode<T> prev) {
-    if(this.next == null) {
+    if (this.next == null) {
       throw new IllegalArgumentException("Next node is null");
     }
     this.next = next;
-    if(this.prev == null) {
+    if (this.prev == null) {
       throw new IllegalArgumentException("Prev node is null");
     }
     this.prev = prev;
@@ -87,6 +86,7 @@ class Node<T> extends ANode<T> {
       return this.next.findNode(pred);
     }
   }
+  
   // EFFECT: removes the given node from the deque
   void removeNodeHelper(Deque<T> deque) {
     deque.find(new SameData<T>(this.data)).remove();
@@ -94,17 +94,13 @@ class Node<T> extends ANode<T> {
   
 }
 
-
-class Sentinel<T> extends ANode<T>{
+class Sentinel<T> extends ANode<T> {
   
   Sentinel() {
     this.next = this;
     this.prev = this;
   }
-  
-  
 }
-
 
 class Deque<T> {
   Sentinel<T> header;
@@ -138,28 +134,32 @@ class Deque<T> {
     node.connect(this.header);
   }
   
+  // gets the removed node from the head
   // EFFECT: removes a node from the head of the deque
-  void removeFromHead() {
+  ANode<T> removeFromHead() {
+    ANode<T> removed = this.header.next;
     this.header.next.remove();
+    return removed;
   }
   
+  // gets the removed node from the tail
   // EFFECT: removes a node from the tail of the deque.
-  void removeFromTail() {
+  ANode<T> removeFromTail() {
+    ANode<T> removed = this.header.prev;
     this.header.prev.remove();
+    return removed;
   }
   
   // finds the node that passed the given predicate
   ANode<T> find(Predicate<T> pred) {
-    return this.header.next.findNode(pred);                     // field of a field, but this is allowed
+    return this.header.next.findNode(pred);
   }
   
   // EFFECT: removes the given node from the deque
   void removeNode(ANode<T> node) {
-    node.removeNodeHelper(this);                                // fix data type
-    }                                                           // finds the given node, then calls remove on it
-  
+    node.removeNodeHelper(this);                 
+  }                                                          
 }
-
 
 class SameData<T> implements Predicate<T> {
 
@@ -196,9 +196,10 @@ class ExamplesDeque {
   
   Deque<String> deque1;
   Deque<String> deque2;
+  Deque<String> deque3;
   
-  Sentinel<String> sent1;
   Sentinel<String> sent2;
+  Sentinel<String> sent3;
   
   ANode<String> zab;
   ANode<String> abc;
@@ -217,8 +218,9 @@ class ExamplesDeque {
   
   void initData() {
     
+    this.deque1 = new Deque<String>();
     
-    this.sent1 = new Sentinel<String>();
+    this.sent2 = new Sentinel<String>();
     this.abc = new Node<String>("abc");
     this.bcd = new Node<String>("bcd");
     this.cde = new Node<String>("cde");
@@ -227,21 +229,21 @@ class ExamplesDeque {
     this.zab = new Node<String>("zab");
     this.efg = new Node<String>("efg");
     
-    this.sent1.next = this.abc;
-    this.sent1.prev = this.def;
-    this.def.next = this.sent1;
+    this.sent2.next = this.abc;
+    this.sent2.prev = this.def;
+    this.def.next = this.sent2;
     this.def.prev = this.cde;
     this.cde.next = this.def;
     this.cde.prev = this.bcd;
     this.bcd.next = this.cde;
     this.bcd.prev = this.abc;
     this.abc.next = this.bcd;
-    this.abc.prev = this.sent1;
+    this.abc.prev = this.sent2;
     
-    this.deque1 = new Deque<String>(this.sent1);
+    this.deque2 = new Deque<String>(this.sent2);
     
     
-    this.sent2 = new Sentinel<String>();
+    this.sent3 = new Sentinel<String>();
     this.dog = new Node<String>("dog");
     this.four = new Node<String>("four");
     this.apple = new Node<String>("apple");
@@ -250,52 +252,62 @@ class ExamplesDeque {
     this.hi = new Node<String>("hi");
     this.welcome = new Node<String>("welcome");
     
-    this.sent2.next = this.dog;
-    this.sent2.prev = this.banana;
-    this.banana.next = this.sent2;
+    this.sent3.next = this.dog;
+    this.sent3.prev = this.banana;
+    this.banana.next = this.sent3;
     this.banana.prev = this.apple;
     this.apple.next = this.banana;
     this.apple.prev = this.four;
     this.four.next = this.apple;
     this.four.prev = this.dog;
     this.dog.next = this.four;
-    this.dog.prev = this.sent2;
+    this.dog.prev = this.sent3;
     
-    this.deque2 = new Deque<String>(this.sent2);
+    this.deque3 = new Deque<String>(this.sent3);
+  }
+  
+  // test for node constructor
+  void testNode(Tester t) {
+    
+    t.checkExpect(new Node<String>("abc", null, null), new IllegalArgumentException("Next node is null"));
+   // ANode<String> nullNodeNext = new Node<String>("aaa", null, this.abc);
+   // t.checkException("Checks for null links", new IllegalArgumentException("Next node is null"), nullNodeNext, "Node");
+    // ANode<String> nullNodePrev = new Node<String>("bbb", this.def, null);
+    // t.checkException("Checks for null links", new IllegalArgumentException("Next node is null"));
   }
   
   // tests for size method
   void testSize(Tester t) {
     this.initData();
-    t.checkExpect(this.deque1.size(), 4);
     t.checkExpect(this.deque2.size(), 4);
+    t.checkExpect(this.deque3.size(), 4);
     
-    this.deque1.removeFromHead();
-    t.checkExpect(this.deque1.size(), 3);
+    this.deque2.removeFromHead();
+    t.checkExpect(this.deque2.size(), 3);
   }
   
   // tests for addAtHead method
   void testAddAtHead(Tester t) {
     this.initData();
-    t.checkExpect(this.sent1.next, this.abc);
-    this.deque1.addAtHead("zab");
-    t.checkExpect(this.sent1.next, this.abc.prev);
+    t.checkExpect(this.sent2.next, this.abc);
+    this.deque2.addAtHead("zab");
+    t.checkExpect(this.sent2.next, this.abc.prev);
     
-    t.checkExpect(this.sent2.next, this.dog);
-    this.deque2.addAtHead("hi");
-    t.checkExpect(this.sent2.next, this.dog.prev);
+    t.checkExpect(this.sent3.next, this.dog);
+    this.deque3.addAtHead("hi");
+    t.checkExpect(this.sent3.next, this.dog.prev);
   }
   
   // tests for addAtTail method
   void testAddAtTail(Tester t) {
     this.initData();
-    t.checkExpect(this.sent1.prev, this.def);
-    this.deque1.addAtTail("efg");
-    t.checkExpect(this.sent1.prev, this.def.next);
+    t.checkExpect(this.sent2.prev, this.def);
+    this.deque2.addAtTail("efg");
+    t.checkExpect(this.sent2.prev, this.def.next);
     
-    t.checkExpect(this.sent2.prev, this.banana);
-    this.deque2.addAtTail("welcome");
-    t.checkExpect(this.sent2.prev, this.banana.next);
+    t.checkExpect(this.sent3.prev, this.banana);
+    this.deque3.addAtTail("welcome");
+    t.checkExpect(this.sent3.prev, this.banana.next);
   }
   
   // tests for insert helper method
@@ -313,9 +325,9 @@ class ExamplesDeque {
   // tests for connect helper method
   void testConnect(Tester t) {
     this.initData();
-    this.sent1.connect(this.zab);
-    t.checkExpect(this.zab.prev, this.sent1);
-    t.checkExpect(this.sent1.next, this.zab);
+    this.sent2.connect(this.zab);
+    t.checkExpect(this.zab.prev, this.sent2);
+    t.checkExpect(this.sent2.next, this.zab);
     
     this.abc.connect(this.dog);
     t.checkExpect(this.dog.prev, this.abc);
@@ -326,25 +338,31 @@ class ExamplesDeque {
   // tests for removeFromTail method
   void testRemoveFromHead(Tester t) {
     this.initData();
-    t.checkExpect(this.sent1.next, this.abc);
-    this.deque1.removeFromHead();
-    t.checkExpect(this.sent1.next, this.bcd);
+    t.checkExpect(this.sent2.next, this.abc);
+    t.checkExpect(this.deque2.removeFromHead(), this.abc);
+    t.checkExpect(this.sent2.next, this.bcd);
     
-    t.checkExpect(this.sent2.next, this.dog);
-    this.deque2.removeFromHead();
-    t.checkExpect(this.sent2.next, this.four);
+    t.checkExpect(this.sent3.next, this.dog);
+    t.checkExpect(this.deque3.removeFromHead(), this.dog);
+    t.checkExpect(this.sent3.next, this.four);
+    
+    t.checkException("Check for empty deque", 
+        new RuntimeException("Cannot remove from an empty list"), this.deque1.header, "remove");
   }
   
   // tests for removeFromTail method
   void testRemoveFromTail(Tester t) {
     this.initData();
-    t.checkExpect(this.sent1.prev, this.def);
-    this.deque1.removeFromTail();
-    t.checkExpect(this.sent1.prev, this.cde);
+    t.checkExpect(this.sent2.prev, this.def);
+    t.checkExpect(this.deque2.removeFromTail(), this.def);
+    t.checkExpect(this.sent2.prev, this.cde);
     
-    t.checkExpect(this.sent2.prev, this.banana);
-    this.deque2.removeFromTail();
-    t.checkExpect(this.sent2.prev, this.apple);
+    t.checkExpect(this.sent3.prev, this.banana);
+    t.checkExpect(this.deque3.removeFromTail(), this.banana);
+    t.checkExpect(this.sent3.prev, this.apple);
+    
+    t.checkException("Check for empty deque", 
+        new RuntimeException("Cannot remove from an empty list"), this.deque1.header, "remove");
   }
   
   // tests for the remove helper method
@@ -352,19 +370,20 @@ class ExamplesDeque {
     this.initData();
     
     this.abc.remove();
-    t.checkExpect(this.sent1.next, this.bcd);
-    t.checkExpect(this.bcd.prev, this.sent1);
+    t.checkExpect(this.sent2.next, this.bcd);
+    t.checkExpect(this.bcd.prev, this.sent2);
     this.bcd.remove();
-    t.checkExpect(this.sent1.next, this.cde);
-    t.checkExpect(this.cde.prev, this.sent1);
+    t.checkExpect(this.sent2.next, this.cde);
+    t.checkExpect(this.cde.prev, this.sent2);
     this.def.remove();
-    t.checkExpect(this.sent1.prev, this.cde);
-    t.checkExpect(this.cde.next, this.sent1);
-    t.checkException("Check for empty deque", new RuntimeException("Cannot remove from an empty list"), this.cde, "remove");
+    t.checkExpect(this.sent2.prev, this.cde);
+    t.checkExpect(this.cde.next, this.sent2);
+    t.checkException("Check for empty deque", 
+        new RuntimeException("Cannot remove from an empty list"), this.cde, "remove");
     
     this.dog.remove();
-    t.checkExpect(this.sent2.next, this.four);
-    t.checkExpect(this.four.prev, this.sent2);
+    t.checkExpect(this.sent3.next, this.four);
+    t.checkExpect(this.four.prev, this.sent3);
     this.apple.remove();
     t.checkExpect(this.four.next, this.banana);
     t.checkExpect(this.banana.prev, this.four);
@@ -375,59 +394,94 @@ class ExamplesDeque {
   // tests for the find method
   void testFind(Tester t) {
     this.initData();
-    t.checkExpect(this.deque1.find(new FirstD()), this.def);
-    t.checkExpect(this.deque2.find(new FirstD()), this.dog);
-    t.checkExpect(this.deque2.find(new LessThanFour()), this.dog);
-    t.checkExpect(this.deque1.find(new SameData<String>("dog")), this.deque1.header);
-    t.checkExpect(this.deque2.find(new SameData<String>("bcd")), this.deque2.header);
+    t.checkExpect(this.deque2.find(new FirstD()), this.def);
+    t.checkExpect(this.deque3.find(new FirstD()), this.dog);
+    t.checkExpect(this.deque3.find(new LessThanFour()), this.dog);
+    t.checkExpect(this.deque2.find(new SameData<String>("dog")), this.deque2.header);
+    t.checkExpect(this.deque3.find(new SameData<String>("bcd")), this.deque3.header);
   }
   
   // tests for the find helper method
   void testFindNode(Tester t) {
     this.initData();
     t.checkExpect(this.abc.findNode(new LessThanFour()), this.abc);
-    t.checkExpect(this.banana.findNode(new LessThanFour()), this.sent2);
+    t.checkExpect(this.banana.findNode(new LessThanFour()), this.sent3);
     t.checkExpect(this.dog.findNode(new LessThanFour()), this.dog);
     t.checkExpect(this.abc.findNode(new FirstD()), this.def);
     t.checkExpect(this.dog.findNode(new FirstD()), this.dog);
-    t.checkExpect(this.four.findNode(new FirstD()), this.sent2); 
+    t.checkExpect(this.four.findNode(new FirstD()), this.sent3); 
   }
   
   // tests for the removenode helper method
   void testRemoveNodeHelper(Tester t) {
+    this.initData();
+    this.initData();
     
+    t.checkExpect(this.deque2.header.next, this.abc);
+    this.abc.removeNodeHelper(this.deque2);
+    t.checkExpect(this.deque2.header.next, this.bcd);
+    
+    this.bcd.removeNodeHelper(this.deque2);
+    t.checkExpect(this.deque2.header.next, this.cde);
+    
+    this.initData();
+    this.dog.removeNodeHelper(this.deque2);
+    t.checkExpect(this.deque2, this.deque2);
+    
+    t.checkExpect(this.deque3.header.next, this.dog);
+    this.dog.removeNodeHelper(this.deque3);
+    t.checkExpect(this.deque3.header.next, this.four);
+
+    this.apple.removeNodeHelper(this.deque3);
+    t.checkExpect(this.deque3.header.next.next, this.banana);
+    
+    this.initData();
+    this.abc.removeNodeHelper(this.deque3);
+    t.checkExpect(this.deque3, this.deque3);
+    
+    this.initData();
+    t.checkExpect(this.deque2, this.deque2);
+    this.sent2.removeNodeHelper(this.deque2);
+    t.checkExpect(this.deque2, this.deque2);
+    
+    t.checkExpect(this.deque2, this.deque2);
+    this.sent3.removeNodeHelper(this.deque3);
+    t.checkExpect(this.deque2, this.deque2);
   }
   
   // tests for removenode method
   void testRemoveNode(Tester t) {
     this.initData();
-    this.deque1.removeNode(this.abc);
-    t.checkExpect(this.deque1.header.next, this.bcd);
     
-    this.deque1.removeNode(this.bcd);
-    t.checkExpect(this.deque1.header.next, this.cde);
-    
-    this.initData();
-    this.deque1.removeNode(this.dog);
-    t.checkExpect(this.deque1, this.deque1);
-    
-    this.deque2.removeNode(this.dog);
-    t.checkExpect(this.deque2.header.next, this.four);
-    
-    this.deque2.removeNode(this.apple);
-    t.checkExpect(this.deque2.header.next.next, this.banana);
-    
-    this.initData();
+    t.checkExpect(this.deque2.header.next, this.abc);
     this.deque2.removeNode(this.abc);
+    t.checkExpect(this.deque2.header.next, this.bcd);
+    
+    this.deque2.removeNode(this.bcd);
+    t.checkExpect(this.deque2.header.next, this.cde);
+    
+    this.initData();
+    this.deque2.removeNode(this.dog);
     t.checkExpect(this.deque2, this.deque2);
     
-    this.initData();
-    t.checkExpect(this.deque1, this.deque1);
-    this.deque1.removeNode(this.sent1);
-    t.checkExpect(this.deque1, this.deque1);
+    t.checkExpect(this.deque3.header.next, this.dog);
+    this.deque3.removeNode(this.dog);
+    t.checkExpect(this.deque3.header.next, this.four);
+
+    this.deque3.removeNode(this.apple);
+    t.checkExpect(this.deque3.header.next.next, this.banana);
     
-    t.checkExpect(this.deque1, this.deque1);
+    this.initData();
+    this.deque3.removeNode(this.abc);
+    t.checkExpect(this.deque3, this.deque3);
+    
+    this.initData();
+    t.checkExpect(this.deque2, this.deque2);
     this.deque2.removeNode(this.sent2);
-    t.checkExpect(this.deque1, this.deque1);
+    t.checkExpect(this.deque2, this.deque2);
+    
+    t.checkExpect(this.deque2, this.deque2);
+    this.deque3.removeNode(this.sent3);
+    t.checkExpect(this.deque2, this.deque2);
   }
 }
