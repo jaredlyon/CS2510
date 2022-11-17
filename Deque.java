@@ -1,6 +1,7 @@
 import java.util.function.Predicate;
 import tester.Tester;
 
+// represents an abstracted node class
 abstract class ANode<T> {
   ANode<T> next;
   ANode<T> prev;
@@ -10,12 +11,10 @@ abstract class ANode<T> {
     return 0;
   }
   
-  
   // EFFECT: inserts the given node into the sentinel
   void insert(ANode<T> node) {
     this.prev = node;
     node.next = this;
-    
   }
   
   // EFFECT: connects one side of the node into the deque
@@ -45,9 +44,9 @@ abstract class ANode<T> {
     // this does not do anything because it is inherited by sentinel
     // and we do not want anything to happen when the method is given a sentinel
   }
- 
 }
   
+// represents a node with data
 class Node<T> extends ANode<T> {
   T data;
 
@@ -65,8 +64,7 @@ class Node<T> extends ANode<T> {
     this.prev = prev;
     this.data = data;
     this.next.prev = this;
-    this.prev.next = this;
-    
+    this.prev.next = this;  
   }
   
   // pulls the data field of the given node
@@ -83,8 +81,7 @@ class Node<T> extends ANode<T> {
   ANode<T> findNode(Predicate<T> pred) {
     if (pred.test(this.data)) {
       return this;
-    }
-    else {
+    } else {
       return this.next.findNode(pred);
     }
   }
@@ -93,9 +90,9 @@ class Node<T> extends ANode<T> {
   void removeNodeHelper(Deque<T> deque) {
     deque.find(new SameData<T>(this.data)).remove();
   }
-  
 }
 
+// represents a sentinel which denotes the beginning and end of a deque
 class Sentinel<T> extends ANode<T> {
   
   Sentinel() {
@@ -107,10 +104,12 @@ class Sentinel<T> extends ANode<T> {
     if (this.next == this.prev) {
       throw new RuntimeException("Cannot remove from an empty list");
     }
+    
     this.next.remove();
   }
 }
 
+// represents a deque
 class Deque<T> {
   Sentinel<T> header;
   
@@ -122,12 +121,10 @@ class Deque<T> {
     this.header = new Sentinel<T>();
   }
   
-  
   // returns number of nodes in a deque
   int size() {
     return this.header.next.size();
   }
-  
   
   // EFFECT: adds a node to the head of the deque
   void addAtHead(T data) {
@@ -170,6 +167,7 @@ class Deque<T> {
   }                                                          
 }
 
+// checks if two nodes contain identical data
 class SameData<T> implements Predicate<T> {
 
   T data;
@@ -185,6 +183,7 @@ class SameData<T> implements Predicate<T> {
   
 }
 
+// checks if a string length is <4
 class LessThanFour implements Predicate<String> {
   
   // checks if the strings length is less than four
@@ -193,6 +192,7 @@ class LessThanFour implements Predicate<String> {
   }
 }
 
+// checks if a string begins with d
 class FirstD implements Predicate<String> {
   
   // checks if the strings first letter is d
@@ -224,9 +224,7 @@ class ExamplesDeque {
   Node<String> hi;
   Node<String> welcome;
 
-  
   void initData() {
-    
     this.deque1 = new Deque<String>();
     
     this.sent2 = new Sentinel<String>();
@@ -249,7 +247,6 @@ class ExamplesDeque {
     
     this.hi = new Node<String>("hi");
     this.welcome = new Node<String>("welcome");
-    
   }
   
   // tests for FirstD predicate
@@ -344,7 +341,6 @@ class ExamplesDeque {
     t.checkExpect(this.abc.next, this.dog);
   }
   
-  
   // tests for removeFromTail method
   void testRemoveFromHead(Tester t) {
     this.initData();
@@ -408,9 +404,7 @@ class ExamplesDeque {
     this.apple.remove();
     t.checkExpect(this.four.next, this.banana);
     t.checkExpect(this.banana.prev, this.four);
-    
   }
-   
   
   // tests for the find method
   void testFind(Tester t) {
