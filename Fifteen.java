@@ -16,6 +16,14 @@ class Tile {
     this.value = value;
   }
   
+  // swaps the data of two tiles
+  void swap(Tile t) {
+    int temp = this.value;
+    this.value = t.value;
+    t.value = temp;
+  }
+  
+  
   // Draws this tile onto the background at the specified logical coordinates
   WorldImage drawAt(int col, int row, WorldImage background) { 
     return new OverlayImage(new TextImage(this.value.toString(), 5, Color.black), (new OverlayOffsetImage(new RectangleImage(10, 10, "solid", Color.BLUE), col * 30, row * 30, background));
@@ -37,13 +45,6 @@ class FifteenGame extends World {
     // use below iterator to draw the stuff
   }
   
-  // swaps two tiles positions
-  WorldScene swap(Tile t) {
-    Tile temp = this.tiles.get(__);
-    this.tiles.set(____, t);
-    t.set(____, temp);
-    
-  }
   
   // displays win screen
   WorldScene isWon() {
@@ -65,6 +66,9 @@ class FifteenGame extends World {
         if (this.tiles.listIterator().get(j) < prev) {                 // needs to check for zero, it is going to be in bottom right
           flag = false;
         }
+        if else (this.tiles.listIterator().get(j) == 0 && prev == 15) {
+          flag = true;
+        }
         else {
           prev = this.tiles.listIterator().get(j);
         }
@@ -73,23 +77,26 @@ class FifteenGame extends World {
     }
   }
   
+  
   // handles keystrokes
   public void onKeyEvent(String k) {
     
+    this.tiles.findZero();                           // finds the zero tile, stores coordinates as indices
+    
     if (k.equals("up")) {
-      // call swap
-      // check win
-      
+      this.get(x).get(y).swap(this.get(x).get(y - 1));
+      // check win 
+                                                      // swaps two tiles depending on where it is located
     } else if (k.equals("down")) {
-      // call swap
+      this.get(x).get(y).swap(this.get(x).get(y + 1));
       // check win
       
     } else if (k.equals("left")) {
-      // call swap
+      this.get(x).get(y).swap(this.get(x - 1).get(y));
       // check win
       
     } else if (k.equals("right")) {
-      // call swap
+      this.get(x).get(y).swap(this.get(x + 1).get(y));
       // check win
       
     } else if (k.equals("u")) {
@@ -142,10 +149,6 @@ class ListOfLists<T> implements Iterable<T> {
     } else {
       return this.list.get(index);
     }
-  }
-
-  public int size() {
-    return this.list.size();
   }
 
   //produces an Iterator for this list
