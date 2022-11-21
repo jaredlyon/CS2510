@@ -37,6 +37,8 @@ class FifteenGame extends World {
   // inner are four in length (one will be 0 in value)
   ArrayList<ArrayList<Tile>> tiles;
   ArrayList<ArrayList<Tile>> prev;
+  int x;
+  int y;
   
   // draws the game
   public WorldScene makeScene() { 
@@ -81,7 +83,7 @@ class FifteenGame extends World {
   // handles keystrokes
   public void onKeyEvent(String k) {
     
-    this.tiles.findZero();                           // finds the zero tile, stores coordinates as indices
+    this.tiles.findValue(0);                           // finds the zero tile, stores coordinates as indices
     
     if (k.equals("up")) {
       this.get(x).get(y).swap(this.get(x).get(y - 1));
@@ -150,6 +152,16 @@ class ListOfLists<T> implements Iterable<T> {
       return this.list.get(index);
     }
   }
+  
+  void findValue(int data) {
+    for (i = 0, i < this.size(), i++) {
+      for (j = 0, j < this.list.size(), j++)
+        if (this.get(i).get(j).value == data) {
+          this.x = i;
+          this.y = j;
+        }
+    }
+  }
 
   //produces an Iterator for this list
   public Iterator<T> iterator() {
@@ -194,7 +206,7 @@ class LoLIterator<T> implements Iterator<T> {
   }
 }
 
-class ExamplesLoL {
+class ExamplesFifteen {
   void testListOfLists(Tester t) {
     ListOfLists<Integer> lol = new ListOfLists<Integer>();
     //add 3 lists
@@ -224,4 +236,18 @@ class ExamplesLoL {
       number = number + 1;
     }
   }
+  
+  Tile t1 = new Tile(1);
+  Tile t2 = new Tile(2);
+  
+  
+  // tests for swap method
+  void testSwap(Tester t) {
+    this.t1.value == 1;
+    this.t2.value == 2;
+    this.t1.swap(this.t2);
+    this.t1.value == 2;
+    this.t2.value == 1;
+  }
+  
 }
