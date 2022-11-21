@@ -20,6 +20,7 @@ class Tile {
   WorldImage drawAt(int col, int row, WorldImage background) { 
     return new OverlayImage(new TextImage(this.value.toString(), 5, Color.black), (new OverlayOffsetImage(new RectangleImage(10, 10, "solid", Color.BLUE), col * 30, row * 30, background));
   }
+  
 }
 
 class FifteenGame extends World {
@@ -38,42 +39,64 @@ class FifteenGame extends World {
   
   // swaps two tiles positions
   WorldScene swap(Tile t) {
+    Tile temp = this.tiles.get(__);
+    this.tiles.set(____, t);
+    t.set(____, temp);
     
   }
   
+  // displays win screen
+  WorldScene isWon() {
+    WorldScene win = new WorldScene(120, 120).placeImageXY(new TextImage("YOU WON", 20, Color.BLACK), 60, 60);
+    if (this.checkWin()) {
+      return win;
+    }
+    else {
+      return this;
+    }
+  }
+  
   // checks if the player won
-  boolean checkWin() {
-    // use the iterator to check if each tile
-    // has a greater value than the last
+  boolean checkWin() {                                                 // compares order of tiles
+    for (i = 0, i < this.tiles.size(), i++) {                          // flag is false upon a singular false case
+      boolean flag = true;
+      int prev = 0;                                                    // store the previous value for comparison
+      for (j = 0, j < this.tiles.listIterator(), j++) {
+        if (this.tiles.listIterator().get(j) < prev) {                 // needs to check for zero, it is going to be in bottom right
+          flag = false;
+        }
+        else {
+          prev = this.tiles.listIterator().get(j);
+        }
+      }
+     return flag;                                                      // true if all tiles are in order
+    }
   }
   
   // handles keystrokes
   public void onKeyEvent(String k) {
     
     if (k.equals("up")) {
-      // store current arraylist in prev BEFORE calling swap
       // call swap
       // check win
       
     } else if (k.equals("down")) {
-      // store current arraylist in prev BEFORE calling swap
       // call swap
       // check win
       
     } else if (k.equals("left")) {
-      // store current arraylist in prev BEFORE calling swap
       // call swap
       // check win
       
     } else if (k.equals("right")) {
-      // store current arraylist in prev BEFORE calling swap
       // call swap
       // check win
       
     } else if (k.equals("u")) {
-      // call up prev
+      this = this.prev;
     }
   }
+  this.prev = this;                                       // stores previous state for potential undo
 }
 
 class ExampleFifteenGame {
@@ -82,6 +105,11 @@ class ExampleFifteenGame {
     g.bigBang(120, 120);
   }
 }
+
+
+
+
+
 
 class ListOfLists<T> implements Iterable<T> {
   ArrayList<ArrayList<T>> list;
