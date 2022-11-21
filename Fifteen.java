@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Iterator;
+
 import tester.*;
 import javalib.impworld.*;
 import java.awt.Color;
@@ -10,24 +12,28 @@ class Tile {
   // The number on the tile.  Use 0 to represent the hole
   int value;
   
-  Tile() {
-    this.value = 2;
+  Tile(int value) {
+    this.value = value;
   }
   
   // Draws this tile onto the background at the specified logical coordinates
   WorldImage drawAt(int col, int row, WorldImage background) { 
-    return new OverlayOffsetImage(new RectangleImage(10, 10, "solid", Color.BLUE), col * 30, row * 30, background);
+    return new OverlayImage(new TextImage(this.value.toString(), 5, Color.black), (new OverlayOffsetImage(new RectangleImage(10, 10, "solid", Color.BLUE), col * 30, row * 30, background));
   }
 }
 
 class FifteenGame extends World {
   // represents the rows of tiles
+  // outer arraylist is four in length
+  // inner are four in length (one will be 0 in value)
   ArrayList<ArrayList<Tile>> tiles;
+  ArrayList<ArrayList<Tile>> prev;
   
   // draws the game
   public WorldScene makeScene() { 
     WorldImage background = new RectangleImage(120, 120, "solid", Color.WHITE);
     
+    // use below iterator to draw the stuff
   }
   
   // swaps two tiles positions
@@ -35,24 +41,37 @@ class FifteenGame extends World {
     
   }
   
+  // checks if the player won
+  boolean checkWin() {
+    // use the iterator to check if each tile
+    // has a greater value than the last
+  }
+  
   // handles keystrokes
   public void onKeyEvent(String k) {
-    // WorldScene prev = this;
     
     if (k.equals("up")) {
-      // change needs to be stored as previous
+      // store current arraylist in prev BEFORE calling swap
+      // call swap
+      // check win
       
     } else if (k.equals("down")) {
-      // change needs to be stored as previous
+      // store current arraylist in prev BEFORE calling swap
+      // call swap
+      // check win
       
     } else if (k.equals("left")) {
-      // change needs to be stored as previous
+      // store current arraylist in prev BEFORE calling swap
+      // call swap
+      // check win
       
     } else if (k.equals("right")) {
-      // change needs to be stored as previous
+      // store current arraylist in prev BEFORE calling swap
+      // call swap
+      // check win
       
     } else if (k.equals("u")) {
-      // needs to call previous state
+      // call up prev
     }
   }
 }
