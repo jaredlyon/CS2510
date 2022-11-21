@@ -10,6 +10,10 @@ class Tile {
   // The number on the tile.  Use 0 to represent the hole
   int value;
   
+  Tile() {
+    this.value = 2;
+  }
+  
   // Draws this tile onto the background at the specified logical coordinates
   WorldImage drawAt(int col, int row, WorldImage background) { 
     return new OverlayOffsetImage(new RectangleImage(10, 10, "solid", Color.BLUE), col * 30, row * 30, background);
@@ -24,16 +28,11 @@ class FifteenGame extends World {
   public WorldScene makeScene() { 
     WorldImage background = new RectangleImage(120, 120, "solid", Color.WHITE);
     
-    for (int i = 0; i < 5; i++) {
-      for (int j = 0; j < 5; j++) {
-        this.tiles.get(i).get(j).drawAt(i, j, background);
-      }
-    }
   }
   
   // swaps two tiles positions
   WorldScene swap(Tile t) {
-    this.tiles.get
+    
   }
   
   // handles keystrokes
@@ -64,11 +63,6 @@ class ExampleFifteenGame {
     g.bigBang(120, 120);
   }
 }
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import tester.Tester;
 
 class ListOfLists<T> implements Iterable<T> {
   ArrayList<ArrayList<T>> list;
