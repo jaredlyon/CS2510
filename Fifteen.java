@@ -46,6 +46,8 @@ class FifteenGame extends World {
   // constructor
   FifteenGame() {
     this.tiles = this.initTiles();
+    this.x = 0;                                     // default location to origin
+    this.y = 0;
   }
 
   // Initialize the tiles in a random order
@@ -74,18 +76,23 @@ class FifteenGame extends World {
   // draws the game
   public WorldScene makeScene() { 
     WorldImage background = new RectangleImage(120, 120, "solid", Color.WHITE);
-    // use below iterator to draw the stuff
+    for (int i = 0; i < this.tiles.size(); i++) {
+      for (int j = 0; j < this.tiles.get(i).size(); j++) {
+        this.tiles.get(i).get(j).drawAt(i, j, background);
+      }
+    }
   }
   // loop thru tiles, draw each onto scene
   
   // displays win screen
   WorldScene isWon() {
-    World win = new World(120, 120).placeImageXY(new TextImage("YOU WON", 20, Color.BLACK), 60, 60);
+    WorldScene empty = new WorldScene(120, 120);
+    empty.placeImageXY(new TextImage("YOU WON", 20, Color.BLACK), 60, 60);    // place win screen on top of empty scene
     if (this.checkWin()) {
-      return win;
+      return empty;
     }
     else {
-      return this;
+      return this.makeScene();
     }
   }
   
@@ -145,12 +152,6 @@ class FifteenGame extends World {
   }
 }
 
-class ExampleFifteenGame {
-  void testGame(Tester t) {
-    FifteenGame g = new FifteenGame();
-    g.bigBang(120, 120);
-  }
-}
 
 class ListOfLists<T> implements Iterable<T> {
   ArrayList<ArrayList<T>> list;
@@ -232,7 +233,7 @@ class LoLIterator<T> implements Iterator<T> {
   }
 }
 
-class ExamplesFifteen {
+class ExamplesFifteenGame {
   void testListOfLists(Tester t) {
     ListOfLists<Integer> lol = new ListOfLists<Integer>();
     //add 3 lists
@@ -263,10 +264,20 @@ class ExamplesFifteen {
     }
   }
   
+  void
+  
+  void testGame(Tester t) {
+    FifteenGame g = new FifteenGame();
+    g.bigBang(120, 120);
+  }
+  
+  
   Tile t1 = new Tile(1);
   Tile t2 = new Tile(2);
   Tile t3 = new Tile(3);
   Tile t4 = new Tile(4);
+  
+
   
   // tests for swap method
   void testSwap(Tester t) {
@@ -277,8 +288,19 @@ class ExamplesFifteen {
     this.t2.value = 1;
   }
   
+  
+  
+  FifteenGame fg1 = new FifteenGame();
+  ArrayList<Tile> upper = new ArrayList<Tile>();
+  this.upper.add(this.t1);
+  
   // tests for findValue method
   void testFindValue(Tester t) {
-    
+    this.fg1.findValue(1);
+    this.fg1.x = 0;
+    this.fg1.y = 0;
+    this.fg1.findValue(3);
+    this.fg1.x = 0;
+    this.fg1.y = 1;
   }
 }
