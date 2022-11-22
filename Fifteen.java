@@ -115,20 +115,28 @@ class FifteenGame extends World {
     
     if (k.equals("up")) {
       this.tiles.get(x).get(y).swap(this.tiles.get(x).get(y - 1));
-      // check win 
+      if (this.checkWin()) {
+        this.isWon();
+      }
                                                       // swaps two tiles depending on where it is located
     } else if (k.equals("down")) {
       this.tiles.get(x).get(y).swap(this.tiles.get(x).get(y + 1));
-      // check win
+      if (this.checkWin()) {
+        this.isWon();
+      }
       
     } else if (k.equals("left")) {
       this.tiles.get(x).get(y).swap(this.tiles.get(x - 1).get(y));
-      // check win
+      if (this.checkWin()) {
+        this.isWon();
+      }
       
     } else if (k.equals("right")) {
       this.tiles.get(x).get(y).swap(this.tiles.get(x + 1).get(y));
-      // check win
-      
+      if (this.checkWin()) {
+        this.isWon();
+      }
+
     } else if (k.equals("u")) {
       this.tiles = this.prev;
     }
