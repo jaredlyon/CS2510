@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Random;
 
 import tester.*;
 import javalib.impworld.*;
@@ -39,11 +41,37 @@ class FifteenGame extends World {
   ArrayList<ArrayList<Tile>> prev;
   int x;
   int y;
+
+  // A random number generator
+  Random rand = new Random();
+
+  // Initialize the tiles in a random order
+  public ArrayList<ArrayList<Tile>> initTiles() {
+    // create rand instance
+    Random rand = new Random();
+    // use values 0-15
+    ArrayList<Integer> tempVals = new ArrayList<Integer>(Arrays.asList(
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15));
+    // init tempRow holder
+    ArrayList<Tile> tempRow = new ArrayList<Tile>();
+    
+    // generate 4x4 matrix of random tiles
+    for (int i = 0; i < 4; i++) {
+      for (int j = 0; j < 4; j ++) {
+        tempRow = new ArrayList<Tile>();
+        tempRow.add(new Tile(tempVals.remove(rand.nextInt(tempVals.size()))));
+      }
+      
+      this.tiles.add(tempRow);
+    }
+    
+    return this.tiles;
+  }
   
   // draws the game
   public WorldScene makeScene() { 
     WorldImage background = new RectangleImage(120, 120, "solid", Color.WHITE);
-    
+    this.tiles = this.initTiles(); // generates a random tile matrix
     // use below iterator to draw the stuff
   }
   
