@@ -12,9 +12,9 @@ import javalib.worldimages.*;
 // Represents an individual tile
 class Tile {
   // The number on the tile.  Use 0 to represent the hole
-  int value;
+  Integer value;
   
-  Tile(int value) {
+  Tile(Integer value) {
     this.value = value;
   }
   
@@ -76,10 +76,10 @@ class FifteenGame extends World {
     WorldImage background = new RectangleImage(120, 120, "solid", Color.WHITE);
     // use below iterator to draw the stuff
   }
-  
+  // loop thru tiles, draw each onto scene
   
   // displays win screen
-  World isWon() {
+  WorldScene isWon() {
     World win = new World(120, 120).placeImageXY(new TextImage("YOU WON", 20, Color.BLACK), 60, 60);
     if (this.checkWin()) {
       return win;
@@ -88,6 +88,8 @@ class FifteenGame extends World {
       return this;
     }
   }
+  
+  // make empty scene, invoke placexy
   
   // checks if the player won
   boolean checkWin() {
@@ -183,6 +185,10 @@ class ListOfLists<T> implements Iterable<T> {
     }
   }
   
+  public int size() {
+    return this.list.size();
+  }
+  
   //produces an Iterator for this list
   public Iterator<T> iterator() {
     return new LoLIterator<T>(this);
@@ -259,6 +265,8 @@ class ExamplesFifteen {
   
   Tile t1 = new Tile(1);
   Tile t2 = new Tile(2);
+  Tile t3 = new Tile(3);
+  Tile t4 = new Tile(4);
   
   // tests for swap method
   void testSwap(Tester t) {
@@ -267,5 +275,10 @@ class ExamplesFifteen {
     this.t1.swap(this.t2);
     this.t1.value = 2;
     this.t2.value = 1;
+  }
+  
+  // tests for findValue method
+  void testFindValue(Tester t) {
+    
   }
 }
