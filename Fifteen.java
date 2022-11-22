@@ -111,35 +111,24 @@ class FifteenGame extends World {
   // handles keystrokes
   public void onKeyEvent(String k) {
     
-    this.findValue(0);                           // finds the zero tile, stores coordinates as indices
+    this.findValue(0);                         
     
     if (k.equals("up")) {
       this.tiles.get(x).get(y).swap(this.tiles.get(x).get(y - 1));
-      if (this.checkWin()) {
-        this.isWon();
-      }
-                                                      // swaps two tiles depending on where it is located
+      this.isWon();                                            
     } else if (k.equals("down")) {
       this.tiles.get(x).get(y).swap(this.tiles.get(x).get(y + 1));
-      if (this.checkWin()) {
-        this.isWon();
-      }
-      
+      this.isWon();
     } else if (k.equals("left")) {
       this.tiles.get(x).get(y).swap(this.tiles.get(x - 1).get(y));
-      if (this.checkWin()) {
-        this.isWon();
-      }
-      
+      this.isWon();
     } else if (k.equals("right")) {
       this.tiles.get(x).get(y).swap(this.tiles.get(x + 1).get(y));
-      if (this.checkWin()) {
-        this.isWon();
-      }
-
+      this.isWon();
     } else if (k.equals("u")) {
       this.tiles = this.prev;
     }
+    
     this.prev = this.tiles; 
   }
   
