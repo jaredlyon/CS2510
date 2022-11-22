@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Random;
 
 import tester.*;
@@ -28,7 +29,7 @@ class Tile {
   
   // Draws this tile onto the background at the specified logical coordinates
   WorldImage drawAt(int col, int row, WorldImage background) { 
-    return new OverlayImage(new TextImage(this.value.toString(), 5, Color.black), (new OverlayOffsetImage(new RectangleImage(10, 10, "solid", Color.BLUE), col * 30, row * 30, background));
+    return new OverlayImage(new TextImage(this.value.toString(), 5, Color.black), (new OverlayOffsetImage(new RectangleImage(10, 10, "solid", Color.BLUE), col * 30, row * 30, background)));
   }
   
 }
@@ -77,8 +78,8 @@ class FifteenGame extends World {
   
   
   // displays win screen
-  WorldScene isWon() {
-    WorldScene win = new WorldScene(120, 120).placeImageXY(new TextImage("YOU WON", 20, Color.BLACK), 60, 60);
+  World isWon() {
+    World win = new World(120, 120).placeImageXY(new TextImage("YOU WON", 20, Color.BLACK), 60, 60);
     if (this.checkWin()) {
       return win;
     }
@@ -89,51 +90,63 @@ class FifteenGame extends World {
   
   // checks if the player won
   boolean checkWin() {                                                 // compares order of tiles
-    for (i = 0, i < this.tiles.size(), i++) {                          // flag is false upon a singular false case
-      boolean flag = true;
+    boolean flag = true;
+    for (int i = 0; i < this.tiles.size(); i++) {                          // flag is false upon a singular false case
+
       int prev = 0;                                                    // store the previous value for comparison
-      for (j = 0, j < this.tiles.listIterator(), j++) {
-        if (this.tiles.listIterator().get(j) < prev) {                 // needs to check for zero, it is going to be in bottom right
+      for (int j = 0; j < this.tiles.get(i).size(); j++) {
+        if (this.tiles.get(i).get(j).value < prev) {                 // needs to check for zero, it is going to be in bottom right
           flag = false;
         }
-        if else (this.tiles.listIterator().get(j) == 0 && prev == 15) {
+        if (this.tiles.get(i).get(j).value == 0 && prev == 15) {
           flag = true;
         }
         else {
-          prev = this.tiles.listIterator().get(j);
+          prev = this.tiles.get(i).get(j).value;
         }
-      }
-     return flag;                                                      // true if all tiles are in order
+      }                                                             // true if all tiles are in order
     }
+    return flag;
   }
   
   
   // handles keystrokes
   public void onKeyEvent(String k) {
     
-    this.tiles.findValue(0);                           // finds the zero tile, stores coordinates as indices
+    this.findValue(0);                           // finds the zero tile, stores coordinates as indices
     
     if (k.equals("up")) {
-      this.get(x).get(y).swap(this.get(x).get(y - 1));
+      this.tiles.get(x).get(y).swap(this.tiles.get(x).get(y - 1));
       // check win 
                                                       // swaps two tiles depending on where it is located
     } else if (k.equals("down")) {
-      this.get(x).get(y).swap(this.get(x).get(y + 1));
+      this.tiles.get(x).get(y).swap(this.tiles.get(x).get(y + 1));
       // check win
       
     } else if (k.equals("left")) {
-      this.get(x).get(y).swap(this.get(x - 1).get(y));
+      this.tiles.get(x).get(y).swap(this.tiles.get(x - 1).get(y));
       // check win
       
     } else if (k.equals("right")) {
-      this.get(x).get(y).swap(this.get(x + 1).get(y));
+      this.tiles.get(x).get(y).swap(this.tiles.get(x + 1).get(y));
       // check win
       
     } else if (k.equals("u")) {
-      this = this.prev;
+      this.tiles = this.prev;
+    }
+    this.prev = this.tiles; 
+  }
+  void findValue(int data) {
+    for (int i = 0; i < this.tiles.size(); i++) {
+      for (int j = 0; j < this.tiles.get(i).size(); j++)
+        if (this.tiles.get(i).get(j).value == data) {
+          this.x = i;
+          this.y = j;
+        }
     }
   }
-  this.prev = this;                                       // stores previous state for potential undo
+  
+                                      // stores previous state for potential undo
 }
 
 class ExampleFifteenGame {
@@ -181,15 +194,7 @@ class ListOfLists<T> implements Iterable<T> {
     }
   }
   
-  void findValue(int data) {
-    for (i = 0, i < this.size(), i++) {
-      for (j = 0, j < this.list.size(), j++)
-        if (this.get(i).get(j).value == data) {
-          this.x = i;
-          this.y = j;
-        }
-    }
-  }
+
 
   //produces an Iterator for this list
   public Iterator<T> iterator() {
@@ -271,11 +276,11 @@ class ExamplesFifteen {
   
   // tests for swap method
   void testSwap(Tester t) {
-    this.t1.value == 1;
-    this.t2.value == 2;
+    this.t1.value = 1;
+    this.t2.value = 2;
     this.t1.swap(this.t2);
-    this.t1.value == 2;
-    this.t2.value == 1;
+    this.t1.value = 2;
+    this.t2.value = 1;
   }
   
 }
