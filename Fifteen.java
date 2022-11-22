@@ -264,7 +264,22 @@ class ExamplesFifteenGame {
     }
   }
   
-  void
+  FifteenGame fg1;
+  
+  void initData() {
+    FifteenGame fg1 = new FifteenGame();
+    ArrayList<Tile> upper = new ArrayList<Tile>();
+    upper.add(this.t1);
+    upper.add(this.t2);
+    ArrayList<Tile> lower = new ArrayList<Tile>();
+    lower.add(this.t3);
+    lower.add(this.t4);
+    
+    ArrayList<ArrayList<Tile>> twoByTwo = new ArrayList<ArrayList<Tile>>();
+    twoByTwo.add(upper);
+    twoByTwo.add(lower);
+    fg1.tiles = twoByTwo;
+  }
   
   void testGame(Tester t) {
     FifteenGame g = new FifteenGame();
@@ -290,12 +305,11 @@ class ExamplesFifteenGame {
   
   
   
-  FifteenGame fg1 = new FifteenGame();
-  ArrayList<Tile> upper = new ArrayList<Tile>();
-  this.upper.add(this.t1);
+
   
   // tests for findValue method
   void testFindValue(Tester t) {
+    this.initData();
     this.fg1.findValue(1);
     this.fg1.x = 0;
     this.fg1.y = 0;
