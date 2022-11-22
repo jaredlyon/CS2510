@@ -3,7 +3,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Random;
-
 import tester.*;
 import javalib.impworld.*;
 import java.awt.Color;
@@ -26,12 +25,10 @@ class Tile {
     t.value = temp;
   }
   
-  
   // Draws this tile onto the background at the specified logical coordinates
   WorldImage drawAt(int col, int row, WorldImage background) { 
     return new OverlayImage(new TextImage(this.value.toString(), 5, Color.black), (new OverlayOffsetImage(new RectangleImage(10, 10, "solid", Color.BLUE), col * 30, row * 30, background)));
   }
-  
 }
 
 class FifteenGame extends World {
@@ -45,6 +42,11 @@ class FifteenGame extends World {
 
   // A random number generator
   Random rand = new Random();
+  
+  // constructor
+  FifteenGame() {
+    this.tiles = this.initTiles();
+  }
 
   // Initialize the tiles in a random order
   public ArrayList<ArrayList<Tile>> initTiles() {
@@ -72,7 +74,6 @@ class FifteenGame extends World {
   // draws the game
   public WorldScene makeScene() { 
     WorldImage background = new RectangleImage(120, 120, "solid", Color.WHITE);
-    this.tiles = this.initTiles(); // generates a random tile matrix
     // use below iterator to draw the stuff
   }
   
@@ -89,23 +90,20 @@ class FifteenGame extends World {
   }
   
   // checks if the player won
-  boolean checkWin() {                                                 // compares order of tiles
+  boolean checkWin() {
     boolean flag = true;
-    for (int i = 0; i < this.tiles.size(); i++) {                          // flag is false upon a singular false case
-
-      int prev = 0;                                                    // store the previous value for comparison
-      for (int j = 0; j < this.tiles.get(i).size(); j++) {
-        if (this.tiles.get(i).get(j).value < prev) {                 // needs to check for zero, it is going to be in bottom right
-          flag = false;
+    int temp = 0; // start at 0
+    
+    // while loop breaks the for loop if any comparisons are false
+    while (flag) {
+      for (int i = 0; i < 4; i++) {
+        for (int j = 1; j < 4; j++) {
+          flag = temp < this.tiles.get(i).get(j).value; // check if next tile is greater
+          temp = this.tiles.get(i).get(j).value;
         }
-        if (this.tiles.get(i).get(j).value == 0 && prev == 15) {
-          flag = true;
-        }
-        else {
-          prev = this.tiles.get(i).get(j).value;
-        }
-      }                                                             // true if all tiles are in order
+      }
     }
+    
     return flag;
   }
   
@@ -136,6 +134,7 @@ class FifteenGame extends World {
     }
     this.prev = this.tiles; 
   }
+  
   void findValue(int data) {
     for (int i = 0; i < this.tiles.size(); i++) {
       for (int j = 0; j < this.tiles.get(i).size(); j++)
@@ -145,8 +144,6 @@ class FifteenGame extends World {
         }
     }
   }
-  
-                                      // stores previous state for potential undo
 }
 
 class ExampleFifteenGame {
@@ -155,11 +152,6 @@ class ExampleFifteenGame {
     g.bigBang(120, 120);
   }
 }
-
-
-
-
-
 
 class ListOfLists<T> implements Iterable<T> {
   ArrayList<ArrayList<T>> list;
@@ -194,8 +186,6 @@ class ListOfLists<T> implements Iterable<T> {
     }
   }
   
-
-
   //produces an Iterator for this list
   public Iterator<T> iterator() {
     return new LoLIterator<T>(this);
@@ -273,7 +263,6 @@ class ExamplesFifteen {
   Tile t1 = new Tile(1);
   Tile t2 = new Tile(2);
   
-  
   // tests for swap method
   void testSwap(Tester t) {
     this.t1.value = 1;
@@ -282,5 +271,4 @@ class ExamplesFifteen {
     this.t1.value = 2;
     this.t2.value = 1;
   }
-  
 }
