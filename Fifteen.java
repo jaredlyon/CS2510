@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 import tester.*;
+import javalib.funworld.WorldScene;
 import javalib.impworld.*;
 import java.awt.Color;
 import javalib.worldimages.*;
@@ -103,13 +104,16 @@ class FifteenGame extends World {
     return scene;
   }
 
-//  // displays win screen
-//  public WorldScene lastScene(String s) {
-//    WorldScene empty = new WorldScene(120, 120);
-//    if (s == "You won") {
-//      this = empty.placeImageXY(new TextImage("YOU WON", 20, Color.BLACK), 60, 60);
-//    }
-//  }
+  // return the end screen if the player dies
+  public WorldEnd worldEnds() {
+    WorldScene endWin = new WorldScene(600, 400).placeImageXY(new TextImage("YOU WON - ALL TILES IN ORDER", 20, Color.BLACK), 300, 150);
+    
+    if (this.checkWin()) {
+      return new WorldEnd(true, endWin);
+    } else {
+      return new WorldEnd(false, endWin);
+    }
+  }
 
   // displays win screen
   WorldScene isWon() {
@@ -146,8 +150,8 @@ class FifteenGame extends World {
   public void onKeyEvent(String k) {
     if (this.checkWin()) {
       this.endOfWorld("You won");
-
     }
+    
     this.findValue(0);
 
     if (k.equals("up") && y < 3) {
@@ -298,5 +302,11 @@ class ExamplesFifteenGame {
     t.checkExpect(initTest.tiles.contains(row2), true);
     t.checkExpect(initTest.tiles.contains(row3), true);
     t.checkExpect(initTest.tiles.contains(row4), true);
+  }
+  
+  // test worldEnds
+  void testWorldEnds(Tester t) {
+    t.checkExpect(this.checkWinTrue.worldEnds(), new WorldEnd(true, new WorldScene(600, 400).placeImageXY(new TextImage("YOU WON - ALL TILES IN ORDER", 20, Color.BLACK), 300, 150)));
+    t.checkExpect(this.checkWinFalse.worldEnds(), new WorldEnd(false, new WorldScene(600, 400).placeImageXY(new TextImage("YOU WON - ALL TILES IN ORDER", 20, Color.BLACK), 300, 150)));
   }
 }
