@@ -103,30 +103,18 @@ class FifteenGame extends World {
     return scene;
   }
 
-  // return the end screen if the player dies
-  public WorldEnd worldEnds() {
-    WorldScene endWin = new WorldScene(600, 600);
-    endWin.placeImageXY(new TextImage("YOU WON - ALL TILES IN ORDER", 20, Color.BLACK), 300, 150);
+  // displays win screen
+  WorldScene isWon() {
+    WorldScene empty = new WorldScene(120, 120);
+    empty.placeImageXY(new TextImage("YOU WON - ALL TILES IN ORDER", 20, Color.BLACK), 300, 150);
     
     if (this.checkWin()) {
-      return new WorldEnd(true, endWin);
-    } else {
-      return new WorldEnd(false, endWin);
+      return empty;
+    }
+    else {
+      return this.makeScene();
     }
   }
-
-//  // displays win screen
-//  WorldScene isWon() {
-//    WorldScene empty = new WorldScene(120, 120);
-//    empty.placeImageXY(new TextImage("YOU WON", 20, Color.BLACK), 60, 60); // place win screen on
-//                                                                           // top of empty scene
-//    if (this.checkWin()) {
-//      return empty;
-//    }
-//    else {
-//      return this.makeScene();
-//    }
-//  }
 
   // checks if the player won
   boolean checkWin() {
@@ -274,12 +262,12 @@ class ExamplesFifteenGame {
     this.initTest.y = 2;
   }
 
-//  // tests for isWon method
-//  void testIsWon(Tester t) {
-//    WorldScene w = new WorldScene(120, 120);
-//    w.placeImageXY(new TextImage("YOU WON", 20, Color.BLACK), 60, 60);
-//    t.checkExpect(this.initTest.isWon(), w);
-//  }
+  // tests for isWon method
+  void testIsWon(Tester t) {
+    WorldScene w = new WorldScene(120, 120);
+    w.placeImageXY(new TextImage("YOU WON", 20, Color.BLACK), 60, 60);
+    t.checkExpect(this.initTest.isWon(), w);
+  }
 
   // tests for checkWin method
   void testCheckWin(Tester t) {
@@ -302,14 +290,5 @@ class ExamplesFifteenGame {
     t.checkExpect(initTest.tiles.contains(row2), true);
     t.checkExpect(initTest.tiles.contains(row3), true);
     t.checkExpect(initTest.tiles.contains(row4), true);
-  }
-  
-  // test worldEnds
-  void testWorldEnds(Tester t) {
-    WorldScene endWinTest = new WorldScene(600, 600);
-    endWinTest.placeImageXY(new TextImage("YOU WON - ALL TILES IN ORDER", 20, Color.BLACK), 300, 150);
-    
-    t.checkExpect(this.checkWinTrue.worldEnds(), new WorldEnd(true, endWinTest));
-    t.checkExpect(this.checkWinFalse.worldEnds(), new WorldEnd(false, endWinTest));
   }
 }
