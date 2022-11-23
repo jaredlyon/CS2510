@@ -6,10 +6,9 @@ import javalib.impworld.*;
 import java.awt.Color;
 import javalib.worldimages.*;
 
-
 // Represents an individual tile
 class Tile {
-  // The number on the tile.  Use 0 to represent the hole
+  // The number on the tile. Use 0 to represent the hole
   Integer value;
 
   // constructor
@@ -25,14 +24,14 @@ class Tile {
   }
 
   // Draws this tile onto the background at the specified logical coordinates
-  WorldScene drawAt(int col, int row, WorldScene background) {     
+  WorldScene drawAt(int col, int row, WorldScene background) {
     // generates the tile
     WorldImage tile = new OverlayImage(new TextImage(Integer.toString(this.value), 25, Color.black),
         new RectangleImage(100, 100, "solid", Color.blue));
 
     // puts the tile on the background
     background.placeImageXY(tile, (col * 100) + 50, (row * 100) + 50);
-    
+
     return background;
   }
 }
@@ -55,11 +54,12 @@ class FifteenGame extends World {
     this.tiles = this.initTiles();
     this.findValue(0);
   }
-  
+
   // test constructor
   FifteenGame(ArrayList<ArrayList<Tile>> tiles) {
     this.tiles = tiles;
-    this.findValue(0);
+    this.x = 0;
+    this.y = 0;
   }
 
   // Initialize the tiles in a random order
@@ -70,8 +70,8 @@ class FifteenGame extends World {
     Random rand = new Random();
 
     // use values 0-15
-    ArrayList<Integer> tempVals = new ArrayList<Integer>(Arrays.asList(
-        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15));
+    ArrayList<Integer> tempVals = new ArrayList<Integer>(
+        Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15));
 
     // init tempRow holder
     ArrayList<Tile> tempRow = new ArrayList<Tile>();
@@ -79,7 +79,7 @@ class FifteenGame extends World {
     // generate 4x4 matrix of random tiles
     for (int i = 0; i < 4; i++) {
       tempRow = new ArrayList<Tile>();
-      
+
       for (int j = 0; j < 4; j++) {
         tempRow.add(new Tile(tempVals.remove(rand.nextInt(tempVals.size()))));
       }
@@ -103,10 +103,19 @@ class FifteenGame extends World {
     return scene;
   }
 
+//  // displays win screen
+//  public WorldScene lastScene(String s) {
+//    WorldScene empty = new WorldScene(120, 120);
+//    if (s == "You won") {
+//      this = empty.placeImageXY(new TextImage("YOU WON", 20, Color.BLACK), 60, 60);
+//    }
+//  }
+
   // displays win screen
   WorldScene isWon() {
     WorldScene empty = new WorldScene(120, 120);
-    empty.placeImageXY(new TextImage("YOU WON", 20, Color.BLACK), 60, 60);    // place win screen on top of empty scene
+    empty.placeImageXY(new TextImage("YOU WON", 20, Color.BLACK), 60, 60); // place win screen on
+                                                                           // top of empty scene
     if (this.checkWin()) {
       return empty;
     }
@@ -135,26 +144,29 @@ class FifteenGame extends World {
 
   // handles keystrokes
   public void onKeyEvent(String k) {
+    if (this.checkWin()) {
+      this.endOfWorld("You won");
 
-    this.findValue(0);                         
+    }
+    this.findValue(0);
 
-    if (k.equals("up")) {
+    if (k.equals("up") && y < 3) {
       this.tiles.get(x).get(y).swap(this.tiles.get(x).get(y - 1));
-      this.isWon();                                            
-    } else if (k.equals("down")) {
+    }
+    else if (k.equals("down") && y > 0) {
       this.tiles.get(x).get(y).swap(this.tiles.get(x).get(y + 1));
-      this.isWon();
-    } else if (k.equals("left")) {
+    }
+    else if (k.equals("left") && x > 0) {
       this.tiles.get(x).get(y).swap(this.tiles.get(x - 1).get(y));
-      this.isWon();
-    } else if (k.equals("right")) {
+    }
+    else if (k.equals("right") && x < 3) {
       this.tiles.get(x).get(y).swap(this.tiles.get(x + 1).get(y));
-      this.isWon();
-    } else if (k.equals("u")) {
+    }
+    else if (k.equals("u")) {
       this.tiles = this.prev;
     }
 
-    this.prev = this.tiles; 
+    this.prev = this.tiles;
   }
 
   void findValue(int data) {
@@ -189,84 +201,52 @@ class ExamplesFifteenGame {
   Tile t15 = new Tile(15);
   Tile t0 = new Tile(0);
 
-  FifteenGame fg1;
-  ArrayList<Tile> upper;
-  ArrayList<Tile> lower;
-  ArrayList<ArrayList<Tile>> twoByTwo;
+  ArrayList<Tile> row1 = new ArrayList<Tile>(
+      Arrays.asList(new Tile(0), new Tile(1), new Tile(2), new Tile(3)));
+  ArrayList<Tile> row2 = new ArrayList<Tile>(
+      Arrays.asList(new Tile(4), new Tile(5), new Tile(6), new Tile(7)));
+  ArrayList<Tile> row3 = new ArrayList<Tile>(
+      Arrays.asList(new Tile(8), new Tile(9), new Tile(10), new Tile(11)));
+  ArrayList<Tile> row4 = new ArrayList<Tile>(
+      Arrays.asList(new Tile(12), new Tile(13), new Tile(14), new Tile(15)));
 
-  FifteenGame fgWon;
-  ArrayList<Tile> firstRow;
-  ArrayList<Tile> secondRow;
-  ArrayList<Tile> thirdRow;
-  ArrayList<Tile> fourthRow;
-  ArrayList<ArrayList<Tile>> wonGame;
-  
-  ArrayList<Tile> row1 = new ArrayList<Tile>(Arrays.asList(new Tile(0), new Tile(1), new Tile(2), new Tile(3)));
-  ArrayList<Tile> row2 = new ArrayList<Tile>(Arrays.asList(new Tile(4), new Tile(5), new Tile(6), new Tile(7)));
-  ArrayList<Tile> row3 = new ArrayList<Tile>(Arrays.asList(new Tile(8), new Tile(9), new Tile(10), new Tile(11)));
-  ArrayList<Tile> row4 = new ArrayList<Tile>(Arrays.asList(new Tile(12), new Tile(13), new Tile(14), new Tile(15)));
-  
-  ArrayList<ArrayList<Tile>> initGameTest = new ArrayList<ArrayList<Tile>>(Arrays.asList(row1, row2, row3, row4));
-  
+  ArrayList<ArrayList<Tile>> initGameTest = new ArrayList<ArrayList<Tile>>(
+      Arrays.asList(row1, row2, row3, row4));
+
   FifteenGame initTest = new FifteenGame(initGameTest);
-  
-  ArrayList<Tile> row1CheckWin = new ArrayList<Tile>(Arrays.asList(new Tile(1), new Tile(0), new Tile(2), new Tile(3)));
-  ArrayList<Tile> row2CheckWin = new ArrayList<Tile>(Arrays.asList(new Tile(4), new Tile(5), new Tile(6), new Tile(7)));
-  ArrayList<Tile> row3CheckWin = new ArrayList<Tile>(Arrays.asList(new Tile(8), new Tile(9), new Tile(10), new Tile(11)));
-  ArrayList<Tile> row4CheckWin = new ArrayList<Tile>(Arrays.asList(new Tile(12), new Tile(13), new Tile(14), new Tile(15)));
-  
-  ArrayList<ArrayList<Tile>> checkWinFalseTiles = new ArrayList<ArrayList<Tile>>(Arrays.asList(row1, row2, row3, row4));
-  
+
+  ArrayList<Tile> row1CheckWin = new ArrayList<Tile>(
+      Arrays.asList(new Tile(1), new Tile(0), new Tile(2), new Tile(3)));
+  ArrayList<Tile> row2CheckWin = new ArrayList<Tile>(
+      Arrays.asList(new Tile(4), new Tile(5), new Tile(6), new Tile(7)));
+  ArrayList<Tile> row3CheckWin = new ArrayList<Tile>(
+      Arrays.asList(new Tile(8), new Tile(9), new Tile(10), new Tile(11)));
+  ArrayList<Tile> row4CheckWin = new ArrayList<Tile>(
+      Arrays.asList(new Tile(12), new Tile(13), new Tile(14), new Tile(15)));
+
+  ArrayList<ArrayList<Tile>> checkWinFalseTiles = new ArrayList<ArrayList<Tile>>(
+      Arrays.asList(row1, row2, row3, row4));
+
   FifteenGame checkWinFalse = new FifteenGame(checkWinFalseTiles);
 
-  void initData() {
-    this.fg1 = new FifteenGame();
-    this.upper = new ArrayList<Tile>();
-    upper.add(this.t1);
-    upper.add(this.t2);
-    this.lower = new ArrayList<Tile>();
-    lower.add(this.t3);
-    lower.add(this.t4);
+  ArrayList<Tile> row1CheckWin2 = new ArrayList<Tile>(
+      Arrays.asList(new Tile(1), new Tile(0), new Tile(2), new Tile(3)));
+  ArrayList<Tile> row2CheckWin2 = new ArrayList<Tile>(
+      Arrays.asList(new Tile(4), new Tile(5), new Tile(6), new Tile(7)));
+  ArrayList<Tile> row3CheckWin2 = new ArrayList<Tile>(
+      Arrays.asList(new Tile(8), new Tile(9), new Tile(10), new Tile(11)));
+  ArrayList<Tile> row4CheckWin2 = new ArrayList<Tile>(
+      Arrays.asList(new Tile(12), new Tile(13), new Tile(14), new Tile(15)));
 
-    this.twoByTwo = new ArrayList<ArrayList<Tile>>();
-    twoByTwo.add(upper);
-    twoByTwo.add(lower);
-    fg1.tiles = twoByTwo;
+  ArrayList<ArrayList<Tile>> checkWinFalseTiles2 = new ArrayList<ArrayList<Tile>>(
+      Arrays.asList(row1CheckWin2, row2CheckWin2, row3CheckWin2, row4CheckWin2));
 
-    this.fgWon = new FifteenGame();
-    this.firstRow = new ArrayList<Tile>();
-    firstRow.add(this.t1);
-    firstRow.add(this.t2);
-    firstRow.add(this.t3);
-    firstRow.add(this.t4);
-    this.secondRow = new ArrayList<Tile>();
-    secondRow.add(this.t5);
-    secondRow.add(this.t6);
-    secondRow.add(this.t7);
-    secondRow.add(this.t8);
-    this.thirdRow = new ArrayList<Tile>();
-    thirdRow.add(this.t9);
-    thirdRow.add(this.t10);
-    thirdRow.add(this.t11);
-    thirdRow.add(this.t12);
-    this.fourthRow = new ArrayList<Tile>();
-    fourthRow.add(this.t13);
-    fourthRow.add(this.t14);
-    fourthRow.add(this.t15);
-    fourthRow.add(this.t0);
-    this.wonGame = new ArrayList<ArrayList<Tile>>();
-    wonGame.add(firstRow);
-    wonGame.add(secondRow);
-    wonGame.add(thirdRow);
-    wonGame.add(fourthRow);
-    this.fgWon.tiles = this.wonGame;
-  }
+  FifteenGame checkWinTrue = new FifteenGame(checkWinFalseTiles2);
 
   void testGame(Tester t) {
     FifteenGame g = new FifteenGame();
     g.bigBang(600, 600);
   }
-
 
   // tests for swap method
   void testSwap(Tester t) {
@@ -279,48 +259,44 @@ class ExamplesFifteenGame {
 
   // tests for findValue method
   void testFindValue(Tester t) {
-    this.initData();
-
-    this.fg1.findValue(1);
-    this.fg1.x = 0;
-    this.fg1.y = 0;
-    this.fg1.findValue(3);
-    this.fg1.x = 0;
-    this.fg1.y = 1;
-
-    this.fgWon.findValue(0);
-    this.fgWon.x = 3;
-    this.fgWon.y = 3;
+    this.initTest.findValue(1);
+    this.initTest.x = 1;
+    this.initTest.y = 0;
+    this.initTest.findValue(4);
+    this.initTest.x = 0;
+    this.initTest.y = 1;
+    this.initTest.findValue(9);
+    this.initTest.x = 1;
+    this.initTest.y = 2;
   }
 
   // tests for isWon method
   void testIsWon(Tester t) {
-    this.initData();
-    t.checkExpect(this.fgWon.isWon(), new WorldScene(120, 120).placeImageXY(new TextImage("YOU WON", 20, Color.BLACK), 60, 60));
+    WorldScene w = new WorldScene(120, 120);
+    w.placeImageXY(new TextImage("YOU WON", 20, Color.BLACK), 60, 60);
+    t.checkExpect(this.initTest.isWon(), w);
   }
 
   // tests for checkWin method
   void testCheckWin(Tester t) {
-    this.initData();
-    t.checkExpect(this.fgWon.checkWin(), true);
+    t.checkExpect(this.checkWinTrue.checkWin(), true);
     t.checkExpect(this.checkWinFalse.checkWin(), false);
   }
 
   ArrayList<ArrayList<Tile>> makeSceneTiles = new ArrayList<ArrayList<Tile>>();
   FifteenGame makeSceneTest = new FifteenGame(makeSceneTiles);
-  
+
   // tests for makeScene method
   void testMakeScene(Tester t) {
-    this.initData();
     t.checkExpect(this.makeSceneTest.makeScene(), new WorldScene(600, 600));
   }
-  
+
   // test initEncoder
   void testInitTiles(Tester t) {
     t.checkExpect(initTest.tiles.size(), 4);
     t.checkExpect(initTest.tiles.contains(row1), true);
     t.checkExpect(initTest.tiles.contains(row2), true);
     t.checkExpect(initTest.tiles.contains(row3), true);
-    t.checkExpect(initTest.tiles.contains(row4), true);   
+    t.checkExpect(initTest.tiles.contains(row4), true);
   }
 }
