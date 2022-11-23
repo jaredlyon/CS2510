@@ -161,6 +161,7 @@ class FifteenGame extends World {
     this.prev = this.tiles;
   }
 
+  // finds where the 0 tile is
   void findValue(int data) {
     for (int i = 0; i < 4; i++) {
       for (int j = 0; j < 4; j++) {
