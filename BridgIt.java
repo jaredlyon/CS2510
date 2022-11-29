@@ -28,6 +28,8 @@ class Piece {
   }
 }
 
+// create an empty piece for edge pieces
+
 //represents a fifteen game using tiles
 class BridgIt extends World {
   
@@ -35,7 +37,12 @@ class BridgIt extends World {
 
 // normal constructor
   BridgIt(int size) {
-    this.size = size;
+    if(this.size <= 3 || this.size % 2 == 0) {
+      this.size = size + 1;
+      else {
+        this.size = size;
+      }
+    }
   }
 
 @Override
