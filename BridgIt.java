@@ -1,11 +1,14 @@
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
+
 import tester.*;
 import javalib.impworld.*;
 import java.awt.Color;
 import javalib.worldimages.*;
 
 interface ANode {
-  
+  WorldImage drawAt();
 }
 
 class Node implements ANode {
@@ -14,7 +17,7 @@ class Node implements ANode {
   Node down;
   Node left;
   Node right;
-  
+
   Node(Color color, Node up, Node down, Node left, Node right) {
     this.color = color;
     this.up = up;
@@ -22,7 +25,7 @@ class Node implements ANode {
     this.left = left;
     this.right = right;
   }
-  
+
   Node(Color color) {
     this.color = color;
     this.up = null;
@@ -30,47 +33,96 @@ class Node implements ANode {
     this.left = null;
     this.right = null;
   }
-}
 
-class Empty implements ANode {   // represents a node at a boundary
-  Color color;
-  
-  Empty(Color color) {           // create an empty piece for edge pieces
-    this.color = Color.WHITE;
+  @Override
+  public WorldImage drawAt() {
+    return new RectangleImage(50, 50, "solid", this.color);
   }
 }
 
+class Empty implements ANode {
+  Color color;
+
+  Empty() {
+    this.color = Color.WHITE;
+  }
+
+  @Override
+  public WorldImage drawAt() {
+    return new RectangleImage(50, 50, "solid", this.color);
+  }
+}
 
 
 //represents a fifteen game using tiles
 class BridgIt extends World {
-  
   int size;
+  ArrayList<ArrayList<ANode>> nodes;
 
-// normal constructor
+  // normal constructor
   BridgIt(int size) {
-    if(this.size <= 3 || this.size % 2 == 0) {
-      this.size = size + 1;
+    if (size % 2 == 0) {
+      throw new IllegalArgumentException("Game side length must be odd!");
+    } else {
+      this.size = size;
     }
-      else {
-        this.size = size;
+    
+    this.nodes = this.initNodes();
+  }
+
+  public ArrayList<ArrayList<ANode>> initNodes() {
+    this.nodes = new ArrayList<ArrayList<ANode>>();
+
+    // init tempRow holder
+    ArrayList<ANode> tempRow = new ArrayList<ANode>();
+
+    // generate matrix of patterned nodes
+    for (int i = 0; i < this.size - 1; i++) {
+      tempRow = new ArrayList<ANode>();
+
+      for (int j = 0; j < this.size - 1; j++) {
+        if (i % 2 == 0) {
+          if (j % 2 == 0) {
+            tempRow.add(new Empty());
+          } else {
+            tempRow.add(new Node(Color.MAGENTA));
+          }
+        } else {
+          if (j % 2 == 0) {
+            tempRow.add(new Node(Color.PINK));
+          } else {
+            tempRow.add(new Empty());
+          }
+        }
+      }
+
+      this.nodes.add(tempRow);
+    }
+
+    return this.nodes;
+  }
+
+  @Override
+  public WorldScene makeScene() {
+    WorldScene scene = new WorldScene(this.size * 50, this.size * 50);
+
+    for (int i = 0; i < this.size - 1; i++) {
+      for (int j = 0; j < this.size - 1; j++) {
+        scene.placeImageXY(this.nodes.get(i).get(j).drawAt(), (i * 50) + 25, (j * 50) + 25);
       }
     }
 
-  // create in new method, put in constructor
-  // the creation of all the pieces belongs in the game constructor, depends on gameboard size (in indices)
-  for (i = 0; i <= this.size; i = i + 2) {                   // increment by two, alternates nodes and empty nodes
-    for (j = 1; j <= this.size; j = j + 2) {
-      // Node temp = new Node(Color, empty, empty, empty, empty)
-      // next node -> new Node(Color, empty, empty, list.get(i - 1)., empty)
-    }
+    return scene;
+  }
+}
+
+class ExamplesBridgIt {
+  ExamplesBridgIt() {
+    
   }
   
-  
-  
-@Override
-public WorldScene makeScene() {
-  // TODO Auto-generated method stub
-  return null;
-}
+  void testGame(Tester t) {
+    BridgIt g = new BridgIt(11);
+    g.bigBang(1000, 1000);
+  }
 }
