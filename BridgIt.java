@@ -109,8 +109,8 @@ class BridgIt extends World {
 
   // normal constructor
   BridgIt(int size) {
-    if (size % 2 == 0) {
-      throw new IllegalArgumentException("Game side length must be odd!");
+    if (size % 2 == 0 || size < 2) {
+      throw new IllegalArgumentException("Game side length must be odd and greater than one!");
     } else {
       this.size = size;
     }
@@ -147,6 +147,12 @@ class BridgIt extends World {
         }
       }
     }
+  }
+  
+  // test constructor w/o linkage for makeScene
+  BridgIt() {
+    this.size = 1;
+    this.nodes = this.initNodes();
   }
 
   // initializes the game board in a checkerboard pattern
@@ -205,5 +211,76 @@ class ExamplesBridgIt {
   void testGame(Tester t) {
     BridgIt g = new BridgIt(11);
     g.bigBang(1000, 1000);
+  }
+  
+  // examples for tests
+  Node node1 = new Node(Color.PINK);
+  Node node2 = new Node(Color.MAGENTA);
+  Empty empty1 = new Empty();
+  Edge edge1 = new Edge();
+  
+  BridgIt game1 = new BridgIt(11);
+  
+  // init test data
+  void initData() {
+    node1 = new Node(Color.PINK);
+    node2 = new Node(Color.MAGENTA);
+    empty1 = new Empty();
+    edge1 = new Edge();
+    game1 = new BridgIt(11);
+  }
+  
+  // test drawAt
+  void testDrawAt(Tester t) {
+    this.initData();
+    
+    t.checkExpect(this.node1.drawAt(), new RectangleImage(50, 50, "solid", Color.PINK));
+    t.checkExpect(this.node2.drawAt(), new RectangleImage(50, 50, "solid", Color.MAGENTA));
+    t.checkExpect(this.empty1.drawAt(), new RectangleImage(50, 50, "solid", Color.WHITE));
+    t.checkExpect(this.edge1.drawAt(), new RectangleImage(50, 50, "solid", Color.RED));
+  }
+  
+  // test link
+  void testLink(Tester t) {
+    this.initData();
+    
+    this.node1.link(this.node2, this.empty1, this.empty1, this.edge1);
+    this.node2.link(this.empty1, this.empty1, this.empty1, this.empty1);
+    
+    t.checkExpect(this.node1.up, this.node2);
+    t.checkExpect(this.node1.down, this.empty1);
+    t.checkExpect(this.node1.left, this.empty1);
+    t.checkExpect(this.node1.right, this.edge1);
+    t.checkExpect(this.node2.up, this.empty1);
+    t.checkExpect(this.node2.down, this.empty1);
+    t.checkExpect(this.node2.left, this.empty1);
+    t.checkExpect(this.node2.right, this.empty1);
+  }
+  
+  // test initNodes
+  void testInitNodes(Tester t) {
+    this.initData();
+    
+    t.checkExpect(game1.nodes.size(), 11);
+    t.checkExpect(game1.nodes.get(0).size(), 11);
+  }
+  
+  // test BridgIt constructor
+  void testBridgItConstructor(Tester t) {
+    this.initData();
+    
+    t.checkConstructorException(new IllegalArgumentException(), "Game side length must be odd and greater than one!", new BridgIt(2));
+    t.checkConstructorException(new IllegalArgumentException(), "Game side length must be odd and greater than one!", new BridgIt(1));
+  }
+  
+  BridgIt makeSceneTest = new BridgIt();
+  
+  // test makeScene
+  void testMakeScene(Tester t) {
+    this.initData();
+    
+    WorldScene expected = new WorldScene(50, 50);
+    expected.placeImageXY(new RectangleImage(50, 50, "solid", Color.WHITE), 25, 25);
+    t.checkExpect(this.makeSceneTest.makeScene(), expected);
   }
 }
