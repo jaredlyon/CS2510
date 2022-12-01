@@ -269,8 +269,8 @@ class ExamplesBridgIt {
   void testBridgItConstructor(Tester t) {
     this.initData();
     
-    t.checkConstructorException(new IllegalArgumentException(), "Game side length must be odd and greater than one!", new BridgIt(2));
-    t.checkConstructorException(new IllegalArgumentException(), "Game side length must be odd and greater than one!", new BridgIt(1));
+    t.checkConstructorException(new IllegalArgumentException("Game side length must be odd and greater than one!"), "BridgIt", 2);
+    t.checkConstructorException(new IllegalArgumentException("Game side length must be odd and greater than one!"), "BridgIt", 2);
   }
   
   BridgIt makeSceneTest = new BridgIt();
