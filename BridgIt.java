@@ -8,6 +8,7 @@ import javalib.worldimages.*;
 interface ANode {
   // draws the node
   WorldImage drawAt();
+  
   // links this node to given nodes
   void link(ANode up, ANode down, ANode left, ANode right);
 }
@@ -88,7 +89,7 @@ class Empty implements ANode {
 class Edge implements ANode {
 
   Edge() {
-    
+
   }
 
   // "draws" this node -> should never be called
@@ -114,41 +115,68 @@ class BridgIt extends World {
     } else {
       this.size = size;
     }
-    
+
     this.nodes = this.initNodes();
-    
+
     // a for loop that links each node
     for (int i = 0; i < this.size; i++) {
       for (int j = 0; j < this.size; j++) {
         if (i == 0) {
           if (j == 0) {
-            this.nodes.get(i).get(j).link(new Edge(), this.nodes.get(i + 1).get(j), new Edge(), this.nodes.get(i).get(j + 1));
+            this.nodes.get(i).get(j).link(new Edge(),
+                this.nodes.get(i + 1).get(j),
+                new Edge(),
+                this.nodes.get(i).get(j + 1));
           } else if (j == this.size - 1) {
-            this.nodes.get(i).get(j).link(new Edge(), this.nodes.get(i + 1).get(j), this.nodes.get(i).get(j - 1), new Edge());
+            this.nodes.get(i).get(j).link(new Edge(),
+                this.nodes.get(i + 1).get(j),
+                this.nodes.get(i).get(j - 1),
+                new Edge());
           } else {
-            this.nodes.get(i).get(j).link(new Edge(), this.nodes.get(i + 1).get(j), this.nodes.get(i).get(j - 1), this.nodes.get(i).get(j + 1));
+            this.nodes.get(i).get(j).link(new Edge(),
+                this.nodes.get(i + 1).get(j),
+                this.nodes.get(i).get(j - 1),
+                this.nodes.get(i).get(j + 1));
           }
         } else if (i == this.size - 1) {
           if (j == 0) {
-            this.nodes.get(i).get(j).link(this.nodes.get(i - 1).get(j), new Edge(), new Edge(), this.nodes.get(i).get(j + 1));
+            this.nodes.get(i).get(j).link(this.nodes.get(i - 1).get(j),
+                new Edge(),
+                new Edge(),
+                this.nodes.get(i).get(j + 1));
           } else if (j == this.size - 1) {
-            this.nodes.get(i).get(j).link(this.nodes.get(i - 1).get(j), new Edge(), this.nodes.get(i).get(j - 1), new Edge());
+            this.nodes.get(i).get(j).link(this.nodes.get(i - 1).get(j),
+                new Edge(),
+                this.nodes.get(i).get(j - 1),
+                new Edge());
           } else {
-            this.nodes.get(i).get(j).link(this.nodes.get(i - 1).get(j), new Edge(), this.nodes.get(i).get(j - 1), this.nodes.get(i).get(j + 1));
+            this.nodes.get(i).get(j).link(this.nodes.get(i - 1).get(j),
+                new Edge(),
+                this.nodes.get(i).get(j - 1),
+                this.nodes.get(i).get(j + 1));
           }
         } else {
           if (j == 0) {
-            this.nodes.get(i).get(j).link(this.nodes.get(i - 1).get(j), this.nodes.get(i + 1).get(j), new Edge(), this.nodes.get(i).get(j + 1));
+            this.nodes.get(i).get(j).link(this.nodes.get(i - 1).get(j),
+                this.nodes.get(i + 1).get(j),
+                new Edge(),
+                this.nodes.get(i).get(j + 1));
           } else if (j == this.size - 1) {
-            this.nodes.get(i).get(j).link(this.nodes.get(i - 1).get(j), this.nodes.get(i + 1).get(j), this.nodes.get(i).get(j - 1), new Edge());
+            this.nodes.get(i).get(j).link(this.nodes.get(i - 1).get(j),
+                this.nodes.get(i + 1).get(j),
+                this.nodes.get(i).get(j - 1),
+                new Edge());
           } else {
-            this.nodes.get(i).get(j).link(this.nodes.get(i - 1).get(j), this.nodes.get(i + 1).get(j), this.nodes.get(i).get(j - 1), this.nodes.get(i).get(j + 1));
+            this.nodes.get(i).get(j).link(this.nodes.get(i - 1).get(j),
+                this.nodes.get(i + 1).get(j),
+                this.nodes.get(i).get(j - 1),
+                this.nodes.get(i).get(j + 1));
           }
         }
       }
     }
   }
-  
+
   // test constructor w/o linkage for makeScene
   BridgIt() {
     this.size = 1;
@@ -204,23 +232,23 @@ class BridgIt extends World {
 
 class ExamplesBridgIt {
   ExamplesBridgIt() {
-    
+
   }
-  
+
   // runs the game
   void testGame(Tester t) {
     BridgIt g = new BridgIt(11);
     g.bigBang(1000, 1000);
   }
-  
+
   // examples for tests
   Node node1 = new Node(Color.PINK);
   Node node2 = new Node(Color.MAGENTA);
   Empty empty1 = new Empty();
   Edge edge1 = new Edge();
-  
+
   BridgIt game1 = new BridgIt(11);
-  
+
   // init test data
   void initData() {
     node1 = new Node(Color.PINK);
@@ -229,24 +257,24 @@ class ExamplesBridgIt {
     edge1 = new Edge();
     game1 = new BridgIt(11);
   }
-  
+
   // test drawAt
   void testDrawAt(Tester t) {
     this.initData();
-    
+
     t.checkExpect(this.node1.drawAt(), new RectangleImage(50, 50, "solid", Color.PINK));
     t.checkExpect(this.node2.drawAt(), new RectangleImage(50, 50, "solid", Color.MAGENTA));
     t.checkExpect(this.empty1.drawAt(), new RectangleImage(50, 50, "solid", Color.WHITE));
     t.checkExpect(this.edge1.drawAt(), new RectangleImage(50, 50, "solid", Color.RED));
   }
-  
+
   // test link
   void testLink(Tester t) {
     this.initData();
-    
+
     this.node1.link(this.node2, this.empty1, this.empty1, this.edge1);
     this.node2.link(this.empty1, this.empty1, this.empty1, this.empty1);
-    
+
     t.checkExpect(this.node1.up, this.node2);
     t.checkExpect(this.node1.down, this.empty1);
     t.checkExpect(this.node1.left, this.empty1);
@@ -256,29 +284,33 @@ class ExamplesBridgIt {
     t.checkExpect(this.node2.left, this.empty1);
     t.checkExpect(this.node2.right, this.empty1);
   }
-  
+
   // test initNodes
   void testInitNodes(Tester t) {
     this.initData();
-    
+
     t.checkExpect(game1.nodes.size(), 11);
     t.checkExpect(game1.nodes.get(0).size(), 11);
   }
-  
+
   // test BridgIt constructor
   void testBridgItConstructor(Tester t) {
     this.initData();
-    
-    t.checkConstructorException(new IllegalArgumentException("Game side length must be odd and greater than one!"), "BridgIt", 2);
-    t.checkConstructorException(new IllegalArgumentException("Game side length must be odd and greater than one!"), "BridgIt", 2);
+
+    t.checkConstructorException(
+        new IllegalArgumentException("Game side length must be odd and greater than one!"),
+        "BridgIt", 2);
+    t.checkConstructorException(
+        new IllegalArgumentException("Game side length must be odd and greater than one!"),
+        "BridgIt", 2);
   }
-  
+
   BridgIt makeSceneTest = new BridgIt();
-  
+
   // test makeScene
   void testMakeScene(Tester t) {
     this.initData();
-    
+
     WorldScene expected = new WorldScene(50, 50);
     expected.placeImageXY(new RectangleImage(50, 50, "solid", Color.WHITE), 25, 25);
     t.checkExpect(this.makeSceneTest.makeScene(), expected);
