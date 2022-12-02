@@ -13,6 +13,7 @@ interface INode {
   // links this node to given nodes
   void link(INode up, INode down, INode left, INode right);
 }
+
 // represents a colored node 
 class Node implements INode {
   Color color;
