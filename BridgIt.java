@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import tester.*;
 import javalib.impworld.*;
@@ -9,9 +8,15 @@ import javalib.worldimages.*;
 interface INode {
   // draws the node
   WorldImage drawAt();
-  
+
   // links this node to given nodes
   void link(INode up, INode down, INode left, INode right);
+
+  // updates this node when clicked
+  void update(Color col);
+  
+  // advances the game counter
+  boolean count();
 }
 
 // represents a colored node 
@@ -52,6 +57,16 @@ class Node implements INode {
     this.left = left;
     this.right = right;
   }
+
+  // "updates" this node when clicked
+  public void update(Color col) {
+    // do nothing
+  }
+  
+  // advances the game counter
+  public boolean count() {
+    return false;
+  }
 }
 
 // represents a white node
@@ -63,6 +78,17 @@ class Empty implements INode {
   INode right;
   boolean changed;
 
+  // full constructor
+  Empty(Color color, INode up, INode down, INode left, INode right, boolean changed) {
+    this.color = color;
+    this.up = up;
+    this.down = down;
+    this.left = left;
+    this.right = right;
+    this.changed = changed;
+  }
+
+  // skeleton questions
   Empty() {
     this.color = Color.WHITE;
     this.up = null;
@@ -84,23 +110,46 @@ class Empty implements INode {
     this.left = left;
     this.right = right;
   }
+
+  // updates this node when clicked
+  // EFFECT: colors an empty tile
+  public void update(Color col) {
+    this.color = col;
+    this.changed = true;
+  }
+  
+  // advances the game counter
+  public boolean count() {
+    return true;
+  }
 }
 
 // represents a placeholder edge tile
 class Edge implements INode {
+  Color color;
 
   Edge() {
-
+    this.color = Color.RED;
   }
 
   // "draws" this node -> should never be called
   public WorldImage drawAt() {
-    return new RectangleImage(50, 50, "solid", Color.RED);
+    return new RectangleImage(50, 50, "solid", this.color);
   }
 
   // "links" this node -> probably will never be called
   public void link(INode up, INode down, INode left, INode right) {
     // empty lel
+  }
+
+  // "updates" this node when clicked
+  public void update(Color col) {
+    // do nothing
+  }
+  
+  // advances the game counter
+  public boolean count() {
+    return false;
   }
 }
 
@@ -232,30 +281,23 @@ class BridgIt extends World {
 
     return scene;
   }
-  
+
   // changes an empty piece upon click
   public void onMouseClicked(Posn pos) {
-    // needs to dispatch to only work on empty nodes
-    // needs to check that empty has not already been changed 
-    
+    int rowIndex = pos.x / 50;
+    int colIndex = pos.y / 50;
+
     Color newColor = null;
     if (this.counter % 2 == 0) {
       newColor = Color.magenta; 
-      }
-        else {
-        newColor = Color.pink;
-      }
-    
-    
-    if {!this.nodes.get(pos.x).get(pos.y).changed) {
-      this.nodes.get(pos.x).get(pos.y).color = newColor;
-      this.nodes.get(pos.x).get(pos.y).changed = true;
-      this.counter = this.counter + 1;  
-    }
-    else {
-      // display that a valid piece must be chosen
+    } else {
+      newColor = Color.pink;
     }
 
+    this.nodes.get(rowIndex).get(colIndex).update(newColor);
+    
+    if (this.nodes.get(rowIndex).get(colIndex).count()) {
+      counter++;
     }
   }
 }
