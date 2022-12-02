@@ -1,3 +1,4 @@
+
 import java.util.ArrayList;
 import tester.*;
 import javalib.impworld.*;
@@ -5,24 +6,23 @@ import java.awt.Color;
 import javalib.worldimages.*;
 
 // represents an abstracted class node
-interface ANode {
+interface INode {
   // draws the node
   WorldImage drawAt();
   
   // links this node to given nodes
-  void link(ANode up, ANode down, ANode left, ANode right);
+  void link(INode up, INode down, INode left, INode right);
 }
-
 // represents a colored node 
-class Node implements ANode {
+class Node implements INode {
   Color color;
-  ANode up;
-  ANode down;
-  ANode left;
-  ANode right;
+  INode up;
+  INode down;
+  INode left;
+  INode right;
 
   // full constructor
-  Node(Color color, ANode up, ANode down, ANode left, ANode right) {
+  Node(Color color, INode up, INode down, INode left, INode right) {
     this.color = color;
     this.up = up;
     this.down = down;
@@ -45,7 +45,7 @@ class Node implements ANode {
   }
 
   // links this node to the given nodes
-  public void link(ANode up, ANode down, ANode left, ANode right) {
+  public void link(INode up, INode down, INode left, INode right) {
     this.up = up;
     this.down = down;
     this.left = left;
@@ -54,12 +54,12 @@ class Node implements ANode {
 }
 
 // represents a white node
-class Empty implements ANode {
+class Empty implements INode {
   Color color;
-  ANode up;
-  ANode down;
-  ANode left;
-  ANode right;
+  INode up;
+  INode down;
+  INode left;
+  INode right;
   boolean changed;
 
   Empty() {
@@ -77,7 +77,7 @@ class Empty implements ANode {
   }
 
   // links this node to the given nodes
-  public void link(ANode up, ANode down, ANode left, ANode right) {
+  public void link(INode up, INode down, INode left, INode right) {
     this.up = up;
     this.down = down;
     this.left = left;
@@ -86,7 +86,7 @@ class Empty implements ANode {
 }
 
 // represents a placeholder edge tile
-class Edge implements ANode {
+class Edge implements INode {
 
   Edge() {
 
@@ -98,7 +98,7 @@ class Edge implements ANode {
   }
 
   // "links" this node -> probably will never be called
-  public void link(ANode up, ANode down, ANode left, ANode right) {
+  public void link(INode up, INode down, INode left, INode right) {
     // empty lel
   }
 }
@@ -106,7 +106,8 @@ class Edge implements ANode {
 //represents a fifteen game using tiles
 class BridgIt extends World {
   int size;
-  ArrayList<ArrayList<ANode>> nodes;
+  ArrayList<ArrayList<INode>> nodes;
+  int counter;
 
   // normal constructor
   BridgIt(int size) {
@@ -117,6 +118,7 @@ class BridgIt extends World {
     }
 
     this.nodes = this.initNodes();
+    this.counter = 0;
 
     // a for loop that links each node
     for (int i = 0; i < this.size; i++) {
@@ -181,18 +183,19 @@ class BridgIt extends World {
   BridgIt() {
     this.size = 1;
     this.nodes = this.initNodes();
+    this.counter = 0;
   }
 
   // initializes the game board in a checkerboard pattern
-  public ArrayList<ArrayList<ANode>> initNodes() {
-    this.nodes = new ArrayList<ArrayList<ANode>>();
+  public ArrayList<ArrayList<INode>> initNodes() {
+    this.nodes = new ArrayList<ArrayList<INode>>();
 
     // init tempRow holder
-    ArrayList<ANode> tempRow = new ArrayList<ANode>();
+    ArrayList<INode> tempRow = new ArrayList<INode>();
 
     // generate matrix of patterned nodes
     for (int i = 0; i < this.size; i++) {
-      tempRow = new ArrayList<ANode>();
+      tempRow = new ArrayList<INode>();
 
       for (int j = 0; j < this.size; j++) {
         if (i % 2 == 0) {
