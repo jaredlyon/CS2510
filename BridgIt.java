@@ -232,6 +232,32 @@ class BridgIt extends World {
 
     return scene;
   }
+  
+  // changes an empty piece upon click
+  public void onMouseClicked(Posn pos) {
+    // needs to dispatch to only work on empty nodes
+    // needs to check that empty has not already been changed 
+    
+    Color newColor = null;
+    if (this.counter % 2 == 0) {
+      newColor = Color.magenta; 
+      }
+        else {
+        newColor = Color.pink;
+      }
+    
+    
+    if {!this.nodes.get(pos.x).get(pos.y).changed) {
+      this.nodes.get(pos.x).get(pos.y).color = newColor;
+      this.nodes.get(pos.x).get(pos.y).changed = true;
+      this.counter = this.counter + 1;  
+    }
+    else {
+      // display that a valid piece must be chosen
+    }
+
+    }
+  }
 }
 
 class ExamplesBridgIt {
