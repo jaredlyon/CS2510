@@ -14,9 +14,9 @@ interface INode {
 
   // updates this node when clicked
   void update(Color col);
-  
-  // advances the game counter
-  boolean count();
+
+  // checks if this tile has been changed
+  boolean checkChange();
 }
 
 // represents a colored node 
@@ -26,6 +26,7 @@ class Node implements INode {
   INode down;
   INode left;
   INode right;
+  boolean changed;
 
   // full constructor
   Node(Color color, INode up, INode down, INode left, INode right) {
@@ -34,6 +35,7 @@ class Node implements INode {
     this.down = down;
     this.left = left;
     this.right = right;
+    this.changed = true;
   }
 
   // skeleton constructor
@@ -43,6 +45,7 @@ class Node implements INode {
     this.down = null;
     this.left = null;
     this.right = null;
+    this.changed = true;
   }
 
   // draws this node
@@ -62,10 +65,10 @@ class Node implements INode {
   public void update(Color col) {
     // do nothing
   }
-  
-  // advances the game counter
-  public boolean count() {
-    return false;
+
+  // checks if this node has been changed
+  public boolean checkChange() {
+    return this.changed;
   }
 }
 
@@ -117,19 +120,21 @@ class Empty implements INode {
     this.color = col;
     this.changed = true;
   }
-  
-  // advances the game counter
-  public boolean count() {
-    return true;
+
+  // checks if this node has been changed
+  public boolean checkChange() {
+    return this.changed;
   }
 }
 
 // represents a placeholder edge tile
 class Edge implements INode {
   Color color;
+  boolean changed;
 
   Edge() {
     this.color = Color.RED;
+    this.changed = true;
   }
 
   // "draws" this node -> should never be called
@@ -137,7 +142,7 @@ class Edge implements INode {
     return new RectangleImage(50, 50, "solid", this.color);
   }
 
-  // "links" this node -> probably will never be called
+  // "links" this node -> will never be called
   public void link(INode up, INode down, INode left, INode right) {
     // empty lel
   }
@@ -146,10 +151,10 @@ class Edge implements INode {
   public void update(Color col) {
     // do nothing
   }
-  
-  // advances the game counter
-  public boolean count() {
-    return false;
+
+  // checks if this node has been changed
+  public boolean checkChange() {
+    return this.changed;
   }
 }
 
@@ -294,11 +299,57 @@ class BridgIt extends World {
       newColor = Color.pink;
     }
 
-    this.nodes.get(rowIndex).get(colIndex).update(newColor);
-    
-    if (this.nodes.get(rowIndex).get(colIndex).count()) {
-      counter++;
+    if (!this.nodes.get(rowIndex).get(colIndex).checkChange()) {
+      this.nodes.get(rowIndex).get(colIndex).update(newColor);
+      this.counter++;
+      this.checkWin(newColor, rowIndex, colIndex);
     }
+  }
+
+  //  public WorldScene checkWin(Color col, int rowIndex, int colIndex) {
+  //    INode currentNode = this.nodes.get(rowIndex).get(colIndex);
+  //    ArrayList<INode> nodeList = new ArrayList<INode>();
+  //    nodeList.add(currentNode);
+  //    
+  //    if (col == Color.PINK) {
+  //      
+  //    } else if (col == Color.MAGENTA) {
+  //      
+  //    }
+  //  }
+
+  //In Graph
+  boolean bfs(INode from, INode to) {
+    return searchHelp(from, to, new ArrayList<INode>());
+  }
+
+  boolean searchHelp(INode from, INode to, ArrayList<INode> worklist) {
+    ArrayList<INode> alreadySeen = new ArrayList<INode>();
+
+    // Initialize the worklist with the from vertex
+    worklist.add(from);
+    // As long as the worklist isn't empty...
+    while (!worklist.isEmpty()) {
+      INode next = worklist.remove(0);
+      if (next.equals(to)) {
+        return true; // Success!
+      }
+      else if (alreadySeen.contains(next)) {
+        // do nothing: we've already seen this one
+      }
+      else {
+        // add all the neighbors of next to the worklist for further processing
+        worklist.add(next.up);
+        worklist.add(next.down);
+        worklist.add(next.left);
+        worklist.add(next.right);
+        
+        // add next to alreadySeen, since we're done with it
+        alreadySeen.add(next);
+      }
+    }
+    // We haven't found the to vertex, and there are no more to try
+    return false;
   }
 }
 
