@@ -385,7 +385,7 @@ class BridgIt extends World {
             boolean winCheck = this.bfs(this.nodes.get(i).get(0), this.nodes.get(j).get(this.size - 1), Color.MAGENTA);
             
             if (winCheck) {
-              // win the game
+              this.endOfWorld("One");
             }
           }
         }
@@ -396,7 +396,7 @@ class BridgIt extends World {
             boolean winCheck = this.bfs(this.nodes.get(0).get(i), this.nodes.get(this.size - 1).get(j), Color.PINK);
             
             if (winCheck) {
-              // win the game
+              this.endOfWorld("Two");
             }
           }
         }
@@ -404,6 +404,18 @@ class BridgIt extends World {
       
       this.counter++;
     }
+  }
+  
+  // produces win screen
+  public WorldScene lastScene(String s) {
+    WorldScene scene = new WorldScene(this.size * 50, this.size * 50);
+    
+    if (s.equals("One")) {
+      scene.placeImageXY(new TextImage("Player 1 wins", 10.0, Color.MAGENTA), 50, 50);
+    } else {
+      scene.placeImageXY(new TextImage("Player 2's turn", 10.0, Color.PINK), 50, 50);
+    }
+    return scene;
   }
 
   // BFS parent func
