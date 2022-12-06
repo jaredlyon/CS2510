@@ -602,7 +602,12 @@ class ExamplesBridgIt {
   
   // test onMouseClicked
   void testOnMouseClicked(Tester t) {
-
+    this.initData();
+    
+    this.game2.onMouseClicked(new Posn(50, 50));
+    t.checkExpect(this.game2.nodes.get(1).get(1), new Empty(Color.MAGENTA, this.game2.nodes.get(0).get(1), this.game2.nodes.get(2).get(1), this.game2.nodes.get(1).get(0), this.game2.nodes.get(1).get(2), true));
+    this.game2.onMouseClicked(new Posn(100, 100));
+    t.checkExpect(this.game2.nodes.get(2).get(2), new Empty(Color.PINK, this.game2.nodes.get(1).get(2), new Edge(), this.game2.nodes.get(2).get(1), new Edge(), true));
   } 
   
   // test lastScene
