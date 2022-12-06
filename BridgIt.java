@@ -242,7 +242,8 @@ class BridgIt extends World {
   // normal constructor
   BridgIt(int size) {
     if (size % 2 == 0 || size < 2) {
-      throw new IllegalArgumentException("Game side length must be odd and greater than one!");
+      throw new IllegalArgumentException(
+          "Game side length must be odd and greater than one!");
     } else {
       this.size = size;
     }
@@ -255,51 +256,60 @@ class BridgIt extends World {
       for (int j = 0; j < this.size; j++) {
         if (i == 0) {
           if (j == 0) {
-            this.nodes.get(i).get(j).link(new Edge(),
+            this.nodes.get(i).get(j).link(
+                new Edge(),
                 this.nodes.get(i + 1).get(j),
                 new Edge(),
                 this.nodes.get(i).get(j + 1));
           } else if (j == this.size - 1) {
-            this.nodes.get(i).get(j).link(new Edge(),
+            this.nodes.get(i).get(j).link(
+                new Edge(),
                 this.nodes.get(i + 1).get(j),
                 this.nodes.get(i).get(j - 1),
                 new Edge());
           } else {
-            this.nodes.get(i).get(j).link(new Edge(),
+            this.nodes.get(i).get(j).link(
+                new Edge(),
                 this.nodes.get(i + 1).get(j),
                 this.nodes.get(i).get(j - 1),
                 this.nodes.get(i).get(j + 1));
           }
         } else if (i == this.size - 1) {
           if (j == 0) {
-            this.nodes.get(i).get(j).link(this.nodes.get(i - 1).get(j),
+            this.nodes.get(i).get(j).link(
+                this.nodes.get(i - 1).get(j),
                 new Edge(),
                 new Edge(),
                 this.nodes.get(i).get(j + 1));
           } else if (j == this.size - 1) {
-            this.nodes.get(i).get(j).link(this.nodes.get(i - 1).get(j),
+            this.nodes.get(i).get(j).link(
+                this.nodes.get(i - 1).get(j),
                 new Edge(),
                 this.nodes.get(i).get(j - 1),
                 new Edge());
           } else {
-            this.nodes.get(i).get(j).link(this.nodes.get(i - 1).get(j),
+            this.nodes.get(i).get(j).link(
+                this.nodes.get(i - 1).get(j),
                 new Edge(),
                 this.nodes.get(i).get(j - 1),
                 this.nodes.get(i).get(j + 1));
           }
         } else {
           if (j == 0) {
-            this.nodes.get(i).get(j).link(this.nodes.get(i - 1).get(j),
+            this.nodes.get(i).get(j).link(
+                this.nodes.get(i - 1).get(j),
                 this.nodes.get(i + 1).get(j),
                 new Edge(),
                 this.nodes.get(i).get(j + 1));
           } else if (j == this.size - 1) {
-            this.nodes.get(i).get(j).link(this.nodes.get(i - 1).get(j),
+            this.nodes.get(i).get(j).link(
+                this.nodes.get(i - 1).get(j),
                 this.nodes.get(i + 1).get(j),
                 this.nodes.get(i).get(j - 1),
                 new Edge());
           } else {
-            this.nodes.get(i).get(j).link(this.nodes.get(i - 1).get(j),
+            this.nodes.get(i).get(j).link(
+                this.nodes.get(i - 1).get(j),
                 this.nodes.get(i + 1).get(j),
                 this.nodes.get(i).get(j - 1),
                 this.nodes.get(i).get(j + 1));
@@ -382,7 +392,10 @@ class BridgIt extends World {
         // even -> search left to right; magenta
         for (int i = 0; i < this.size - 1; i++) {
           for (int j = 0; j < this.size - 1; j++) {
-            boolean winCheck = this.bfs(this.nodes.get(i).get(0), this.nodes.get(j).get(this.size - 1), Color.MAGENTA);
+            boolean winCheck = this.bfs(
+                this.nodes.get(i).get(0),
+                this.nodes.get(j).get(this.size - 1),
+                Color.MAGENTA);
             
             if (winCheck) {
               this.endOfWorld("magenta");
@@ -393,7 +406,10 @@ class BridgIt extends World {
         // odd -> search top to bottom; pink
         for (int i = 0; i < this.size - 1; i++) {
           for (int j = 0; j < this.size - 1; j++) {
-            boolean winCheck = this.bfs(this.nodes.get(0).get(i), this.nodes.get(this.size - 1).get(j), Color.PINK);
+            boolean winCheck = this.bfs(
+                this.nodes.get(0).get(i),
+                this.nodes.get(this.size - 1).get(j),
+                Color.PINK);
             
             if (winCheck) {
               this.endOfWorld("pink");
@@ -411,43 +427,49 @@ class BridgIt extends World {
     WorldScene scene = new WorldScene(this.size * 50, this.size * 50);
     
     if (s.equals("magenta")) {
-      scene.placeImageXY(new TextImage("Magenta wins!", 50.0, Color.MAGENTA),(this.size * 50) / 2, (this.size * 50) / 2);
+      scene.placeImageXY(new TextImage(
+          "Magenta wins!",
+          50.0,
+          Color.MAGENTA),
+          (this.size * 50) / 2,
+          (this.size * 50) / 2);
     } else if (s.equals("pink")) {
-      scene.placeImageXY(new TextImage("Pink wins!", 50.0, Color.PINK),(this.size * 50) / 2, (this.size * 50) / 2);
+      scene.placeImageXY(new TextImage(
+          "Pink wins!",
+          50.0,
+          Color.PINK),
+          (this.size * 50) / 2,
+          (this.size * 50) / 2);
     }
     
     return scene;
   }
 
-  // BFS parent func
+  // performs a BFS search
   boolean bfs(INode from, INode to, Color col) {
     return searchHelp(from, to, col, new ArrayList<INode>());
   }
 
-  // BFS algorithm
+  // helper for bfs
   boolean searchHelp(INode from, INode to, Color col, ArrayList<INode> worklist) {
-    ArrayList<INode> alreadySeen = new ArrayList<INode>();
-
-    // Initialize the worklist with the from vertex
+    ArrayList<INode> done = new ArrayList<INode>();
     worklist.add(from);
-    // As long as the worklist isn't empty...
+
     while (!worklist.isEmpty()) {
       INode next = worklist.remove(0);
       if (next.equals(to)) {
-        return true; // Success!
+        return true;
       }
-      else if (alreadySeen.contains(next)) {
-        // do nothing: we've already seen this one
+      else if (done.contains(next)) {
+        // skip
       }
       else {
-        // add all the neighbors of next to the worklist for further processing
+        // add neighbors and advance list
         next.addLinks(worklist, col);
-        
-        // add next to alreadySeen, since we're done with it
-        alreadySeen.add(next);
+        done.add(next);
       }
     }
-    // We haven't found the to vertex, and there are no more to try
+
     return false;
   }
 }
@@ -605,9 +627,21 @@ class ExamplesBridgIt {
     this.initData();
     
     this.game2.onMouseClicked(new Posn(50, 50));
-    t.checkExpect(this.game2.nodes.get(1).get(1), new Empty(Color.MAGENTA, this.game2.nodes.get(0).get(1), this.game2.nodes.get(2).get(1), this.game2.nodes.get(1).get(0), this.game2.nodes.get(1).get(2), true));
+    t.checkExpect(this.game2.nodes.get(1).get(1), new Empty(
+        Color.MAGENTA,
+        this.game2.nodes.get(0).get(1),
+        this.game2.nodes.get(2).get(1),
+        this.game2.nodes.get(1).get(0),
+        this.game2.nodes.get(1).get(2),
+        true));
     this.game2.onMouseClicked(new Posn(100, 100));
-    t.checkExpect(this.game2.nodes.get(2).get(2), new Empty(Color.PINK, this.game2.nodes.get(1).get(2), new Edge(), this.game2.nodes.get(2).get(1), new Edge(), true));
+    t.checkExpect(this.game2.nodes.get(2).get(2), new Empty(
+        Color.PINK,
+        this.game2.nodes.get(1).get(2),
+        new Edge(),
+        this.game2.nodes.get(2).get(1),
+        new Edge(),
+        true));
   } 
   
   // test lastScene
@@ -615,9 +649,19 @@ class ExamplesBridgIt {
     this.initData();
     
     WorldScene scene1 = new WorldScene(11 * 50, 11 * 50);
-    scene1.placeImageXY(new TextImage("Magenta wins!", 50.0, Color.MAGENTA),(11 * 50) / 2, (11 * 50) / 2);
+    scene1.placeImageXY(new TextImage(
+        "Magenta wins!",
+        50.0,
+        Color.MAGENTA),
+        (11 * 50) / 2,
+        (11 * 50) / 2);
     WorldScene scene2 = new WorldScene(11 * 50, 11 * 50);
-    scene2.placeImageXY(new TextImage("Pink wins!", 50.0, Color.PINK),(11 * 50) / 2, (11 * 50) / 2);
+    scene2.placeImageXY(new TextImage(
+        "Pink wins!",
+        50.0,
+        Color.PINK),
+        (11 * 50) / 2,
+        (11 * 50) / 2);
     
     t.checkExpect(this.game1.lastScene("magenta"), scene1);
     t.checkExpect(this.game1.lastScene("pink"), scene2);
@@ -627,14 +671,30 @@ class ExamplesBridgIt {
   void testBFS(Tester t) {
     this.initData();
     
-    t.checkExpect(this.game2.bfs(this.game2.nodes.get(1).get(0), this.game2.nodes.get(1).get(2), Color.MAGENTA), false);
+    t.checkExpect(this.game2.bfs(
+        this.game2.nodes.get(1).get(0),
+        this.game2.nodes.get(1).get(2),
+        Color.MAGENTA),
+        false);
     this.game2.nodes.get(1).get(1).update(Color.MAGENTA);
-    t.checkExpect(this.game2.bfs(this.game2.nodes.get(1).get(0), this.game2.nodes.get(1).get(2), Color.MAGENTA), true);
+    t.checkExpect(this.game2.bfs(
+        this.game2.nodes.get(1).get(0),
+        this.game2.nodes.get(1).get(2),
+        Color.MAGENTA),
+        true);
     
     this.initData();
-    t.checkExpect(this.game2.bfs(this.game2.nodes.get(0).get(1), this.game2.nodes.get(2).get(1), Color.PINK), false);
+    t.checkExpect(this.game2.bfs(
+        this.game2.nodes.get(0).get(1),
+        this.game2.nodes.get(2).get(1),
+        Color.PINK),
+        false);
     this.game2.nodes.get(1).get(1).update(Color.PINK);
-    t.checkExpect(this.game2.bfs(this.game2.nodes.get(0).get(1), this.game2.nodes.get(2).get(1), Color.PINK), true);
+    t.checkExpect(this.game2.bfs(
+        this.game2.nodes.get(0).get(1),
+        this.game2.nodes.get(2).get(1),
+        Color.PINK),
+        true);
   }
   
   // test searchHelp
@@ -642,15 +702,35 @@ class ExamplesBridgIt {
     this.initData();
     ArrayList<INode> searchHelpTestList = new ArrayList<INode>();
     
-    t.checkExpect(this.game2.searchHelp(this.game2.nodes.get(1).get(0), this.game2.nodes.get(1).get(2), Color.MAGENTA, searchHelpTestList), false);
+    t.checkExpect(this.game2.searchHelp(
+        this.game2.nodes.get(1).get(0),
+        this.game2.nodes.get(1).get(2),
+        Color.MAGENTA,
+        searchHelpTestList),
+        false);
     this.game2.nodes.get(1).get(1).update(Color.MAGENTA);
-    t.checkExpect(this.game2.searchHelp(this.game2.nodes.get(1).get(0), this.game2.nodes.get(1).get(2), Color.MAGENTA, searchHelpTestList), true);
+    t.checkExpect(this.game2.searchHelp(
+        this.game2.nodes.get(1).get(0),
+        this.game2.nodes.get(1).get(2),
+        Color.MAGENTA,
+        searchHelpTestList),
+        true);
     
     this.initData();
     searchHelpTestList = new ArrayList<INode>();
     
-    t.checkExpect(this.game2.searchHelp(this.game2.nodes.get(0).get(1), this.game2.nodes.get(2).get(1), Color.PINK, searchHelpTestList), false);
+    t.checkExpect(this.game2.searchHelp(
+        this.game2.nodes.get(0).get(1),
+        this.game2.nodes.get(2).get(1),
+        Color.PINK,
+        searchHelpTestList),
+        false);
     this.game2.nodes.get(1).get(1).update(Color.PINK);
-    t.checkExpect(this.game2.searchHelp(this.game2.nodes.get(0).get(1), this.game2.nodes.get(2).get(1), Color.PINK, searchHelpTestList), true);
+    t.checkExpect(this.game2.searchHelp(
+        this.game2.nodes.get(0).get(1),
+        this.game2.nodes.get(2).get(1),
+        Color.PINK,
+        searchHelpTestList),
+        true);
   }
 }
