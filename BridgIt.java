@@ -411,9 +411,9 @@ class BridgIt extends World {
     WorldScene scene = new WorldScene(this.size * 50, this.size * 50);
     
     if (s.equals("One")) {
-      scene.placeImageXY(new TextImage("Player 1 wins", 10.0, Color.MAGENTA), 50, 50);
+      scene.placeImageXY(new TextImage("Player 1 wins", 50.0, Color.MAGENTA),(this.size * 50) / 2, (this.size * 50) / 2);
     } else {
-      scene.placeImageXY(new TextImage("Player 2's turn", 10.0, Color.PINK), 50, 50);
+      scene.placeImageXY(new TextImage("Player 2 wins", 50.0, Color.PINK),(this.size * 50) / 2, (this.size * 50) / 2);
     }
     return scene;
   }
