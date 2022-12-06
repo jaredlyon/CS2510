@@ -10,13 +10,22 @@ interface INode {
   WorldImage drawAt();
 
   // links this node to given nodes
+  // EFFECT: links this node to given neighbors
   void link(INode up, INode down, INode left, INode right);
 
   // updates this node when clicked
+  // EFFECT: updates a node
   void update(Color col);
 
   // checks if this tile has been changed
   boolean checkChange();
+  
+  // adds the linkages to the given arraylist for the search algo
+  // EFFECT: updates a given arraylist only with the color matches
+  void addLinks(ArrayList<INode> worklist, Color col);
+  
+  // checks if this node matches a given color
+  boolean match(Color col);
 }
 
 // represents a colored node 
@@ -54,6 +63,7 @@ class Node implements INode {
   }
 
   // links this node to the given nodes
+  // EFFECT: links this node to given neighbors
   public void link(INode up, INode down, INode left, INode right) {
     this.up = up;
     this.down = down;
@@ -62,6 +72,7 @@ class Node implements INode {
   }
 
   // "updates" this node when clicked
+  // EFFECT: nothing -> this node will never be updated
   public void update(Color col) {
     // do nothing
   }
@@ -69,6 +80,31 @@ class Node implements INode {
   // checks if this node has been changed
   public boolean checkChange() {
     return this.changed;
+  }
+
+  // adds the linkages to the given arraylist for the search algo
+  // EFFECT: updates a given worklist with this node's neighbors only if the color matches
+  public void addLinks(ArrayList<INode> worklist, Color col) {
+    if (this.up.match(col)) {
+      worklist.add(this.up);
+    }
+    
+    if (this.down.match(col)) {
+      worklist.add(this.down);
+    }
+    
+    if (this.left.match(col)) {
+      worklist.add(this.left);
+    }
+    
+    if (this.right.match(col)) {
+      worklist.add(this.right);
+    }
+  }
+
+  // checks if this node matches a given color
+  public boolean match(Color col) {
+    return this.color.equals(col);
   }
 }
 
@@ -107,6 +143,7 @@ class Empty implements INode {
   }
 
   // links this node to the given nodes
+  // EFFECT: links this node with given neighbors
   public void link(INode up, INode down, INode left, INode right) {
     this.up = up;
     this.down = down;
@@ -124,6 +161,31 @@ class Empty implements INode {
   // checks if this node has been changed
   public boolean checkChange() {
     return this.changed;
+  }
+  
+  // adds the linkages to the given arraylist for the search algo
+  // EFFECT: updates a given worklist with this node's neighbors only if the color matches
+  public void addLinks(ArrayList<INode> worklist, Color col) {
+    if (this.up.match(col)) {
+      worklist.add(this.up);
+    }
+    
+    if (this.down.match(col)) {
+      worklist.add(this.down);
+    }
+    
+    if (this.left.match(col)) {
+      worklist.add(this.left);
+    }
+    
+    if (this.right.match(col)) {
+      worklist.add(this.right);
+    }
+  }
+  
+  // checks if this node matches a given color
+  public boolean match(Color col) {
+    return this.color.equals(col);
   }
 }
 
@@ -143,11 +205,13 @@ class Edge implements INode {
   }
 
   // "links" this node -> will never be called
+  // EFFECT: nothing -> this should never be called
   public void link(INode up, INode down, INode left, INode right) {
-    // empty lel
+    // do nothing
   }
 
   // "updates" this node when clicked
+  // EFFECT: nothing -> this should never be called
   public void update(Color col) {
     // do nothing
   }
@@ -155,6 +219,17 @@ class Edge implements INode {
   // checks if this node has been changed
   public boolean checkChange() {
     return this.changed;
+  }
+  
+  // adds the linkages to the given arraylist for the search algo
+  // EFFECT: nothing -> this should never be called
+  public void addLinks(ArrayList<INode> worklist, Color col) {
+    // do nothing
+  }
+  
+  // checks if this node matches a given color
+  public boolean match(Color col) {
+    return this.color.equals(col);
   }
 }
 
@@ -301,29 +376,43 @@ class BridgIt extends World {
 
     if (!this.nodes.get(rowIndex).get(colIndex).checkChange()) {
       this.nodes.get(rowIndex).get(colIndex).update(newColor);
+      
+      // checks for the win
+      if (this.counter % 2 == 0) {
+        // even -> search left to right; magenta
+        for (int i = 0; i < this.size - 1; i++) {
+          for (int j = 0; j < this.size - 1; j++) {
+            boolean winCheck = this.bfs(this.nodes.get(i).get(0), this.nodes.get(j).get(this.size - 1), Color.MAGENTA);
+            
+            if (winCheck) {
+              // win the game
+            }
+          }
+        }
+      } else {
+        // odd -> search top to bottom; pink
+        for (int i = 0; i < this.size - 1; i++) {
+          for (int j = 0; j < this.size - 1; j++) {
+            boolean winCheck = this.bfs(this.nodes.get(0).get(i), this.nodes.get(this.size - 1).get(j), Color.PINK);
+            
+            if (winCheck) {
+              // win the game
+            }
+          }
+        }
+      }
+      
       this.counter++;
-      this.checkWin(newColor, rowIndex, colIndex);
     }
   }
 
-  //  public WorldScene checkWin(Color col, int rowIndex, int colIndex) {
-  //    INode currentNode = this.nodes.get(rowIndex).get(colIndex);
-  //    ArrayList<INode> nodeList = new ArrayList<INode>();
-  //    nodeList.add(currentNode);
-  //    
-  //    if (col == Color.PINK) {
-  //      
-  //    } else if (col == Color.MAGENTA) {
-  //      
-  //    }
-  //  }
-
-  //In Graph
-  boolean bfs(INode from, INode to) {
-    return searchHelp(from, to, new ArrayList<INode>());
+  // BFS parent func
+  boolean bfs(INode from, INode to, Color col) {
+    return searchHelp(from, to, col, new ArrayList<INode>());
   }
 
-  boolean searchHelp(INode from, INode to, ArrayList<INode> worklist) {
+  // BFS algorithm
+  boolean searchHelp(INode from, INode to, Color col, ArrayList<INode> worklist) {
     ArrayList<INode> alreadySeen = new ArrayList<INode>();
 
     // Initialize the worklist with the from vertex
@@ -339,10 +428,7 @@ class BridgIt extends World {
       }
       else {
         // add all the neighbors of next to the worklist for further processing
-        worklist.add(next.up);
-        worklist.add(next.down);
-        worklist.add(next.left);
-        worklist.add(next.right);
+        next.addLinks(worklist, col);
         
         // add next to alreadySeen, since we're done with it
         alreadySeen.add(next);
