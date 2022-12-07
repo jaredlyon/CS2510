@@ -238,6 +238,7 @@ class BridgIt extends World {
   int size;
   ArrayList<ArrayList<INode>> nodes;
   int counter;
+  int moves;
 
   // normal constructor
   BridgIt(int size) {
@@ -250,6 +251,7 @@ class BridgIt extends World {
 
     this.nodes = this.initNodes();
     this.counter = 0;
+    this.moves = 30;
 
     // a for loop that links each node
     for (int i = 0; i < this.size; i++) {
@@ -324,6 +326,7 @@ class BridgIt extends World {
     this.size = 1;
     this.nodes = this.initNodes();
     this.counter = 0;
+    this.moves = 30;
   }
 
   // initializes the game board in a checkerboard pattern
@@ -361,13 +364,21 @@ class BridgIt extends World {
 
   // draws the gameboard
   public WorldScene makeScene() {
-    WorldScene scene = new WorldScene(this.size * 50, this.size * 50);
+    WorldScene scene = new WorldScene(this.size * 50, (this.size + 4) * 50);
 
     for (int i = 0; i < this.size; i++) {
       for (int j = 0; j < this.size; j++) {
         scene.placeImageXY(this.nodes.get(i).get(j).drawAt(), (i * 50) + 25, (j * 50) + 25);
       }
     }
+    if (this.counter % 2 == 0) {
+      scene.placeImageXY(new TextImage("Magenta's turn", 40.0, Color.MAGENTA), this.size * 25,(this.size + 1) * 50);
+    } else {
+      scene.placeImageXY(new TextImage("Pink's turn", 40.0, Color.PINK), this.size * 25, (this.size + 1) * 50);
+    }
+    
+    String movesLeft = Integer.toString(this.moves);
+    scene.placeImageXY(new TextImage("Total Moves Left: " + movesLeft, 20.0, Color.BLACK), this.size * 25, (this.size + 3) * 50);
 
     return scene;
   }
@@ -383,19 +394,23 @@ class BridgIt extends World {
     } else {
       newColor = Color.pink;
     }
-
-    if (!this.nodes.get(rowIndex).get(colIndex).checkChange()) {
+    
+    // once the game is out of moves, pick up old pieces and place them again, old used spaces can no longer be used
+    if (this.moves <= 0 && this.nodes.get(rowIndex).get(colIndex).checkChange() && this.nodes.get(rowIndex).get(colIndex).match(newColor)) {
+        this.nodes.get(rowIndex).get(colIndex).update(Color.WHITE);
+        this.moves = 1;
+    }
+    
+    if (!this.nodes.get(rowIndex).get(colIndex).checkChange() && this.moves > 0) {
       this.nodes.get(rowIndex).get(colIndex).update(newColor);
+      this.moves = this.moves - 1;
       
       // checks for the win
       if (this.counter % 2 == 0) {
         // even -> search left to right; magenta
         for (int i = 0; i < this.size - 1; i++) {
           for (int j = 0; j < this.size - 1; j++) {
-            boolean winCheck = this.bfs(
-                this.nodes.get(i).get(0),
-                this.nodes.get(j).get(this.size - 1),
-                Color.MAGENTA);
+            boolean winCheck = this.bfs(this.nodes.get(i).get(0), this.nodes.get(j).get(this.size - 1), Color.MAGENTA);
             
             if (winCheck) {
               this.endOfWorld("magenta");
@@ -406,10 +421,7 @@ class BridgIt extends World {
         // odd -> search top to bottom; pink
         for (int i = 0; i < this.size - 1; i++) {
           for (int j = 0; j < this.size - 1; j++) {
-            boolean winCheck = this.bfs(
-                this.nodes.get(0).get(i),
-                this.nodes.get(this.size - 1).get(j),
-                Color.PINK);
+            boolean winCheck = this.bfs(this.nodes.get(0).get(i), this.nodes.get(this.size - 1).get(j), Color.PINK);
             
             if (winCheck) {
               this.endOfWorld("pink");
@@ -419,6 +431,15 @@ class BridgIt extends World {
       }
       
       this.counter++;
+    }
+  }
+  
+  // resets the game
+  public void onKeyEvent(String s) {
+    BridgIt newGame = new BridgIt(this.size);
+    
+    if (s.equals("r")) {
+      this.nodes = newGame.nodes;
     }
   }
   
@@ -643,6 +664,20 @@ class ExamplesBridgIt {
         new Edge(),
         true));
   } 
+  
+  // test onKeyEvent
+  void testOnKeyEvent(Tester t) {
+    this.initData();
+    
+    
+    this.game1.nodes.get(5).get(5).update(Color.MAGENTA);
+    this.game1.onKeyEvent("r");
+    t.checkExpect(this.game1.nodes.get(5).get(5).match(Color.white), true);
+    
+    this.game1.nodes.get(5).get(5).update(Color.MAGENTA);
+    this.game1.onKeyEvent("z");
+    t.checkExpect(this.game1.nodes.get(5).get(5).match(Color.MAGENTA), true);
+  }
   
   // test lastScene
   void testLastScene(Tester t) {    
