@@ -26,6 +26,9 @@ interface INode {
 
   // checks if this node matches a given color
   boolean match(Color col);
+
+  // checks if this is able to revert
+  boolean revert();
 }
 
 // represents a colored node 
@@ -106,6 +109,12 @@ class Node implements INode {
   // checks if this node matches a given color
   public boolean match(Color col) {
     return this.color.equals(col);
+  }
+
+  // checks if this is able to revert
+  public boolean revert() {
+    return false;
+
   }
 }
 
@@ -189,6 +198,11 @@ class Empty implements INode {
   public boolean match(Color col) {
     return this.color.equals(col);
   }
+
+  // checks if this is able to revert
+  public boolean revert() {
+    return true;
+  }
 }
 
 // represents a placeholder edge tile
@@ -232,6 +246,12 @@ class Edge implements INode {
   // checks if this node matches a given color
   public boolean match(Color col) {
     return this.color.equals(col);
+  }
+
+  // checks if this is able to revert
+  public boolean revert() {
+    return false;
+
   }
 }
 
@@ -389,9 +409,9 @@ class BridgIt extends World {
 
     // once the game is out of moves, pick up old pieces and place them again, old
     // used spaces can no longer be used
-    if (this.moves <= 0 && this.nodes.get(rowIndex).get(colIndex).checkChange()
+    if (this.moves <= 0 && this.nodes.get(rowIndex).get(colIndex).revert()
         && this.nodes.get(rowIndex).get(colIndex).match(newColor)) {
-      this.nodes.get(rowIndex).get(colIndex).update(Color.WHITE);
+      this.nodes.get(rowIndex).get(colIndex).update(Color.BLACK);
       this.moves = 1;
     }
 
@@ -602,6 +622,16 @@ class ExamplesBridgIt {
     t.checkExpect(this.empty1.match(Color.WHITE), true);
   }
 
+  // test revert
+  void testRevert(Tester t) {
+    this.initData();
+
+    t.checkExpect(this.node1.revert(), false);
+    t.checkExpect(this.empty1.revert(), true);
+    t.checkExpect(this.edge1.revert(), false);
+
+  }
+
   // test initNodes
   void testInitNodes(Tester t) {
     this.initData();
@@ -652,7 +682,7 @@ class ExamplesBridgIt {
 
     this.game2.onMouseClicked(new Posn(50, 50));
     t.checkExpect(this.game2.nodes.get(1).get(1),
-        new Empty(Color.WHITE, this.game2.nodes.get(0).get(1), this.game2.nodes.get(2).get(1),
+        new Empty(Color.BLACK, this.game2.nodes.get(0).get(1), this.game2.nodes.get(2).get(1),
             this.game2.nodes.get(1).get(0), this.game2.nodes.get(1).get(2), true));
 
   }
@@ -684,6 +714,7 @@ class ExamplesBridgIt {
     t.checkExpect(this.game1.lastScene("magenta"), scene1);
     t.checkExpect(this.game1.lastScene("pink"), scene2);
   }
+
 
   // test bfs
   void testBFS(Tester t) {
