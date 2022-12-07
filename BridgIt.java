@@ -19,11 +19,11 @@ interface INode {
 
   // checks if this tile has been changed
   boolean checkChange();
-  
+
   // adds the linkages to the given arraylist for the search algo
   // EFFECT: updates a given arraylist only with the color matches
   void addLinks(ArrayList<INode> worklist, Color col);
-  
+
   // checks if this node matches a given color
   boolean match(Color col);
 }
@@ -83,20 +83,21 @@ class Node implements INode {
   }
 
   // adds the linkages to the given arraylist for the search algo
-  // EFFECT: updates a given worklist with this node's neighbors only if the color matches
+  // EFFECT: updates a given worklist with this node's neighbors only if the color
+  // matches
   public void addLinks(ArrayList<INode> worklist, Color col) {
     if (this.up.match(col)) {
       worklist.add(this.up);
     }
-    
+
     if (this.down.match(col)) {
       worklist.add(this.down);
     }
-    
+
     if (this.left.match(col)) {
       worklist.add(this.left);
     }
-    
+
     if (this.right.match(col)) {
       worklist.add(this.right);
     }
@@ -162,27 +163,28 @@ class Empty implements INode {
   public boolean checkChange() {
     return this.changed;
   }
-  
+
   // adds the linkages to the given arraylist for the search algo
-  // EFFECT: updates a given worklist with this node's neighbors only if the color matches
+  // EFFECT: updates a given worklist with this node's neighbors only if the color
+  // matches
   public void addLinks(ArrayList<INode> worklist, Color col) {
     if (this.up.match(col)) {
       worklist.add(this.up);
     }
-    
+
     if (this.down.match(col)) {
       worklist.add(this.down);
     }
-    
+
     if (this.left.match(col)) {
       worklist.add(this.left);
     }
-    
+
     if (this.right.match(col)) {
       worklist.add(this.right);
     }
   }
-  
+
   // checks if this node matches a given color
   public boolean match(Color col) {
     return this.color.equals(col);
@@ -220,13 +222,13 @@ class Edge implements INode {
   public boolean checkChange() {
     return this.changed;
   }
-  
+
   // adds the linkages to the given arraylist for the search algo
   // EFFECT: nothing -> this should never be called
   public void addLinks(ArrayList<INode> worklist, Color col) {
     // do nothing
   }
-  
+
   // checks if this node matches a given color
   public boolean match(Color col) {
     return this.color.equals(col);
@@ -243,9 +245,9 @@ class BridgIt extends World {
   // normal constructor
   BridgIt(int size) {
     if (size % 2 == 0 || size < 2) {
-      throw new IllegalArgumentException(
-          "Game side length must be odd and greater than one!");
-    } else {
+      throw new IllegalArgumentException("Game side length must be odd and greater than one!");
+    }
+    else {
       this.size = size;
     }
 
@@ -258,62 +260,44 @@ class BridgIt extends World {
       for (int j = 0; j < this.size; j++) {
         if (i == 0) {
           if (j == 0) {
-            this.nodes.get(i).get(j).link(
-                new Edge(),
-                this.nodes.get(i + 1).get(j),
-                new Edge(),
-                this.nodes.get(i).get(j + 1));
-          } else if (j == this.size - 1) {
-            this.nodes.get(i).get(j).link(
-                new Edge(),
-                this.nodes.get(i + 1).get(j),
-                this.nodes.get(i).get(j - 1),
-                new Edge());
-          } else {
-            this.nodes.get(i).get(j).link(
-                new Edge(),
-                this.nodes.get(i + 1).get(j),
-                this.nodes.get(i).get(j - 1),
+            this.nodes.get(i).get(j).link(new Edge(), this.nodes.get(i + 1).get(j), new Edge(),
                 this.nodes.get(i).get(j + 1));
           }
-        } else if (i == this.size - 1) {
+          else if (j == this.size - 1) {
+            this.nodes.get(i).get(j).link(new Edge(), this.nodes.get(i + 1).get(j),
+                this.nodes.get(i).get(j - 1), new Edge());
+          }
+          else {
+            this.nodes.get(i).get(j).link(new Edge(), this.nodes.get(i + 1).get(j),
+                this.nodes.get(i).get(j - 1), this.nodes.get(i).get(j + 1));
+          }
+        }
+        else if (i == this.size - 1) {
           if (j == 0) {
-            this.nodes.get(i).get(j).link(
-                this.nodes.get(i - 1).get(j),
-                new Edge(),
-                new Edge(),
-                this.nodes.get(i).get(j + 1));
-          } else if (j == this.size - 1) {
-            this.nodes.get(i).get(j).link(
-                this.nodes.get(i - 1).get(j),
-                new Edge(),
-                this.nodes.get(i).get(j - 1),
-                new Edge());
-          } else {
-            this.nodes.get(i).get(j).link(
-                this.nodes.get(i - 1).get(j),
-                new Edge(),
-                this.nodes.get(i).get(j - 1),
+            this.nodes.get(i).get(j).link(this.nodes.get(i - 1).get(j), new Edge(), new Edge(),
                 this.nodes.get(i).get(j + 1));
           }
-        } else {
+          else if (j == this.size - 1) {
+            this.nodes.get(i).get(j).link(this.nodes.get(i - 1).get(j), new Edge(),
+                this.nodes.get(i).get(j - 1), new Edge());
+          }
+          else {
+            this.nodes.get(i).get(j).link(this.nodes.get(i - 1).get(j), new Edge(),
+                this.nodes.get(i).get(j - 1), this.nodes.get(i).get(j + 1));
+          }
+        }
+        else {
           if (j == 0) {
-            this.nodes.get(i).get(j).link(
-                this.nodes.get(i - 1).get(j),
-                this.nodes.get(i + 1).get(j),
-                new Edge(),
-                this.nodes.get(i).get(j + 1));
-          } else if (j == this.size - 1) {
-            this.nodes.get(i).get(j).link(
-                this.nodes.get(i - 1).get(j),
-                this.nodes.get(i + 1).get(j),
-                this.nodes.get(i).get(j - 1),
-                new Edge());
-          } else {
-            this.nodes.get(i).get(j).link(
-                this.nodes.get(i - 1).get(j),
-                this.nodes.get(i + 1).get(j),
-                this.nodes.get(i).get(j - 1),
+            this.nodes.get(i).get(j).link(this.nodes.get(i - 1).get(j),
+                this.nodes.get(i + 1).get(j), new Edge(), this.nodes.get(i).get(j + 1));
+          }
+          else if (j == this.size - 1) {
+            this.nodes.get(i).get(j).link(this.nodes.get(i - 1).get(j),
+                this.nodes.get(i + 1).get(j), this.nodes.get(i).get(j - 1), new Edge());
+          }
+          else {
+            this.nodes.get(i).get(j).link(this.nodes.get(i - 1).get(j),
+                this.nodes.get(i + 1).get(j), this.nodes.get(i).get(j - 1),
                 this.nodes.get(i).get(j + 1));
           }
         }
@@ -344,13 +328,16 @@ class BridgIt extends World {
         if (i % 2 == 0) {
           if (j % 2 == 0) {
             tempRow.add(new Empty());
-          } else {
+          }
+          else {
             tempRow.add(new Node(Color.PINK));
           }
-        } else {
+        }
+        else {
           if (j % 2 == 0) {
             tempRow.add(new Node(Color.MAGENTA));
-          } else {
+          }
+          else {
             tempRow.add(new Empty());
           }
         }
@@ -372,13 +359,17 @@ class BridgIt extends World {
       }
     }
     if (this.counter % 2 == 0) {
-      scene.placeImageXY(new TextImage("Magenta's turn", 40.0, Color.MAGENTA), this.size * 25,(this.size + 1) * 50);
-    } else {
-      scene.placeImageXY(new TextImage("Pink's turn", 40.0, Color.PINK), this.size * 25, (this.size + 1) * 50);
+      scene.placeImageXY(new TextImage("Magenta's turn", 40.0, Color.MAGENTA), this.size * 25,
+          (this.size + 1) * 50);
     }
-    
+    else {
+      scene.placeImageXY(new TextImage("Pink's turn", 40.0, Color.PINK), this.size * 25,
+          (this.size + 1) * 50);
+    }
+
     String movesLeft = Integer.toString(this.moves);
-    scene.placeImageXY(new TextImage("Total Moves Left: " + movesLeft, 20.0, Color.BLACK), this.size * 25, (this.size + 3) * 50);
+    scene.placeImageXY(new TextImage("Total Moves Left: " + movesLeft, 20.0, Color.BLACK),
+        this.size * 25, (this.size + 3) * 50);
 
     return scene;
   }
@@ -390,79 +381,78 @@ class BridgIt extends World {
 
     Color newColor = null;
     if (this.counter % 2 == 0) {
-      newColor = Color.magenta; 
-    } else {
+      newColor = Color.magenta;
+    }
+    else {
       newColor = Color.pink;
     }
-    
-    // once the game is out of moves, pick up old pieces and place them again, old used spaces can no longer be used
-    if (this.moves <= 0 && this.nodes.get(rowIndex).get(colIndex).checkChange() && this.nodes.get(rowIndex).get(colIndex).match(newColor)) {
-        this.nodes.get(rowIndex).get(colIndex).update(Color.WHITE);
-        this.moves = 1;
+
+    // once the game is out of moves, pick up old pieces and place them again, old
+    // used spaces can no longer be used
+    if (this.moves <= 0 && this.nodes.get(rowIndex).get(colIndex).checkChange()
+        && this.nodes.get(rowIndex).get(colIndex).match(newColor)) {
+      this.nodes.get(rowIndex).get(colIndex).update(Color.WHITE);
+      this.moves = 1;
     }
-    
+
     if (!this.nodes.get(rowIndex).get(colIndex).checkChange() && this.moves > 0) {
       this.nodes.get(rowIndex).get(colIndex).update(newColor);
       this.moves = this.moves - 1;
-      
+
       // checks for the win
       if (this.counter % 2 == 0) {
         // even -> search left to right; magenta
         for (int i = 0; i < this.size - 1; i++) {
           for (int j = 0; j < this.size - 1; j++) {
-            boolean winCheck = this.bfs(this.nodes.get(i).get(0), this.nodes.get(j).get(this.size - 1), Color.MAGENTA);
-            
+            boolean winCheck = this.bfs(this.nodes.get(i).get(0),
+                this.nodes.get(j).get(this.size - 1), Color.MAGENTA);
+
             if (winCheck) {
               this.endOfWorld("magenta");
             }
           }
         }
-      } else {
+      }
+      else {
         // odd -> search top to bottom; pink
         for (int i = 0; i < this.size - 1; i++) {
           for (int j = 0; j < this.size - 1; j++) {
-            boolean winCheck = this.bfs(this.nodes.get(0).get(i), this.nodes.get(this.size - 1).get(j), Color.PINK);
-            
+            boolean winCheck = this.bfs(this.nodes.get(0).get(i),
+                this.nodes.get(this.size - 1).get(j), Color.PINK);
+
             if (winCheck) {
               this.endOfWorld("pink");
             }
           }
         }
       }
-      
+
       this.counter++;
     }
   }
-  
+
   // resets the game
   public void onKeyEvent(String s) {
     BridgIt newGame = new BridgIt(this.size);
-    
+
     if (s.equals("r")) {
       this.nodes = newGame.nodes;
     }
   }
-  
+
   // produces win screen
   public WorldScene lastScene(String s) {
     WorldScene scene = new WorldScene(this.size * 50, this.size * 50);
-    
+
     if (s.equals("magenta")) {
-      scene.placeImageXY(new TextImage(
-          "Magenta wins!",
-          50.0,
-          Color.MAGENTA),
-          (this.size * 50) / 2,
-          (this.size * 50) / 2);
-    } else if (s.equals("pink")) {
-      scene.placeImageXY(new TextImage(
-          "Pink wins!",
-          50.0,
-          Color.PINK),
-          (this.size * 50) / 2,
+      scene.placeImageXY(new TextImage("Magenta wins!", 50.0, Color.MAGENTA), (this.size * 50) / 2,
           (this.size * 50) / 2);
     }
-    
+    else if (s.equals("pink")) {
+      scene.placeImageXY(new TextImage("Pink wins!", 50.0, Color.PINK), (this.size * 50) / 2,
+          (this.size * 50) / 2);
+    }
+
     return scene;
   }
 
@@ -514,7 +504,7 @@ class ExamplesBridgIt {
 
   BridgIt game1 = new BridgIt(11);
   BridgIt game2 = new BridgIt(3);
-  
+
   ArrayList<INode> addLinksTestList = new ArrayList<INode>();
   Node node3 = new Node(Color.PINK);
   Node node4 = new Node(Color.PINK);
@@ -530,7 +520,7 @@ class ExamplesBridgIt {
     this.edge1 = new Edge();
     this.game1 = new BridgIt(11);
     this.game2 = new BridgIt(3);
-    
+
     this.node3.link(node4, node5, node6, node7);
     this.addLinksTestList = new ArrayList<INode>();
   }
@@ -561,51 +551,51 @@ class ExamplesBridgIt {
     t.checkExpect(this.node2.left, this.empty1);
     t.checkExpect(this.node2.right, this.empty1);
   }
-  
+
   // test update
   void testUpdate(Tester t) {
     this.initData();
-    
+
     this.node1.update(Color.MAGENTA);
     this.empty1.update(Color.MAGENTA);
     this.edge1.update(Color.MAGENTA);
-    
+
     t.checkExpect(this.node1.color, Color.PINK);
     t.checkExpect(this.empty1.color, Color.MAGENTA);
     t.checkExpect(this.empty1.changed, true);
     t.checkExpect(this.edge1.color, Color.RED);
   }
-  
+
   // test checkChange
   void testCheckChange(Tester t) {
     this.initData();
-    
+
     t.checkExpect(this.node1.checkChange(), true);
     t.checkExpect(this.empty1.checkChange(), false);
     t.checkExpect(this.edge1.checkChange(), true);
-    
+
     this.empty1.update(Color.MAGENTA);
-    
+
     t.checkExpect(this.empty1.checkChange(), true);
   }
-  
+
   // test addLinks
   void testAddLinks(Tester t) {
     this.initData();
-    
+
     node3.addLinks(addLinksTestList, Color.PINK);
-    
+
     t.checkExpect(this.addLinksTestList.size(), 3);
     t.checkExpect(this.addLinksTestList.contains(node4), true);
     t.checkExpect(this.addLinksTestList.contains(node5), false);
     t.checkExpect(this.addLinksTestList.contains(node6), true);
     t.checkExpect(this.addLinksTestList.contains(node7), true);
   }
-  
+
   // test match
   void testMatch(Tester t) {
     this.initData();
-    
+
     t.checkExpect(this.node1.match(Color.PINK), true);
     t.checkExpect(this.node1.match(Color.MAGENTA), false);
     t.checkExpect(this.edge1.match(Color.RED), true);
@@ -644,143 +634,95 @@ class ExamplesBridgIt {
     expected.placeImageXY(new TextImage("Total Moves Left: 30", 20.0, Color.BLACK), 25, 200);
     t.checkExpect(this.makeSceneTest.makeScene(), expected);
   }
-  
+
   // test onMouseClicked
   void testOnMouseClicked(Tester t) {
     this.initData();
-    
+
     this.game2.onMouseClicked(new Posn(50, 50));
-    t.checkExpect(this.game2.nodes.get(1).get(1), new Empty(
-        Color.MAGENTA,
-        this.game2.nodes.get(0).get(1),
-        this.game2.nodes.get(2).get(1),
-        this.game2.nodes.get(1).get(0),
-        this.game2.nodes.get(1).get(2),
-        true));
+    t.checkExpect(this.game2.nodes.get(1).get(1),
+        new Empty(Color.MAGENTA, this.game2.nodes.get(0).get(1), this.game2.nodes.get(2).get(1),
+            this.game2.nodes.get(1).get(0), this.game2.nodes.get(1).get(2), true));
     this.game2.onMouseClicked(new Posn(100, 100));
-    t.checkExpect(this.game2.nodes.get(2).get(2), new Empty(
-        Color.PINK,
-        this.game2.nodes.get(1).get(2),
-        new Edge(),
-        this.game2.nodes.get(2).get(1),
-        new Edge(),
-        true));
-    
+    t.checkExpect(this.game2.nodes.get(2).get(2),
+        new Empty(Color.PINK, this.game2.nodes.get(1).get(2), new Edge(),
+            this.game2.nodes.get(2).get(1), new Edge(), true));
+
     this.game2.moves = 0;
-    
+
     this.game2.onMouseClicked(new Posn(50, 50));
-    t.checkExpect(this.game2.nodes.get(1).get(1), new Empty(
-        Color.WHITE,
-        this.game2.nodes.get(0).get(1),
-        this.game2.nodes.get(2).get(1),
-        this.game2.nodes.get(1).get(0),
-        this.game2.nodes.get(1).get(2),
-        true));
-    
-    
-  } 
-  
+    t.checkExpect(this.game2.nodes.get(1).get(1),
+        new Empty(Color.WHITE, this.game2.nodes.get(0).get(1), this.game2.nodes.get(2).get(1),
+            this.game2.nodes.get(1).get(0), this.game2.nodes.get(1).get(2), true));
+
+  }
+
   // test onKeyEvent
   void testOnKeyEvent(Tester t) {
     this.initData();
-    
-    
+
     this.game1.nodes.get(5).get(5).update(Color.MAGENTA);
     this.game1.onKeyEvent("r");
     t.checkExpect(this.game1.nodes.get(5).get(5).match(Color.white), true);
-    
+
     this.game1.nodes.get(5).get(5).update(Color.MAGENTA);
     this.game1.onKeyEvent("z");
     t.checkExpect(this.game1.nodes.get(5).get(5).match(Color.MAGENTA), true);
   }
-  
+
   // test lastScene
-  void testLastScene(Tester t) {    
+  void testLastScene(Tester t) {
     this.initData();
-    
+
     WorldScene scene1 = new WorldScene(11 * 50, 11 * 50);
-    scene1.placeImageXY(new TextImage(
-        "Magenta wins!",
-        50.0,
-        Color.MAGENTA),
-        (11 * 50) / 2,
+    scene1.placeImageXY(new TextImage("Magenta wins!", 50.0, Color.MAGENTA), (11 * 50) / 2,
         (11 * 50) / 2);
     WorldScene scene2 = new WorldScene(11 * 50, 11 * 50);
-    scene2.placeImageXY(new TextImage(
-        "Pink wins!",
-        50.0,
-        Color.PINK),
-        (11 * 50) / 2,
+    scene2.placeImageXY(new TextImage("Pink wins!", 50.0, Color.PINK), (11 * 50) / 2,
         (11 * 50) / 2);
-    
+
     t.checkExpect(this.game1.lastScene("magenta"), scene1);
     t.checkExpect(this.game1.lastScene("pink"), scene2);
-  } 
-  
+  }
+
   // test bfs
   void testBFS(Tester t) {
     this.initData();
-    
-    t.checkExpect(this.game2.bfs(
-        this.game2.nodes.get(1).get(0),
-        this.game2.nodes.get(1).get(2),
-        Color.MAGENTA),
-        false);
+
+    t.checkExpect(this.game2.bfs(this.game2.nodes.get(1).get(0), this.game2.nodes.get(1).get(2),
+        Color.MAGENTA), false);
     this.game2.nodes.get(1).get(1).update(Color.MAGENTA);
-    t.checkExpect(this.game2.bfs(
-        this.game2.nodes.get(1).get(0),
-        this.game2.nodes.get(1).get(2),
-        Color.MAGENTA),
-        true);
-    
+    t.checkExpect(this.game2.bfs(this.game2.nodes.get(1).get(0), this.game2.nodes.get(1).get(2),
+        Color.MAGENTA), true);
+
     this.initData();
-    t.checkExpect(this.game2.bfs(
-        this.game2.nodes.get(0).get(1),
-        this.game2.nodes.get(2).get(1),
-        Color.PINK),
+    t.checkExpect(
+        this.game2.bfs(this.game2.nodes.get(0).get(1), this.game2.nodes.get(2).get(1), Color.PINK),
         false);
     this.game2.nodes.get(1).get(1).update(Color.PINK);
-    t.checkExpect(this.game2.bfs(
-        this.game2.nodes.get(0).get(1),
-        this.game2.nodes.get(2).get(1),
-        Color.PINK),
+    t.checkExpect(
+        this.game2.bfs(this.game2.nodes.get(0).get(1), this.game2.nodes.get(2).get(1), Color.PINK),
         true);
   }
-  
+
   // test searchHelp
   void testSearchHelp(Tester t) {
     this.initData();
     ArrayList<INode> searchHelpTestList = new ArrayList<INode>();
-    
-    t.checkExpect(this.game2.searchHelp(
-        this.game2.nodes.get(1).get(0),
-        this.game2.nodes.get(1).get(2),
-        Color.MAGENTA,
-        searchHelpTestList),
-        false);
+
+    t.checkExpect(this.game2.searchHelp(this.game2.nodes.get(1).get(0),
+        this.game2.nodes.get(1).get(2), Color.MAGENTA, searchHelpTestList), false);
     this.game2.nodes.get(1).get(1).update(Color.MAGENTA);
-    t.checkExpect(this.game2.searchHelp(
-        this.game2.nodes.get(1).get(0),
-        this.game2.nodes.get(1).get(2),
-        Color.MAGENTA,
-        searchHelpTestList),
-        true);
-    
+    t.checkExpect(this.game2.searchHelp(this.game2.nodes.get(1).get(0),
+        this.game2.nodes.get(1).get(2), Color.MAGENTA, searchHelpTestList), true);
+
     this.initData();
     searchHelpTestList = new ArrayList<INode>();
-    
-    t.checkExpect(this.game2.searchHelp(
-        this.game2.nodes.get(0).get(1),
-        this.game2.nodes.get(2).get(1),
-        Color.PINK,
-        searchHelpTestList),
-        false);
+
+    t.checkExpect(this.game2.searchHelp(this.game2.nodes.get(0).get(1),
+        this.game2.nodes.get(2).get(1), Color.PINK, searchHelpTestList), false);
     this.game2.nodes.get(1).get(1).update(Color.PINK);
-    t.checkExpect(this.game2.searchHelp(
-        this.game2.nodes.get(0).get(1),
-        this.game2.nodes.get(2).get(1),
-        Color.PINK,
-        searchHelpTestList),
-        true);
+    t.checkExpect(this.game2.searchHelp(this.game2.nodes.get(0).get(1),
+        this.game2.nodes.get(2).get(1), Color.PINK, searchHelpTestList), true);
   }
 }
