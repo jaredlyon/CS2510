@@ -1,771 +1,592 @@
-import java.util.ArrayList;
-import tester.*;
-import javalib.impworld.*;
-import java.awt.Color;
-import javalib.worldimages.*;
-
-// represents an abstracted class node
-interface INode {
-  // draws the node
-  WorldImage drawAt();
-
-  // links this node to given nodes
-  // EFFECT: links this node to given neighbors
-  void link(INode up, INode down, INode left, INode right);
-
-  // updates this node when clicked
-  // EFFECT: updates a node
-  void update(Color col);
-
-  // checks if this tile has been changed
-  boolean checkChange();
-  
-  // adds the linkages to the given arraylist for the search algo
-  // EFFECT: updates a given arraylist only with the color matches
-  void addLinks(ArrayList<INode> worklist, Color col);
-  
-  // checks if this node matches a given color
-  boolean match(Color col);
-}
-
-// represents a colored node 
-class Node implements INode {
-  Color color;
-  INode up;
-  INode down;
-  INode left;
-  INode right;
-  boolean changed;
-
-  // full constructor
-  Node(Color color, INode up, INode down, INode left, INode right) {
-    this.color = color;
-    this.up = up;
-    this.down = down;
-    this.left = left;
-    this.right = right;
-    this.changed = true;
+Tester Library v.3.0
+-----------------------------------
+Tests defined in the class: ExamplesBridgIt:
+---------------------------
+ExamplesBridgIt:
+---------------
+new ExamplesBridgIt:1(
+ this.node1 = new Node:2(
+  this.color = [r=255,g=175,b=175]
+  this.up = null
+  this.down = null
+  this.left = null
+  this.right = null
+  this.changed = true)
+ this.node2 = new Node:3(
+  this.color = [r=255,g=0,b=255]
+  this.up = null
+  this.down = null
+  this.left = null
+  this.right = null
+  this.changed = true)
+ this.empty1 = new Empty:4(
+  this.color = [r=255,g=255,b=255]
+  this.up = null
+  this.down = null
+  this.left = null
+  this.right = null
+  this.changed = false)
+ this.edge1 = new Edge:5(
+  this.color = [r=255,g=0,b=0]
+  this.changed = true)
+ this.game1 = new BridgIt:6(
+  this.size = 11
+  this.nodes = new java.util.ArrayList:7(){
+   Iterable[0] new java.util.ArrayList:8(){
+    Iterable[0] new Empty:9(
+     this.color = [r=255,g=255,b=255]
+     this.up = new Edge:10(
+      this.color = [r=255,g=0,b=0]
+      this.changed = true)
+     this.down = new Node:11(
+      this.color = [r=255,g=0,b=255]
+      this.up = Empty:9
+      this.down = new Empty:12(
+       this.color = [r=255,g=255,b=255]
+       this.up = Node:11
+       this.down = new Node:13(
+        this.color = [r=255,g=0,b=255]
+        this.up = Empty:12
+        this.down = new Empty:14(
+         this.color = [r=255,g=255,b=255]
+         this.up = Node:13
+         this.down = new Node:15(
+          this.color = [r=255,g=0,b=255]
+          this.up = Empty:14
+          this.down = new Empty:16(
+           this.color = [r=255,g=255,b=255]
+           this.up = Node:15
+           this.down = new Node:17(
+            this.color = [r=255,g=0,b=255]
+            this.up = Empty:16
+            this.down = new Empty:18(
+             this.color = [r=255,g=255,b=255]
+             this.up = Node:17
+             this.down = new Node:19(
+              this.color = [r=255,g=0,b=255]
+              this.up = Empty:18
+              this.down = new Empty:20(
+               this.color = [r=255,g=255,b=255]
+               this.up = Node:19
+               this.down = new Edge:21(
+                this.color = [r=255,g=0,b=0]
+                this.changed = true)
+               this.left = new Edge:22(
+                this.color = [r=255,g=0,b=0]
+                this.changed = true)
+               this.right = new Node:23(
+                this.color = [r=255,g=175,b=175]
+                this.up = new Empty:24(
+                 this.color = [r=255,g=255,b=255]
+                 this.up = new Node:25(
+                  this.color = [r=255,g=175,b=175]
+                  this.up = new Empty:26(
+                   this.color = [r=255,g=255,b=255]
+                   this.up = new Node:27(
+                    this.color = [r=255,g=175,b=175]
+                    this.up = new Empty:28(
+                     this.color = [r=255,g=255,b=255]
+                     this.up = new Node:29(
+                      this.color = [r=255,g=175,b=175]
+                      this.up = new Empty:30(
+                       this.color = [r=255,g=255,b=255]
+                       this.up = new Node:31(
+                        this.color = [r=255,g=175,b=175]
+                        this.up = new Empty:32(
+                         this.color = [r=255,g=255,b=255]
+                         this.up = new Node:33(
+                          this.color = [r=255,g=175,b=175]
+                          this.up = new Edge:34(
+                           this.color = [r=255,g=0,b=0]
+                           this.changed = true)
+                          this.down = Empty:32
+                          this.left = Empty:9
+                          this.right = new Empty:35(
+                           this.color = [r=255,g=255,b=255]
+                           this.up = new Edge:36(
+                            this.color = [r=255,g=0,b=0]
+                            this.changed = true)
+                           this.down = new Node:37(
+                            this.color = [r=255,g=0,b=255]
+                            this.up = Empty:35
+                            this.down = new Empty:38(
+                             this.color = [r=255,g=255,b=255]
+                             this.up = Node:37
+                             this.down = new Node:39(
+                              this.color = [r=255,g=0,b=255]
+                              this.up = Empty:38
+                              this.down = new Empty:40(
+                               this.color = [r=255,g=255,b=255]
+                               this.up = Node:39
+                               this.down = new Node:41(
+                                this.color = [r=255,g=0,b=255]
+                                this.up = Empty:40
+                                this.down = new Empty:42(
+                                 this.color = [r=255,g=255,b=255]
+                                 this.up = Node:41
+                                 this.down = new Node:43(
+                                  this.color = [r=255,g=0,b=255]
+                                  this.up = Empty:42
+                                  this.down = new Empty:44(
+                                   this.color = [r=255,g=255,b=255]
+                                   this.up = Node:43
+                                   this.down = new Node:45(
+                                    this.color = [r=255,g=0,b=255]
+                                    this.up = Empty:44
+                                    this.down = new Empty:46(
+                                     this.color = [r=255,g=255,b=255]
+                                     this.up = Node:45
+                                     this.down = new Edge:47(
+                                      this.color = [r=255,g=0,b=0]
+                                      this.changed = true)
+                                     this.left = Node:23
+                                     this.right = new Node:48(
+                                      this.color = [r=255,g=175,b=175]
+                                      this.up = new Empty:49(
+                                       this.color = [r=255,g=255,b=255]
+                                       this.up = new Node:50(
+                                        this.color = [r=255,g=175,b=175]
+                                        this.up = new Empty:51(
+                                         this.color = [r=255,g=255,b=255]
+                                         this.up = new Node:52(
+                                          this.color = [r=255,g=175,b=175]
+                                          this.up = new Empty:53(
+                                           this.color = [r=255,g=255,b=255]
+                                           this.up = new Node:54(
+                                            this.color = [r=255,g=175,b=175]
+                                            this.up = new Empty:55(
+                                             this.color = [r=255,g=255,b=255]
+                                             this.up = new Node:56(
+                                              this.color = [r=255,g=175,b=175]
+                                              this.up = new Empty:57(
+                                               this.color = [r=255,g=255,b=255]
+                                               this.up = new Node:58(
+                                                this.color = [r=255,g=175,b=175]
+                                                this.up = new Edge:59(
+                                                 this.color = [r=255,g=0,b=0]
+                                                 this.changed = true)
+                                                this.down = Empty:57
+                                                this.left = Empty:35
+                                                this.right = new Empty:60(
+                                                 this.color = [r=255,g=255,b=255]
+                                                 this.up = new Edge:61(
+                                                  this.color = [r=255,g=0,b=0]
+                                                  this.changed = true)
+                                                 this.down = new Node:62(
+                                                  this.color = [r=255,g=0,b=255]
+                                                  this.up = Empty:60
+                                                  this.down = new Empty:63(
+                                                   this.color = [r=255,g=255,b=255]
+                                                   this.up = Node:62
+                                                   this.down = new Node:64(
+                                                    this.color = [r=255,g=0,b=255]
+                                                    this.up = Empty:63
+                                                    this.down = new Empty:65(
+                                                     this.color = [r=255,g=255,b=255]
+                                                     this.up = Node:64
+                                                     this.down = new Node:66(
+                                                      this.color = [r=255,g=0,b=255]
+                                                      this.up = Empty:65
+                                                      this.down = new Empty:67(
+                                                       this.color = [r=255,g=255,b=255]
+                                                       this.up = Node:66
+                                                       this.down = new Node:68(
+                                                        this.color = [r=255,g=0,b=255]
+                                                        this.up = Empty:67
+                                                        this.down = new Empty:69(
+                                                         this.color = [r=255,g=255,b=255]
+                                                         this.up = Node:68
+                                                         this.down = new Node:70(
+                                                          this.color = [r=255,g=0,b=255]
+                                                          this.up = Empty:69
+                                                          this.down = new Empty:71(
+                                                           this.color = [r=255,g=255,b=255]
+                                                           this.up = Node:70
+                                                           this.down = new Edge:72(
+                                                            this.color = [r=255,g=0,b=0]
+                                                            this.changed = true)
+                                                           this.left = Node:48
+                                                           this.right = new Node:73(
+                                                            this.color = [r=255,g=175,b=175]
+                                                            this.up = new Empty:74(
+                                                             this.color = [r=255,g=255,b=255]
+                                                             this.up = new Node:75(
+                                                              this.color = [r=255,g=175,b=175]
+                                                              this.up = new Empty:76(
+                                                               this.color = [r=255,g=255,b=255]
+                                                               this.up = new Node:77(
+                                                                this.color = [r=255,g=175,b=175]
+                                                                this.up = new Empty:78(
+                                                                 this.color = [r=255,g=255,b=255]
+                                                                 this.up = new Node:79(
+                                                                  this.color = [r=255,g=175,b=175]
+                                                                  this.up = new Empty:80(
+                                                                   this.color = [r=255,g=255,b=255]
+                                                                   this.up = new Node:81(
+                                                                    this.color = [r=255,g=175,b=175]
+                                                                    this.up = new Empty:82(
+                                                                     this.color = [r=255,g=255,b=255]
+                                                                     this.up = new Node:83(
+                                                                      this.color = [r=255,g=175,b=175]
+                                                                      this.up = new Edge:84(
+                                                                       this.color = [r=255,g=0,b=0]
+                                                                       this.changed = true)
+                                                                      this.down = Empty:82
+                                                                      this.left = Empty:60
+                                                                      this.right = new Empty:85(
+                                                                       this.color = [r=255,g=255,b=255]
+                                                                       this.up = new Edge:86(
+                                                                        this.color = [r=255,g=0,b=0]
+                                                                        this.changed = true)
+                                                                       this.down = new Node:87(
+                                                                        this.color = [r=255,g=0,b=255]
+                                                                        this.up = Empty:85
+                                                                        this.down = new Empty:88(
+                                                                         this.color = [r=255,g=255,b=255]
+                                                                         this.up = Node:87
+                                                                         this.down = new Node:89(
+                                                                          this.color = [r=255,g=0,b=255]
+                                                                          this.up = Empty:88
+                                                                          this.down = new Empty:90(
+                                                                           this.color = [r=255,g=255,b=255]
+                                                                           this.up = Node:89
+                                                                           this.down = new Node:91(
+                                                                            this.color = [r=255,g=0,b=255]
+                                                                            this.up = Empty:90
+                                                                            this.down = new Empty:92(
+                                                                             this.color = [r=255,g=255,b=255]
+                                                                             this.up = Node:91
+                                                                             this.down = new Node:93(
+                                                                              this.color = [r=255,g=0,b=255]
+                                                                              this.up = Empty:92
+                                                                              this.down = new Empty:94(
+                                                                               this.color = [r=255,g=255,b=255]
+                                                                               this.up = Node:93
+                                                                               this.down = new Node:95(
+                                                                                this.color = [r=255,g=0,b=255]
+                                                                                this.up = Empty:94
+                                                                                this.down = new Empty:96(
+                                                                                 this.color = [r=255,g=255,b=255]
+                                                                                 this.up = Node:95
+                                                                                 this.down = new Edge:97(
+                                                                                  this.color = [r=255,g=0,b=0]
+                                                                                  this.changed = true)
+                                                                                 this.left = Node:73
+                                                                                 this.right = new Node:98(
+                                                                                  this.color = [r=255,g=175,b=175]
+                                                                                  this.up = new Empty:99(
+                                                                                   this.color = [r=255,g=255,b=255]
+                                                                                   this.up = new Node:100(
+                                                                                    this.color = [r=255,g=175,b=175]
+                                                                                    this.up = new Empty:101(
+                                                                                     this.color = [r=255,g=255,b=255]
+                                                                                     this.up = new Node:102(
+                                                                                      this.color = [r=255,g=175,b=175]
+                                                                                      this.up = new Empty:103(
+                                                                                       this.color = [r=255,g=255,b=255]
+                                                                                       this.up = new Node:104(
+                                                                                        this.color = [r=255,g=175,b=175]
+                                                                                        this.up = new Empty:105(
+                                                                                         this.color = [r=255,g=255,b=255]
+                                                                                         this.up = new Node:106(
+                                                                                          this.color = [r=255,g=175,b=175]
+                                                                                          this.up = new Empty:107(
+                                                                                           this.color = [r=255,g=255,b=255]
+                                                                                           this.up = new Node:108(
+                                                                                            this.color = [r=255,g=175,b=175]
+                                                                                            this.up = new Edge:109(
+                                                                                             this.color = [r=255,g=0,b=0]
+                                                                                             this.changed = true)
+                                                                                            this.down = Empty:107
+                                                                                            this.left = Empty:85
+                                                                                            this.right = new Empty:110(
+                                                                                             this.color = [r=255,g=255,b=255]
+                                                                                             this.up = new Edge:111(
+                                                                                              this.color = [r=255,g=0,b=0]
+                                                                                              this.changed = true)
+                                                                                             this.down = new Node:112(
+                                                                                              this.color = [r=255,g=0,b=255]
+                                                                                              this.up = Empty:110
+                                                                                              this.down = new Empty:113(
+                                                                                               this.color = [r=255,g=255,b=255]
+                                                                                               this.up = Node:112
+                                                                                               this.down = new Node:114(
+                                                                                                this.color = [r=255,g=0,b=255]
+                                                                                                this.up = Empty:113
+                                                                                                this.down = new Empty:115(
+                                                                                                 this.color = [r=255,g=255,b=255]
+                                                                                                 this.up = Node:114
+                                                                                                 this.down = new Node:116(
+                                                                                                  this.color = [r=255,g=0,b=255]
+                                                                                                  this.up = Empty:115
+                                                                                                  this.down = new Empty:117(
+                                                                                                   this.color = [r=255,g=255,b=255]
+                                                                                                   this.up = Node:116
+                                                                                                   this.down = new Node:118(
+                                                                                                    this.color = [r=255,g=0,b=255]
+                                                                                                    this.up = <truncated; objects are too deeply nested to print>
+                                                                                                    this.down = <truncated; objects are too deeply nested to print>
+                                                                                                    this.left = <truncated; objects are too deeply nested to print>
+                                                                                                    this.right = <truncated; objects are too deeply nested to print>
+                                                                                                    this.changed = true)
+                                                                                                   this.left = Node:102
+                                                                                                   this.right = new Node:119(
+                                                                                                    this.color = [r=255,g=175,b=175]
+                                                                                                    this.up = <truncated; objects are too deeply nested to print>
+                                                                                                    this.down = <truncated; objects are too deeply nested to print>
+                                                                                                    this.left = <truncated; objects are too deeply nested to print>
+                                                                                                    this.right = <truncated; objects are too deeply nested to print>
+                                                                                                    this.changed = true)
+                                                                                                   this.changed = false)
+                                                                                                  this.left = Empty:103
+                                                                                                  this.right = new Empty:120(
+                                                                                                   this.color = [r=255,g=255,b=255]
+                                                                                                   this.up = new Node:121(
+                                                                                                    this.color = [r=255,g=175,b=175]
+                                                                                                    this.up = <truncated; objects are too deeply nested to print>
+                                                                                                    this.down = <truncated; objects are too deeply nested to print>
+                                                                                                    this.left = <truncated; objects are too deeply nested to print>
+                                                                                                    this.right = <truncated; objects are too deeply nested to print>
+                                                                                                    this.changed = true)
+                                                                                                   this.down = Node:119
+                                                                                                   this.left = Node:116
+                                                                                                   this.right = new Node:122(
+                                                                                                    this.color = [r=255,g=0,b=255]
+                                                                                                    this.up = <truncated; objects are too deeply nested to print>
+                                                                                                    this.down = <truncated; objects are too deeply nested to print>
+                                                                                                    this.left = <truncated; objects are too deeply nested to print>
+                                                                                                    this.right = <truncated; objects are too deeply nested to print>
+                                                                                                    this.changed = true)
+                                                                                                   this.changed = false)
+                                                                                                  this.changed = true)
+                                                                                                 this.left = Node:104
+                                                                                                 this.right = Node:121
+                                                                                                 this.changed = false)
+                                                                                                this.left = Empty:105
+                                                                                                this.right = new Empty:123(
+                                                                                                 this.color = [r=255,g=255,b=255]
+                                                                                                 this.up = new Node:124(
+                                                                                                  this.color = [r=255,g=175,b=175]
+                                                                                                  this.up = new Empty:125(
+                                                                                                   this.color = [r=255,g=255,b=255]
+                                                                                                   this.up = new Node:126(
+                                                                                                    this.color = [r=255,g=175,b=175]
+                                                                                                    this.up = <truncated; objects are too deeply nested to print>
+                                                                                                    this.down = <truncated; objects are too deeply nested to print>
+                                                                                                    this.left = <truncated; objects are too deeply nested to print>
+                                                                                                    this.right = <truncated; objects are too deeply nested to print>
+                                                                                                    this.changed = true)
+                                                                                                   this.down = Node:124
+                                                                                                   this.left = Node:112
+                                                                                                   this.right = new Node:127(
+                                                                                                    this.color = [r=255,g=0,b=255]
+                                                                                                    this.up = <truncated; objects are too deeply nested to print>
+                                                                                                    this.down = <truncated; objects are too deeply nested to print>
+                                                                                                    this.left = <truncated; objects are too deeply nested to print>
+                                                                                                    this.right = <truncated; objects are too deeply nested to print>
+                                                                                                    this.changed = true)
+                                                                                                   this.changed = false)
+                                                                                                  this.down = Empty:123
+                                                                                                  this.left = Empty:113
+                                                                                                  this.right = new Empty:128(
+                                                                                                   this.color = [r=255,g=255,b=255]
+                                                                                                   this.up = Node:127
+                                                                                                   this.down = new Node:129(
+                                                                                                    this.color = [r=255,g=0,b=255]
+                                                                                                    this.up = <truncated; objects are too deeply nested to print>
+                                                                                                    this.down = <truncated; objects are too deeply nested to print>
+                                                                                                    this.left = <truncated; objects are too deeply nested to print>
+                                                                                                    this.right = <truncated; objects are too deeply nested to print>
+                                                                                                    this.changed = true)
+                                                                                                   this.left = Node:124
+                                                                                                   this.right = new Edge:130(
+                                                                                                    this.color = [r=255,g=0,b=0]
+                                                                                                    this.changed = true)
+                                                                                                   this.changed = false)
+                                                                                                  this.changed = true)
+                                                                                                 this.down = Node:121
+                                                                                                 this.left = Node:114
+                                                                                                 this.right = Node:129
+                                                                                                 this.changed = false)
+                                                                                                this.changed = true)
+                                                                                               this.left = Node:106
+                                                                                               this.right = Node:124
+                                                                                               this.changed = false)
+                                                                                              this.left = Empty:107
+                                                                                              this.right = Empty:125
+                                                                                              this.changed = true)
+                                                                                             this.left = Node:108
+                                                                                             this.right = Node:126
+                                                                                             this.changed = false)
+                                                                                            this.changed = true)
+                                                                                           this.down = Node:106
+                                                                                           this.left = Node:87
+                                                                                           this.right = Node:112
+                                                                                           this.changed = false)
+                                                                                          this.down = Empty:105
+                                                                                          this.left = Empty:88
+                                                                                          this.right = Empty:113
+                                                                                          this.changed = true)
+                                                                                         this.down = Node:104
+                                                                                         this.left = Node:89
+                                                                                         this.right = Node:114
+                                                                                         this.changed = false)
+                                                                                        this.down = Empty:103
+                                                                                        this.left = Empty:90
+                                                                                        this.right = Empty:115
+                                                                                        this.changed = true)
+                                                                                       this.down = Node:102
+                                                                                       this.left = Node:91
+                                                                                       this.right = Node:116
+                                                                                       this.changed = false)
+                                                                                      this.down = Empty:101
+                                                                                      this.left = Empty:92
+                                                                                      this.right = Empty:117
+                                                                                      this.changed = true)
+                                                                                     this.down = Node:100
+                                                                                     this.left = Node:93
+                                                                                     this.right = Node:118
+                                                                                     this.changed = false)
+                                                                                    this.down = Empty:99
+                                                                                    this.left = Empty:94
+                                                                                    this.right = new Empty:131(
+                                                                                     this.color = [r=255,g=255,b=255]
+                                                                                     this.up = Node:118
+                                                                                     this.down = new Node:132(
+                                                                                      this.color = [r=255,g=0,b=255]
+                                                                                      this.up = Empty:131
+                                                                                      this.down = new Empty:133(
+                                                                                       this.color = [r=255,g=255,b=255]
+                                                                                       this.up = Node:132
+                                                                                       this.down = new Edge:134(
+                                                                                        this.color = [r=255,g=0,b=0]
+                                                                                        this.changed = true)
+                                                                                       this.left = Node:98
+                                                                                       this.right = new Node:135(
+                                                                                        this.color = [r=255,g=175,b=175]
+                                                                                        this.up = new Empty:136(
+                                                                                         this.color = [r=255,g=255,b=255]
+                                                                                         this.up = new Node:137(
+                                                                                          this.color = [r=255,g=175,b=175]
+                                                                                          this.up = new Empty:138(
+                                                                                           this.color = [r=255,g=255,b=255]
+                                                                                           this.up = Node:119
+                                                                                           this.down = Node:137
+                                                                                           this.left = Node:118
+                                                                                           this.right = new Node:139(
+                                                                                            this.color = [r=255,g=0,b=255]
+                                                                                            this.up = new Empty:140(
+                                                                                             this.color = [r=255,g=255,b=255]
+                                                                                             this.up = Node:122
+                                                                                             this.down = Node:139
+                                                                                             this.left = Node:119
+                                                                                             this.right = new Edge:141(
+                                                                                             Items skipped)
+                                                                                            Items skipped)
+                                                                                           Items skipped)
+                                                                                          Items skipped)
+                                                                                         Items skipped)
+                                                                                        Items skipped)
+                                                                                       Items skipped)
+                                                                                      Items skipped)
+                                                                                     Items skipped)
+                                                                                    Items skipped)
+                                                                                   Items skipped)
+                                                                                  Items skipped)
+                                                                                 Items skipped)
+                                                                                Items skipped)
+                                                                               Items skipped)
+                                                                              Items skipped)
+                                                                             Items skipped)
+                                                                            Items skipped)
+                                                                           Items skipped)
+                                                                          Items skipped)
+                                                                         Items skipped)
+                                                                        Items skipped)
+                                                                       Items skipped)
+                                                                      Items skipped)
+                                                                     Items skipped)
+                                                                    Items skipped)
+                                                                   Items skipped)
+                                                                  Items skipped)
+                                                                 Items skipped)
+                                                                Items skipped)
+                                                               Items skipped)
+                                                              Items skipped)
+                                                             Items skipped)
+                                                            Items skipped)
+                                                           Items skipped)
+                                                          Items skipped)
+                                                         Items skipped)
+                                                        Items skipped)
+                                                       Items skipped)
+                                                      Items skipped)
+                                                     Items skipped)
+                                                    Items skipped)
+                                                   Items skipped)
+                                                  Items skipped)
+                                                 Items skipped)
+                                                Items skipped)
+                                               Items skipped)
+                                              Items skipped)
+                                             Items skipped)
+                                            Items skipped)
+                                           Items skipped)
+                                          Items skipped)
+                                         Items skipped)
+                                        Items skipped)
+                                       Items skipped)
+                                      Items skipped)
+                                     Items skipped)
+                                    Items skipped)
+                                   Items skipped)
+                                  Items skipped)
+                                 Items skipped)
+                                Items skipped)
+                               Items skipped)
+                              Items skipped)
+                             Items skipped)
+                            Items skipped)
+                           Items skipped)
+                          Items skipped)
+                         Items skipped)
+                        Items skipped)
+                       Items skipped)
+                      Items skipped)
+                     Items skipped)
+                    Items skipped)
+                   Items skipped)
+                  Items skipped)
+                 Items skipped)
+                Items skipped)
+               Items skipped)
+              Items skipped)
+             Items skipped)
+            Items skipped)
+           Items skipped)
+          Items skipped)
+         Items skipped)
+        Items skipped)
+       Items skipped)
+      Items skipped)
+     Items skipped)
+    Items skipped)
+   Items skipped
+   }
+  Items skipped
   }
+ Items skipped)
+Items skipped)
+---------------
+impworld version 1.0 --- 26 June  2012
+-----------------------------------------
 
-  // skeleton constructor
-  Node(Color color) {
-    this.color = color;
-    this.up = null;
-    this.down = null;
-    this.left = null;
-    this.right = null;
-    this.changed = true;
-  }
 
-  // draws this node
-  public WorldImage drawAt() {
-    return new RectangleImage(50, 50, "solid", this.color);
-  }
+Ran 49 tests.
+All tests passed.
 
-  // links this node to the given nodes
-  // EFFECT: links this node to given neighbors
-  public void link(INode up, INode down, INode left, INode right) {
-    this.up = up;
-    this.down = down;
-    this.left = left;
-    this.right = right;
-  }
-
-  // "updates" this node when clicked
-  // EFFECT: nothing -> this node will never be updated
-  public void update(Color col) {
-    // do nothing
-  }
-
-  // checks if this node has been changed
-  public boolean checkChange() {
-    return this.changed;
-  }
-
-  // adds the linkages to the given arraylist for the search algo
-  // EFFECT: updates a given worklist with this node's neighbors only if the color matches
-  public void addLinks(ArrayList<INode> worklist, Color col) {
-    if (this.up.match(col)) {
-      worklist.add(this.up);
-    }
-    
-    if (this.down.match(col)) {
-      worklist.add(this.down);
-    }
-    
-    if (this.left.match(col)) {
-      worklist.add(this.left);
-    }
-    
-    if (this.right.match(col)) {
-      worklist.add(this.right);
-    }
-  }
-
-  // checks if this node matches a given color
-  public boolean match(Color col) {
-    return this.color.equals(col);
-  }
-}
-
-// represents a white node
-class Empty implements INode {
-  Color color;
-  INode up;
-  INode down;
-  INode left;
-  INode right;
-  boolean changed;
-
-  // full constructor
-  Empty(Color color, INode up, INode down, INode left, INode right, boolean changed) {
-    this.color = color;
-    this.up = up;
-    this.down = down;
-    this.left = left;
-    this.right = right;
-    this.changed = changed;
-  }
-
-  // skeleton questions
-  Empty() {
-    this.color = Color.WHITE;
-    this.up = null;
-    this.down = null;
-    this.left = null;
-    this.right = null;
-    this.changed = false;
-  }
-
-  // draws the node
-  public WorldImage drawAt() {
-    return new RectangleImage(50, 50, "solid", this.color);
-  }
-
-  // links this node to the given nodes
-  // EFFECT: links this node with given neighbors
-  public void link(INode up, INode down, INode left, INode right) {
-    this.up = up;
-    this.down = down;
-    this.left = left;
-    this.right = right;
-  }
-
-  // updates this node when clicked
-  // EFFECT: colors an empty tile
-  public void update(Color col) {
-    this.color = col;
-    this.changed = true;
-  }
-
-  // checks if this node has been changed
-  public boolean checkChange() {
-    return this.changed;
-  }
-  
-  // adds the linkages to the given arraylist for the search algo
-  // EFFECT: updates a given worklist with this node's neighbors only if the color matches
-  public void addLinks(ArrayList<INode> worklist, Color col) {
-    if (this.up.match(col)) {
-      worklist.add(this.up);
-    }
-    
-    if (this.down.match(col)) {
-      worklist.add(this.down);
-    }
-    
-    if (this.left.match(col)) {
-      worklist.add(this.left);
-    }
-    
-    if (this.right.match(col)) {
-      worklist.add(this.right);
-    }
-  }
-  
-  // checks if this node matches a given color
-  public boolean match(Color col) {
-    return this.color.equals(col);
-  }
-}
-
-// represents a placeholder edge tile
-class Edge implements INode {
-  Color color;
-  boolean changed;
-
-  Edge() {
-    this.color = Color.RED;
-    this.changed = true;
-  }
-
-  // "draws" this node -> should never be called
-  public WorldImage drawAt() {
-    return new RectangleImage(50, 50, "solid", this.color);
-  }
-
-  // "links" this node -> will never be called
-  // EFFECT: nothing -> this should never be called
-  public void link(INode up, INode down, INode left, INode right) {
-    // do nothing
-  }
-
-  // "updates" this node when clicked
-  // EFFECT: nothing -> this should never be called
-  public void update(Color col) {
-    // do nothing
-  }
-
-  // checks if this node has been changed
-  public boolean checkChange() {
-    return this.changed;
-  }
-  
-  // adds the linkages to the given arraylist for the search algo
-  // EFFECT: nothing -> this should never be called
-  public void addLinks(ArrayList<INode> worklist, Color col) {
-    // do nothing
-  }
-  
-  // checks if this node matches a given color
-  public boolean match(Color col) {
-    return this.color.equals(col);
-  }
-}
-
-//represents a fifteen game using tiles
-class BridgIt extends World {
-  int size;
-  ArrayList<ArrayList<INode>> nodes;
-  int counter;
-  int moves;
-
-  // normal constructor
-  BridgIt(int size) {
-    if (size % 2 == 0 || size < 2) {
-      throw new IllegalArgumentException(
-          "Game side length must be odd and greater than one!");
-    } else {
-      this.size = size;
-    }
-
-    this.nodes = this.initNodes();
-    this.counter = 0;
-    this.moves = 30;
-
-    // a for loop that links each node
-    for (int i = 0; i < this.size; i++) {
-      for (int j = 0; j < this.size; j++) {
-        if (i == 0) {
-          if (j == 0) {
-            this.nodes.get(i).get(j).link(
-                new Edge(),
-                this.nodes.get(i + 1).get(j),
-                new Edge(),
-                this.nodes.get(i).get(j + 1));
-          } else if (j == this.size - 1) {
-            this.nodes.get(i).get(j).link(
-                new Edge(),
-                this.nodes.get(i + 1).get(j),
-                this.nodes.get(i).get(j - 1),
-                new Edge());
-          } else {
-            this.nodes.get(i).get(j).link(
-                new Edge(),
-                this.nodes.get(i + 1).get(j),
-                this.nodes.get(i).get(j - 1),
-                this.nodes.get(i).get(j + 1));
-          }
-        } else if (i == this.size - 1) {
-          if (j == 0) {
-            this.nodes.get(i).get(j).link(
-                this.nodes.get(i - 1).get(j),
-                new Edge(),
-                new Edge(),
-                this.nodes.get(i).get(j + 1));
-          } else if (j == this.size - 1) {
-            this.nodes.get(i).get(j).link(
-                this.nodes.get(i - 1).get(j),
-                new Edge(),
-                this.nodes.get(i).get(j - 1),
-                new Edge());
-          } else {
-            this.nodes.get(i).get(j).link(
-                this.nodes.get(i - 1).get(j),
-                new Edge(),
-                this.nodes.get(i).get(j - 1),
-                this.nodes.get(i).get(j + 1));
-          }
-        } else {
-          if (j == 0) {
-            this.nodes.get(i).get(j).link(
-                this.nodes.get(i - 1).get(j),
-                this.nodes.get(i + 1).get(j),
-                new Edge(),
-                this.nodes.get(i).get(j + 1));
-          } else if (j == this.size - 1) {
-            this.nodes.get(i).get(j).link(
-                this.nodes.get(i - 1).get(j),
-                this.nodes.get(i + 1).get(j),
-                this.nodes.get(i).get(j - 1),
-                new Edge());
-          } else {
-            this.nodes.get(i).get(j).link(
-                this.nodes.get(i - 1).get(j),
-                this.nodes.get(i + 1).get(j),
-                this.nodes.get(i).get(j - 1),
-                this.nodes.get(i).get(j + 1));
-          }
-        }
-      }
-    }
-  }
-
-  // test constructor w/o linkage for makeScene
-  BridgIt() {
-    this.size = 1;
-    this.nodes = this.initNodes();
-    this.counter = 0;
-    this.moves = 30;
-  }
-
-  // initializes the game board in a checkerboard pattern
-  public ArrayList<ArrayList<INode>> initNodes() {
-    this.nodes = new ArrayList<ArrayList<INode>>();
-
-    // init tempRow holder
-    ArrayList<INode> tempRow = new ArrayList<INode>();
-
-    // generate matrix of patterned nodes
-    for (int i = 0; i < this.size; i++) {
-      tempRow = new ArrayList<INode>();
-
-      for (int j = 0; j < this.size; j++) {
-        if (i % 2 == 0) {
-          if (j % 2 == 0) {
-            tempRow.add(new Empty());
-          } else {
-            tempRow.add(new Node(Color.PINK));
-          }
-        } else {
-          if (j % 2 == 0) {
-            tempRow.add(new Node(Color.MAGENTA));
-          } else {
-            tempRow.add(new Empty());
-          }
-        }
-      }
-
-      this.nodes.add(tempRow);
-    }
-
-    return this.nodes;
-  }
-
-  // draws the gameboard
-  public WorldScene makeScene() {
-    WorldScene scene = new WorldScene(this.size * 50, (this.size + 4) * 50);
-
-    for (int i = 0; i < this.size; i++) {
-      for (int j = 0; j < this.size; j++) {
-        scene.placeImageXY(this.nodes.get(i).get(j).drawAt(), (i * 50) + 25, (j * 50) + 25);
-      }
-    }
-    if (this.counter % 2 == 0) {
-      scene.placeImageXY(new TextImage("Magenta's turn", 40.0, Color.MAGENTA), this.size * 25,(this.size + 1) * 50);
-    } else {
-      scene.placeImageXY(new TextImage("Pink's turn", 40.0, Color.PINK), this.size * 25, (this.size + 1) * 50);
-    }
-    
-    String movesLeft = Integer.toString(this.moves);
-    scene.placeImageXY(new TextImage("Total Moves Left: " + movesLeft, 20.0, Color.BLACK), this.size * 25, (this.size + 3) * 50);
-
-    return scene;
-  }
-
-  // changes an empty piece upon click
-  public void onMouseClicked(Posn pos) {
-    int rowIndex = pos.x / 50;
-    int colIndex = pos.y / 50;
-
-    Color newColor = null;
-    if (this.counter % 2 == 0) {
-      newColor = Color.magenta; 
-    } else {
-      newColor = Color.pink;
-    }
-    
-    // once the game is out of moves, pick up old pieces and place them again, old used spaces can no longer be used
-    if (this.moves <= 0 && this.nodes.get(rowIndex).get(colIndex).checkChange() && this.nodes.get(rowIndex).get(colIndex).match(newColor)) {
-        this.nodes.get(rowIndex).get(colIndex).update(Color.WHITE);
-        this.moves = 1;
-    }
-    
-    if (!this.nodes.get(rowIndex).get(colIndex).checkChange() && this.moves > 0) {
-      this.nodes.get(rowIndex).get(colIndex).update(newColor);
-      this.moves = this.moves - 1;
-      
-      // checks for the win
-      if (this.counter % 2 == 0) {
-        // even -> search left to right; magenta
-        for (int i = 0; i < this.size - 1; i++) {
-          for (int j = 0; j < this.size - 1; j++) {
-            boolean winCheck = this.bfs(this.nodes.get(i).get(0), this.nodes.get(j).get(this.size - 1), Color.MAGENTA);
-            
-            if (winCheck) {
-              this.endOfWorld("magenta");
-            }
-          }
-        }
-      } else {
-        // odd -> search top to bottom; pink
-        for (int i = 0; i < this.size - 1; i++) {
-          for (int j = 0; j < this.size - 1; j++) {
-            boolean winCheck = this.bfs(this.nodes.get(0).get(i), this.nodes.get(this.size - 1).get(j), Color.PINK);
-            
-            if (winCheck) {
-              this.endOfWorld("pink");
-            }
-          }
-        }
-      }
-      
-      this.counter++;
-    }
-  }
-  
-  // resets the game
-  public void onKeyEvent(String s) {
-    BridgIt newGame = new BridgIt(this.size);
-    
-    if (s.equals("r")) {
-      this.nodes = newGame.nodes;
-    }
-  }
-  
-  // produces win screen
-  public WorldScene lastScene(String s) {
-    WorldScene scene = new WorldScene(this.size * 50, this.size * 50);
-    
-    if (s.equals("magenta")) {
-      scene.placeImageXY(new TextImage(
-          "Magenta wins!",
-          50.0,
-          Color.MAGENTA),
-          (this.size * 50) / 2,
-          (this.size * 50) / 2);
-    } else if (s.equals("pink")) {
-      scene.placeImageXY(new TextImage(
-          "Pink wins!",
-          50.0,
-          Color.PINK),
-          (this.size * 50) / 2,
-          (this.size * 50) / 2);
-    }
-    
-    return scene;
-  }
-
-  // performs a BFS search
-  boolean bfs(INode from, INode to, Color col) {
-    return searchHelp(from, to, col, new ArrayList<INode>());
-  }
-
-  // helper for bfs
-  boolean searchHelp(INode from, INode to, Color col, ArrayList<INode> worklist) {
-    ArrayList<INode> done = new ArrayList<INode>();
-    worklist.add(from);
-
-    while (!worklist.isEmpty()) {
-      INode next = worklist.remove(0);
-      if (next.equals(to)) {
-        return true;
-      }
-      else if (done.contains(next)) {
-        // skip
-      }
-      else {
-        // add neighbors and advance list
-        next.addLinks(worklist, col);
-        done.add(next);
-      }
-    }
-
-    return false;
-  }
-}
-
-class ExamplesBridgIt {
-  ExamplesBridgIt() {
-
-  }
-
-  // runs the game
-  void testGame(Tester t) {
-    BridgIt g = new BridgIt(11);
-    g.bigBang(1000, 1000);
-  }
-
-  // examples for tests
-  Node node1 = new Node(Color.PINK);
-  Node node2 = new Node(Color.MAGENTA);
-  Empty empty1 = new Empty();
-  Edge edge1 = new Edge();
-
-  BridgIt game1 = new BridgIt(11);
-  BridgIt game2 = new BridgIt(3);
-  
-  ArrayList<INode> addLinksTestList = new ArrayList<INode>();
-  Node node3 = new Node(Color.PINK);
-  Node node4 = new Node(Color.PINK);
-  Node node5 = new Node(Color.MAGENTA);
-  Node node6 = new Node(Color.PINK);
-  Node node7 = new Node(Color.PINK);
-
-  // init test data
-  void initData() {
-    this.node1 = new Node(Color.PINK);
-    this.node2 = new Node(Color.MAGENTA);
-    this.empty1 = new Empty();
-    this.edge1 = new Edge();
-    this.game1 = new BridgIt(11);
-    this.game2 = new BridgIt(3);
-    
-    this.node3.link(node4, node5, node6, node7);
-    this.addLinksTestList = new ArrayList<INode>();
-  }
-
-  // test drawAt
-  void testDrawAt(Tester t) {
-    this.initData();
-
-    t.checkExpect(this.node1.drawAt(), new RectangleImage(50, 50, "solid", Color.PINK));
-    t.checkExpect(this.node2.drawAt(), new RectangleImage(50, 50, "solid", Color.MAGENTA));
-    t.checkExpect(this.empty1.drawAt(), new RectangleImage(50, 50, "solid", Color.WHITE));
-    t.checkExpect(this.edge1.drawAt(), new RectangleImage(50, 50, "solid", Color.RED));
-  }
-
-  // test link
-  void testLink(Tester t) {
-    this.initData();
-
-    this.node1.link(this.node2, this.empty1, this.empty1, this.edge1);
-    this.node2.link(this.empty1, this.empty1, this.empty1, this.empty1);
-
-    t.checkExpect(this.node1.up, this.node2);
-    t.checkExpect(this.node1.down, this.empty1);
-    t.checkExpect(this.node1.left, this.empty1);
-    t.checkExpect(this.node1.right, this.edge1);
-    t.checkExpect(this.node2.up, this.empty1);
-    t.checkExpect(this.node2.down, this.empty1);
-    t.checkExpect(this.node2.left, this.empty1);
-    t.checkExpect(this.node2.right, this.empty1);
-  }
-  
-  // test update
-  void testUpdate(Tester t) {
-    this.initData();
-    
-    this.node1.update(Color.MAGENTA);
-    this.empty1.update(Color.MAGENTA);
-    this.edge1.update(Color.MAGENTA);
-    
-    t.checkExpect(this.node1.color, Color.PINK);
-    t.checkExpect(this.empty1.color, Color.MAGENTA);
-    t.checkExpect(this.empty1.changed, true);
-    t.checkExpect(this.edge1.color, Color.RED);
-  }
-  
-  // test checkChange
-  void testCheckChange(Tester t) {
-    this.initData();
-    
-    t.checkExpect(this.node1.checkChange(), true);
-    t.checkExpect(this.empty1.checkChange(), false);
-    t.checkExpect(this.edge1.checkChange(), true);
-    
-    this.empty1.update(Color.MAGENTA);
-    
-    t.checkExpect(this.empty1.checkChange(), true);
-  }
-  
-  // test addLinks
-  void testAddLinks(Tester t) {
-    this.initData();
-    
-    node3.addLinks(addLinksTestList, Color.PINK);
-    
-    t.checkExpect(this.addLinksTestList.size(), 3);
-    t.checkExpect(this.addLinksTestList.contains(node4), true);
-    t.checkExpect(this.addLinksTestList.contains(node5), false);
-    t.checkExpect(this.addLinksTestList.contains(node6), true);
-    t.checkExpect(this.addLinksTestList.contains(node7), true);
-  }
-  
-  // test match
-  void testMatch(Tester t) {
-    this.initData();
-    
-    t.checkExpect(this.node1.match(Color.PINK), true);
-    t.checkExpect(this.node1.match(Color.MAGENTA), false);
-    t.checkExpect(this.edge1.match(Color.RED), true);
-    t.checkExpect(this.empty1.match(Color.WHITE), true);
-  }
-
-  // test initNodes
-  void testInitNodes(Tester t) {
-    this.initData();
-
-    t.checkExpect(this.game1.nodes.size(), 11);
-    t.checkExpect(this.game1.nodes.get(0).size(), 11);
-  }
-
-  // test BridgIt constructor
-  void testBridgItConstructor(Tester t) {
-    this.initData();
-
-    t.checkConstructorException(
-        new IllegalArgumentException("Game side length must be odd and greater than one!"),
-        "BridgIt", 2);
-    t.checkConstructorException(
-        new IllegalArgumentException("Game side length must be odd and greater than one!"),
-        "BridgIt", 2);
-  }
-
-  BridgIt makeSceneTest = new BridgIt();
-
-  // test makeScene
-  void testMakeScene(Tester t) {
-    this.initData();
-
-    WorldScene expected = new WorldScene(50, 50);
-    expected.placeImageXY(new RectangleImage(50, 50, "solid", Color.WHITE), 25, 25);
-    t.checkExpect(this.makeSceneTest.makeScene(), expected);
-  }
-  
-  // test onMouseClicked
-  void testOnMouseClicked(Tester t) {
-    this.initData();
-    
-    this.game2.onMouseClicked(new Posn(50, 50));
-    t.checkExpect(this.game2.nodes.get(1).get(1), new Empty(
-        Color.MAGENTA,
-        this.game2.nodes.get(0).get(1),
-        this.game2.nodes.get(2).get(1),
-        this.game2.nodes.get(1).get(0),
-        this.game2.nodes.get(1).get(2),
-        true));
-    this.game2.onMouseClicked(new Posn(100, 100));
-    t.checkExpect(this.game2.nodes.get(2).get(2), new Empty(
-        Color.PINK,
-        this.game2.nodes.get(1).get(2),
-        new Edge(),
-        this.game2.nodes.get(2).get(1),
-        new Edge(),
-        true));
-  } 
-  
-  // test onKeyEvent
-  void testOnKeyEvent(Tester t) {
-    this.initData();
-    
-    
-    this.game1.nodes.get(5).get(5).update(Color.MAGENTA);
-    this.game1.onKeyEvent("r");
-    t.checkExpect(this.game1.nodes.get(5).get(5).match(Color.white), true);
-    
-    this.game1.nodes.get(5).get(5).update(Color.MAGENTA);
-    this.game1.onKeyEvent("z");
-    t.checkExpect(this.game1.nodes.get(5).get(5).match(Color.MAGENTA), true);
-  }
-  
-  // test lastScene
-  void testLastScene(Tester t) {    
-    this.initData();
-    
-    WorldScene scene1 = new WorldScene(11 * 50, 11 * 50);
-    scene1.placeImageXY(new TextImage(
-        "Magenta wins!",
-        50.0,
-        Color.MAGENTA),
-        (11 * 50) / 2,
-        (11 * 50) / 2);
-    WorldScene scene2 = new WorldScene(11 * 50, 11 * 50);
-    scene2.placeImageXY(new TextImage(
-        "Pink wins!",
-        50.0,
-        Color.PINK),
-        (11 * 50) / 2,
-        (11 * 50) / 2);
-    
-    t.checkExpect(this.game1.lastScene("magenta"), scene1);
-    t.checkExpect(this.game1.lastScene("pink"), scene2);
-  } 
-  
-  // test bfs
-  void testBFS(Tester t) {
-    this.initData();
-    
-    t.checkExpect(this.game2.bfs(
-        this.game2.nodes.get(1).get(0),
-        this.game2.nodes.get(1).get(2),
-        Color.MAGENTA),
-        false);
-    this.game2.nodes.get(1).get(1).update(Color.MAGENTA);
-    t.checkExpect(this.game2.bfs(
-        this.game2.nodes.get(1).get(0),
-        this.game2.nodes.get(1).get(2),
-        Color.MAGENTA),
-        true);
-    
-    this.initData();
-    t.checkExpect(this.game2.bfs(
-        this.game2.nodes.get(0).get(1),
-        this.game2.nodes.get(2).get(1),
-        Color.PINK),
-        false);
-    this.game2.nodes.get(1).get(1).update(Color.PINK);
-    t.checkExpect(this.game2.bfs(
-        this.game2.nodes.get(0).get(1),
-        this.game2.nodes.get(2).get(1),
-        Color.PINK),
-        true);
-  }
-  
-  // test searchHelp
-  void testSearchHelp(Tester t) {
-    this.initData();
-    ArrayList<INode> searchHelpTestList = new ArrayList<INode>();
-    
-    t.checkExpect(this.game2.searchHelp(
-        this.game2.nodes.get(1).get(0),
-        this.game2.nodes.get(1).get(2),
-        Color.MAGENTA,
-        searchHelpTestList),
-        false);
-    this.game2.nodes.get(1).get(1).update(Color.MAGENTA);
-    t.checkExpect(this.game2.searchHelp(
-        this.game2.nodes.get(1).get(0),
-        this.game2.nodes.get(1).get(2),
-        Color.MAGENTA,
-        searchHelpTestList),
-        true);
-    
-    this.initData();
-    searchHelpTestList = new ArrayList<INode>();
-    
-    t.checkExpect(this.game2.searchHelp(
-        this.game2.nodes.get(0).get(1),
-        this.game2.nodes.get(2).get(1),
-        Color.PINK,
-        searchHelpTestList),
-        false);
-    this.game2.nodes.get(1).get(1).update(Color.PINK);
-    t.checkExpect(this.game2.searchHelp(
-        this.game2.nodes.get(0).get(1),
-        this.game2.nodes.get(2).get(1),
-        Color.PINK,
-        searchHelpTestList),
-        true);
-  }
-}
+--- END OF TEST RESULTS ---
+WARNING: A terminally deprecated method in java.lang.System has been called
+WARNING: System::setSecurityManager has been called by tester.Main (file:/C:/Fundies%202/EclipseJars/tester.jar)
+WARNING: Please consider reporting this to the maintainers of tester.Main
+WARNING: System::setSecurityManager will be removed in a future release
